@@ -10,6 +10,7 @@ df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 #df['date'] = pd.to_datetime(df['date'])
 app = Flask(__name__)
+i = 1
 
 
 def create_dash_app(flask_app):
