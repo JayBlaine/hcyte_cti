@@ -1,0 +1,30 @@
+.flex-parent-element {
+  display: flex;
+
+}
+
+.flex-child-element {
+  flex: 1;
+  margin: 10px;
+}
+
+.flex-child-element:first-child {
+  margin-right: 20px;
+}
+
+
+.big-btn {
+    width: 100px;
+    height: 20px;
+    font-size: 12px;
+    vertical-align: middle;
+    text-align: center;
+    border-color: darkgray;
+
+}
+
+ .big-btn:active,
+ .big-btn:focus
+ {
+     border-color: darkgray;
+  }

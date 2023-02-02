@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} dash {% endblock %}
+
+{% block content %}
+
+    <div id="plotly-timeseries"> </div>
+
+
+    <script>
+    var graph = {{ plot_json | safe }};
+    Plotly.plot('plotly-timeseries', graph, {});
+    </script>
+
+{% endblock %}

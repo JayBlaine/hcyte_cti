@@ -1,0 +1,38 @@
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% if "all" in device %}
+        All
+      {% elif "scans" in device %}
+        Scans/Sweeps
+      {% elif "ssh" in device %}
+        SSH/Telnet
+      {% elif "http" in device %}
+        Webservers
+      {% elif "rtsp" in device %}
+        RTSP/Webcams
+      {% else %}
+        All
+      {% endif %}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href={{ url_for('macro', dv="all")}}>All</a>
+    <a class="dropdown-item" href={{ url_for('macro', dv="num_scans")}}>Scans/Sweeps</a>
+    <a class="dropdown-item" href={{ url_for('macro', dv="ssh_alerts")}}>SSH/Telnet</a>
+    <a class="dropdown-item" href={{ url_for('macro', dv="http_alerts")}}>Webservers</a>
+    <a class="dropdown-item" href={{ url_for('macro', dv="rtsp_alerts")}}>RTSP/Webcams</a>
+  </div>
+</div>
+
+
+
+    <div class="container">
+    <h1>Test for
+    {% if "all" in device %} All
+    {% elif "scans" in device %} Scans/Sweeps
+    {% elif "ssh" in device %} SSH/Telnet
+    {% elif "http" in device %} Webservers
+    {% elif "rtsp" in device %} RTSP/Webcams
+    {% else %} All{% endif %}</h1>
+
+            <p><a href="{{ url_for('macro') }}">back home</a></p>
+        </div>

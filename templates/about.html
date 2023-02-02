@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} About H-CyTE {% endblock %}
+
+{% block content %}
+
+    <script src="static/more.js"></script>
+
+<div class="card" data1="main_about">
+    <h2>H-CyTE</h2>
+    <p>
+        Stuff on testbed
+        <span class="dots">...</span>
+        <span class="more" style="display: none;">More stuff on testbed</span>
+    </p>
+    <button onclick="readMore('main_about')" class="big-btn">Read more</button>
+</div>
+<br>
+
+<div class="card" data1="mission">
+    <h2>Our Mission</h2>
+    <p>
+        What we collect
+        <span class="dots">...</span>
+        <span class="more" style="display: none;">More we collect</span>
+    </p>
+    <button onclick="readMore('mission')" class="big-btn">Read more</button>
+</div>
+<br>
+
+<div class="card" data1="data">
+    <h2>Our Mission</h2>
+    <p>
+        How to get in contact
+        <span class="dots">...</span>
+        <span class="more" style="display: none;">More contact stoof</span>
+    </p>
+    <button onclick="readMore('data')" class="big-btn">Read more</button>
+</div>
+
+
+{% endblock %}
