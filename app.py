@@ -1,14 +1,7 @@
-import re
-
-import plotly
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import pandas as pd
 import plotly.express as px
-import plotly.io as pio
-from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool
-import json
-import datetime as dt
+
 from dash import Dash, html, dcc, Output, Input
 
 df = pd.read_csv('static/website_data.csv')
