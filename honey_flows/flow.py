@@ -96,6 +96,7 @@ class Flow:
     # TCP header len???
 
     label: int = 0  # 0: benign   1: malicious
+    flow_alert = "benign flow"
 
     def __str__(self):
         return "{}:{} -> {}:{}".format(self.ip_addr_src, self.ip_port_src, self.ip_addr_dst, self.ip_port_dst)

@@ -1,26 +1,14 @@
 from flow_tracker import FlowTracker
-from args import parse_args
 from follow import follow
-
-import sys
-
-
-# TODO: argparse for hcyte usage
 
 
 def main():
-    args = parse_args()
-    writefile = None
-    if args.write is not None:
-        writefile = args.write
-    readfile = args.read
-
-    t = FlowTracker(iface=args.interface, stop=args.stop, timeout=args.timeout, filename=writefile)
+    t = FlowTracker(iface='eth0', stop=86400, timeout=90)
     print(t.filename)
 
     t.sniffer.start()
 
-    alert_file = open(readfile, "r")
+    alert_file = open('/mnt/captures/snort_internal/alert', "r")
     alert_lines = follow(alert_file, t)
 
     for line in alert_lines:
@@ -29,20 +17,18 @@ def main():
         dst = line_list[-1:][0]
         try:
             t.flows["{} {}".format(src, dst)].label = 1
+            t.flows["{} {}".format(src, dst)].flow_alert = line
         except KeyError:
             try:
                 t.flows["{} {}".format(dst, src)].label = 1
+                t.flows["{} {}".format(src, dst)].flow_alert = line
             except KeyError:
                 # Key error: Some snort rules (port sweep) don't have port number -> can't find reliably
                 continue
 
 
-
-
-
     # GET IP SRC IP DST FROM LINE, ----> t.flows[src:sport dst:dport].label=1
     t.sniffer.stop()
-    t.final_cleanup()
 
 
 if __name__ == "__main__":

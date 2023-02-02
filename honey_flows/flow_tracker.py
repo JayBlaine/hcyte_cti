@@ -19,18 +19,15 @@ class FlowTracker:
     interface: str
     timeout: int = 60
 
-    def __init__(self, iface: str, filename: str = None, flows: dict = None, timeout: int = None, stop: int = 90):
+    def __init__(self, iface: str, flows: dict = None, timeout: int = None, stop: int = 90):
         """
         Main handler for tracking flows from live capture
 
         :param iface: Interface to listen on
-        :param filename: CSV file to write completed flows to
         :param flows: Dictionary of active flows
         :param timeout: Int for how long after a packet to call a flow inactive
         :param stop: Int for how long the sniffer is active
         """
-        if filename is not None:
-            self.filename = filename
         if flows is not None:
             self.flows = flows
         if timeout is not None:
@@ -38,35 +35,12 @@ class FlowTracker:
 
         self.interface = iface
 
-        with open(self.filename, 'w') as f:
-            w_obj = csv.writer(f)
-            w_obj.writerow(list(Flow.__dict__.keys())[3:63])
-            f.close()
-
-        # sniff(iface=interface, session=IPSession, prn=prn_scapy(flows=flows, writefile=filename), filter='ip and (tcp or udp)')
         self.sniffer = AsyncSniffer(iface=self.interface, session=IPSession,
-                                    prn=prn_scapy(flows=self.flows, writefile=self.filename, timeout=self.timeout),
+                                    prn=prn_scapy(flows=self.flows, timeout=self.timeout),
                                     filter='ip and (tcp or udp) and (net 64.183.181.215 or net 192.168.50.0/24)', timeout=stop)
-                                                               
-    def final_cleanup(self):
-        """
-        Call after sniffer stops to write open flows to csv
-
-        """
-        for j in self.flows.copy().keys():
-            # flow over, write to csv, remove from dict
-            self.flows[j].ip_all_flow_duration = self.flows[j].flow_cur_time - self.flows[j].flow_start
-            # label=0 default
-            self.flows[j] = flow_cleanup(flow=self.flows[j])
-            # flow_buf.append(flows[j]._get_all()[:-1])
-            with open(self.filename, 'a') as f:
-                w_obj = csv.writer(f)
-                w_obj.writerow(self.flows[j]._get_all())
-                f.close()
-            self.flows.pop(j)
 
 
-def prn_scapy(flows: dict, writefile: str, timeout: int):
+def prn_scapy(flows: dict, timeout: int):
     """
     Wrapper for prn in sniffer to allow passing of arguments
 
@@ -94,12 +68,6 @@ def prn_scapy(flows: dict, writefile: str, timeout: int):
                 # flow over, write to csv, remove from dict
                 flows[j].ip_all_flow_duration = flows[j].flow_cur_time - flows[j].flow_start
                 # label=0 default
-                flows[j] = flow_cleanup(flow=flows[j])
-                # flow_buf.append(flows[j]._get_all()[:-1])
-                with open(writefile, 'a') as f:
-                    w_obj = csv.writer(f)
-                    w_obj.writerow(flows[j]._get_all())
-                    f.close()
                 flows.pop(j)
 
     return read_pkt
