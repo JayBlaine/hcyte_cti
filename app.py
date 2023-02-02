@@ -157,7 +157,8 @@ def macro():
 @app.route('/micro', strict_slashes=False)
 def micro():
 
-    return render_template('micro.html')
+    vis_html = None
+    return render_template('micro.html', vis_html=vis_html)
 
 
 @app.route('/about', strict_slashes=False)
