@@ -19,6 +19,7 @@ i = 1
 def create_dash_micro(flask_app):
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
     dash_app1.layout = html.Div('This is a test')
+    #create visdcc thing here
 
     return dash_app1
 
@@ -167,7 +168,7 @@ def macro():
 
 @app.route('/micro', strict_slashes=False)
 def micro():
-
+    
     dash_micro = dash_app_micro.index()
     return render_template('micro.html', vis_html=dash_micro)
 
