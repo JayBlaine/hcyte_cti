@@ -1,7 +1,7 @@
 from scapy.layers.inet import TCP, UDP, ICMP, IP
 from scapy.packet import Packet
 import time
-from flow import Flow
+from honey_flows.flow import Flow
 
 
 def create_flow_entry(pkt: Packet):
