@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
 from bs4 import BeautifulSoup
@@ -6,6 +6,9 @@ import sys
 from pyvis.network import Network
 
 from dash import Dash, html, dcc, Output, Input
+
+from flask_recaptcha import ReCaptcha
+from forms import EmailForm
 from honey_flows import flow_tracker
 
 df = pd.read_csv('static/website_data.csv')
@@ -14,6 +17,13 @@ df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 #df['date'] = pd.to_datetime(df['date'])
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
+
+app.config['RECAPTCHA_USE_SSL']= False
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+app.config['RECAPTCHA_SITE_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'  # <-- Add your site key
+app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'  # <-- Add your secret key
+# TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
 # TODO: argfile???
 # reading from /mnt/captures/snort_internal/alert
@@ -185,7 +195,20 @@ def about():
 
 @app.route('/contact', strict_slashes=False, methods=["GET"])
 def contact():
-    return render_template('contact.html')
+    form = EmailForm()
+    if form.validate_on_submit():
+        return redirect(url_for('/submit'))
+    return render_template('contact.html', form=form)
+
+
+@app.route('/submit', methods=["GET", "POST"])
+def submit():
+    message = ''
+    if request.method == 'POST':
+        test = request.form.getlist('interest')
+        print(test)
+    print('test321')
+    return render_template('submit.html', message=message)
 
 
 if __name__ == '__main__':

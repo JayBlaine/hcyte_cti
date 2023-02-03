@@ -22,6 +22,15 @@
     border-color: darkgray;
 
 }
+#block_container
+{
+    text-align:left;
+}
+#bloc1, #bloc2
+{
+    display: inline-block;
+    vertical-align: middle;
+}
 
  .big-btn:active,
  .big-btn:focus

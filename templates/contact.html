@@ -3,7 +3,107 @@
 {% block title %} Contact Us {% endblock %}
 
 {% block content %}
+    <h2>Interested? Contact us!</h2>
+    <p> Are you interested in H-CyTE? Please fill out the form below and we'll be in contact shortly.</p>
+    <form method="POST" action="/submit">
+        {{ form.csrf_token }}
+    <div>
+        <div id="block_container">
 
-Email form to be added
+            <div id="bloc1">
+                <p>
+                {{ form.first_name.label }}
+                {{ form.first_name(size=20) }}
+                </p>
+            </div>
+            <div id="bloc2">
+                <p>
+                {{ form.last_name.label }}
+                {{ form.last_name(size=20) }}
+                </p>
+            </div>
+        </div>
+
+        <div id="block_container">
+
+            <div id="bloc1">
+                <p>
+                {{ form.org.label }}
+                {{ form.org(size=20) }}
+                </p>
+            </div>
+            <div id="bloc2">
+                <p>
+                {{ form.email.label }}
+                {{ form.email(size=20) }}
+                </p>
+            </div>
+        </div>
+        <div id="block_container">
+            <div id="bloc1">
+                <p>{{ form.interest.label }}</p>
+            </div>
+            <div id="bloc2">
+                {% for subfield in form.interest %}
+                <tr>
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="bloc1">
+            {{ form.recaptcha }}
+            <p>
+            <input type="submit" value="Add">
+            </p>
+        </div>
+
+    </div>
+
+        {% if form.first_name.errors %}
+            <ul class="errors">
+                {% for error in form.first_name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.last_name.errors %}
+            <ul class="errors">
+                {% for error in form.last_name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.email.errors %}
+            <ul class="errors">
+                {% for error in form.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.org.errors %}
+            <ul class="errors">
+                {% for error in form.org.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.interest.errors %}
+            <ul class="errors">
+                {% for error in form.interest.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+
+    </form>
+
 
 {% endblock %}
