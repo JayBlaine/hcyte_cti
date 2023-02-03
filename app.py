@@ -33,7 +33,7 @@ app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3' 
 
 # TODO: argfile???
 # reading from /mnt/captures/snort_internal/alert
-t = flow_tracker.FlowTracker(iface='eno1', stop=60, timeout=86400)
+t = flow_tracker.FlowTracker(iface='eno1', stop=86400, timeout=60)
 #t.sniffer.start()
 
 
@@ -59,6 +59,7 @@ def create_dash_micro(flask_app):
 
         srcIPs.append(srcIP)
         destIPs.append(destIP)
+        # jarrod: Maybe add port in id so we can get flow info from dict based on edge id
         new_edge = {
             'id': srcIP + "__" + destIP,
             'from': srcIP,
