@@ -7,6 +7,9 @@ from pyvis.network import Network
 
 from dash import Dash, html, dcc, Output, Input
 from honey_flows import flow_tracker
+import visdcc
+from honey_flows import flow
+from honey_flows import t_flows
 
 df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
@@ -22,9 +25,52 @@ t = flow_tracker.FlowTracker(iface='eno1', stop=60, timeout=86400)
 
 
 def create_dash_micro(flask_app):
-    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
-    dash_app1.layout = html.Div('This is a test')
     #create visdcc thing here
+    srcIPs = []
+    destIPs = []
+    edges = []
+    for key in t_flows.test_flows.keys():
+        #print(key)
+        IPandPort = key.split(" ")
+        #print("src: " + IPandPort[0] + "\tdest: " + IPandPort[1])
+        
+        srcIPandPort = IPandPort[0].split(":")
+        srcIP = srcIPandPort[0]
+        srcPort = srcIPandPort[1]
+        #print("srcIP: " + srcIP + "\tsrcPort: " + srcPort)
+        
+        destIPandPort = IPandPort[1].split(":")
+        destIP = destIPandPort[0]
+        destPort = destIPandPort[1]
+        #print("destIP: " + destIP + "\tdestPort: " + destPort)
+
+        srcIPs.append(srcIP)
+        destIPs.append(destIP)
+        new_edge = {
+            'id': srcIP + "__" + destIP,
+            'from': srcIP,
+            'to': destIP,
+            'width': 2
+            }
+        if new_edge not in edges:
+            edges.append(new_edge)
+    
+    srcIP_set = set(srcIPs)
+    uniqueSrcIPs = (list(srcIP_set))
+    destIP_set = set(destIPs)
+    uniqueDestIPs = (list(destIP_set))
+
+    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10} for IP in uniqueSrcIPs]
+    for IP in uniqueDestIPs:
+        if(IP not in uniqueSrcIPs):
+            nodes.append({'id': IP, 'label': "dest: " + IP, 'shape': 'dot', 'size': 10})
+
+    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
+    dash_app1.layout = html.Div([
+        visdcc.Network(id = 'net',
+        data = {'nodes': nodes, 'edges': edges},
+        options = dict(height= '600px', width= '100%'))
+    ])
 
     return dash_app1
 
@@ -173,7 +219,8 @@ def macro():
 
 @app.route('/micro', strict_slashes=False)
 def micro():
-    
+    #print("In micro")
+    #print(test_flows)
     dash_micro = dash_app_micro.index()
     return render_template('micro.html', vis_html=dash_micro)
 
