@@ -16,7 +16,13 @@ app = Flask(__name__)
 i = 1
 
 
-def create_dash_app(flask_app):
+def create_dash_micro(flask_app):
+    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
+    dash_app1.layout = html.Div('This is a test')
+
+    return dash_app1
+
+def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
         html.Div([
@@ -48,8 +54,11 @@ def create_dash_app(flask_app):
     return dash_app
 
 
-dash_app = create_dash_app(flask_app=app)
-dash_app.scripts.config.serve_locally = True
+dash_app_macro = create_dash_macro(flask_app=app)
+dash_app_macro.scripts.config.serve_locally = True
+
+dash_app_micro = create_dash_micro(flask_app=app)
+dash_app_micro.scripts.config.serve_locally = True
 
 curve_nums = {
     0: 'scan_num',
@@ -75,7 +84,7 @@ flow_y = {
 }
 
 
-@dash_app.callback(
+@dash_app_macro.callback(
     Output(component_id='secondary_graph_flow', component_property='figure'),
     Input(component_id='yaxis-column', component_property='value'),
     Input(component_id='main_graph_line', component_property='hoverData'),
@@ -100,7 +109,7 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     return fig
 
 
-@dash_app.callback(
+@dash_app_macro.callback(
     Output(component_id='total_value', component_property='children'),
     Output(component_id='secondary_graph_pie', component_property='figure'),
     Input(component_id='main_graph_line', component_property='hoverData'),
@@ -152,126 +161,15 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
 @app.route('/macro', strict_slashes=False, methods=["GET"])
 def macro():
 
-    dash_ht = dash_app.index()
-
-    return render_template('macro.html', dash_html=dash_ht)
+    dash_macro = dash_app_macro.index()
+    return render_template('macro.html', dash_html=dash_macro)
 
 
 @app.route('/micro', strict_slashes=False)
 def micro():
-    #vis_html = None
-    net = Network(filter_menu=True, select_menu=True)
-    srcIPs = []
-    destIPs = []
-    classifications = []
-    descriptions = []
-    def getDescription(splitString, index):
-        description = ""
-        for i in range(len(splitString)):
-            currentWord = splitString[index]
-            while(currentWord[-1] != ']'):
-                description = "{} ".format(currentWord) + description
-                index -= 1
-                currentWord = splitString[index]
-            print("Final description: " + description)
-            return(description)
 
-    alerts = open(sys.argv[1], 'r')
-    counter = 0
-    for line in alerts:
-        print(line)
-        splitString = line.split(" ")
-        print(splitString)
-        destIP = ""
-        srcIP = "" 
-        classification = ""
-        priority = 0
-        color = ""
-        #loop through each line and extract the valuable info
-        for i in range(len(splitString)):
-            #get the src and dest IPs
-            if(splitString[i] == '{TCP}' or splitString[i] == '{UDP}' or splitString[i] == '{ICMP}'):
-                srcIPandPort = splitString[i+1]
-                srcIPandPort = srcIPandPort.split(":")
-                srcIP = srcIPandPort[0]
-
-                if(len(srcIPandPort) > 1):
-                    srcPort = srcIPandPort[1]
-                #if the length is equal to 1, there is no port number specified in the alert
-                else:
-                    srcPort = ''
-
-                destIPandPort = splitString[i+3]
-                destIPandPort = destIPandPort.split(":")
-                destIP = destIPandPort[0]
-                
-                if(len(destIPandPort) > 1):
-                    destPort = destIPandPort[1]
-                else:
-                    destPort = ''
-
-                #print("Source IP: " + srcIP)
-                #print("Source port: " + srcPort)
-                #print("Dest IP: " + destIP)
-                #print("Dest port: " + destPort)
-            j = i
-            #get the alert classification
-            if(splitString[i] == "[Classification:"):
-                j += 1
-                currentWord = splitString[j]
-                while(currentWord[-1] != "]"):
-                    #print("Current word: " + currentWord)
-                    classification += currentWord + " " 
-                    j += 1
-                    currentWord = splitString[j]
-                classification += currentWord[:-1]
-                description = getDescription(splitString, i-2)
-            #get the priority of the alert
-            if(splitString[i] == "[Priority:"):
-                priority = splitString[i+1][:-1]
-        #set the color of the node based on the priority
-        if(priority == '1'):
-            color = 'red'
-        elif(priority == '2'):
-            color = 'orange'
-        else:
-            color = 'blue'
-        #add src node and dest node to the network and draw an edge between them
-        if(destPort == ''):
-            print("Port not specified")
-        #only create the node if the destination port is common
-        elif(int(destPort) < 1024):
-            print("Port is common: " + str(destPort))
-            net.add_node(srcIP + ":" + srcPort, label="Src: " + srcIP + ":" + srcPort, title=classification + ": " + description, color=color)
-            net.add_node(destIP, label="Dest: " + destIP, title="Dest IP")
-            net.add_edge(srcIP + ":" + srcPort, destIP, label=destPort)
-            #add the info to the lists for the text visualization
-            srcIPs.append(srcIP)
-            destIPs.append(destIP)
-            descriptions.append(description)
-            classifications.append(classification)
-        else:
-            print("Port is not common: " + str(destPort))
-            
-    #create the network HTML file
-
-    #This line is used to customize the physics
-    #net.show_buttons(filter_=['physics'])
-
-    #net.save_graph("testAttackPort.html")
-
-    print("Printing generate html")
-    print(net.generate_html())
-
-    with open("testAttackPort.html") as inf:
-        txt = inf.read()
-        soup = BeautifulSoup(txt, 'html.parser')
-    soup.body.decompose()
-    print(soup.prettify())
-    vis_html = soup.prettify()
-
-
-    return render_template('micro.html', vis_html=vis_html)
+    dash_micro = dash_app_micro.index()
+    return render_template('micro.html', vis_html=dash_micro)
 
 
 @app.route('/about', strict_slashes=False)

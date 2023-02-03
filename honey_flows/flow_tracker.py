@@ -1,14 +1,13 @@
 import datetime as dt
 import time
-import csv
 
 from scapy.layers.inet import IP
 from scapy.packet import Packet
-from scapy.sendrecv import sniff, AsyncSniffer
+from scapy.sendrecv import AsyncSniffer
 from scapy.sessions import IPSession
 
 from flow import Flow
-from flow_handler import create_flow_entry, update_flow_entry, flow_cleanup
+from flow_handler import create_flow_entry, update_flow_entry
 
 
 class FlowTracker:
