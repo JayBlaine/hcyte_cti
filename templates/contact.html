@@ -5,7 +5,7 @@
 {% block content %}
     <h2>Interested? Contact us!</h2>
     <p> Are you interested in H-CyTE? Please fill out the form below and we'll be in contact shortly.</p>
-    <form method="POST" action="/submit">
+    <form method="POST" action={{ url_for('contact') }}>
         {{ form.csrf_token }}
     <div>
         <div id="block_container">
@@ -96,6 +96,14 @@
         {% if form.interest.errors %}
             <ul class="errors">
                 {% for error in form.interest.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    {% if form.recaptcha.errors %}
+            <ul class="errors">
+                {% for error in form.recaptcha.errors %}
                     <li>{{ error }}</li>
                 {% endfor %}
             </ul>

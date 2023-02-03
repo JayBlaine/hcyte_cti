@@ -21,6 +21,8 @@ app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
 app.config['RECAPTCHA_USE_SSL']= False
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
+
 app.config['RECAPTCHA_SITE_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'  # <-- Add your site key
 app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'  # <-- Add your secret key
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
@@ -193,22 +195,20 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact', strict_slashes=False, methods=["GET"])
+@app.route('/contact', strict_slashes=False, methods=["GET", "POST"])
 def contact():
     form = EmailForm()
-    if form.validate_on_submit():
-        return redirect(url_for('/submit'))
+    if request.method == 'POST' and form.validate_on_submit():
+        test = request.form.getlist('interest')
+        # EMAIL HERE
+        print(test)
+        return redirect(url_for('submit'))
     return render_template('contact.html', form=form)
 
 
-@app.route('/submit', methods=["GET", "POST"])
+@app.route('/submit', methods=["GET"])
 def submit():
-    message = ''
-    if request.method == 'POST':
-        test = request.form.getlist('interest')
-        print(test)
-    print('test321')
-    return render_template('submit.html', message=message)
+    return render_template('submit.html')
 
 
 if __name__ == '__main__':
