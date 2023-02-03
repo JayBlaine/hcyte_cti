@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 from dash import Dash, html, dcc, Output, Input
+from honey_flows import flow_tracker
 
 df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
@@ -10,7 +11,11 @@ df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 #df['date'] = pd.to_datetime(df['date'])
 app = Flask(__name__)
-i = 1
+
+# TODO: argfile???
+# reading from /mnt/captures/snort_internal/alert
+t = flow_tracker.FlowTracker(iface='eno1', stop=60, timeout=86400)
+#t.sniffer.start()
 
 
 def create_dash_micro(flask_app):
