@@ -13,7 +13,13 @@ app = Flask(__name__)
 i = 1
 
 
-def create_dash_app(flask_app):
+def create_dash_micro(flask_app):
+    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
+    dash_app1.layout = html.Div('This is a test')
+
+    return dash_app1
+
+def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
         html.Div([
@@ -45,8 +51,11 @@ def create_dash_app(flask_app):
     return dash_app
 
 
-dash_app = create_dash_app(flask_app=app)
-dash_app.scripts.config.serve_locally = True
+dash_app_macro = create_dash_macro(flask_app=app)
+dash_app_macro.scripts.config.serve_locally = True
+
+dash_app_micro = create_dash_micro(flask_app=app)
+dash_app_micro.scripts.config.serve_locally = True
 
 curve_nums = {
     0: 'scan_num',
@@ -72,7 +81,7 @@ flow_y = {
 }
 
 
-@dash_app.callback(
+@dash_app_macro.callback(
     Output(component_id='secondary_graph_flow', component_property='figure'),
     Input(component_id='yaxis-column', component_property='value'),
     Input(component_id='main_graph_line', component_property='hoverData'),
@@ -97,7 +106,7 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     return fig
 
 
-@dash_app.callback(
+@dash_app_macro.callback(
     Output(component_id='total_value', component_property='children'),
     Output(component_id='secondary_graph_pie', component_property='figure'),
     Input(component_id='main_graph_line', component_property='hoverData'),
@@ -149,16 +158,15 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
 @app.route('/macro', strict_slashes=False, methods=["GET"])
 def macro():
 
-    dash_ht = dash_app.index()
-
-    return render_template('macro.html', dash_html=dash_ht)
+    dash_macro = dash_app_macro.index()
+    return render_template('macro.html', dash_html=dash_macro)
 
 
 @app.route('/micro', strict_slashes=False)
 def micro():
 
-    vis_html = None
-    return render_template('micro.html', vis_html=vis_html)
+    dash_micro = dash_app_micro.index()
+    return render_template('micro.html', vis_html=dash_micro)
 
 
 @app.route('/about', strict_slashes=False)
