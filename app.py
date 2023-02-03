@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+import datetime as dt
+
+from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
 from bs4 import BeautifulSoup
@@ -6,6 +8,8 @@ import sys
 from pyvis.network import Network
 
 from dash import Dash, html, dcc, Output, Input
+
+from forms import EmailForm
 from honey_flows import flow_tracker
 import visdcc
 from honey_flows import flow
@@ -17,6 +21,15 @@ df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 #df['date'] = pd.to_datetime(df['date'])
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
+
+app.config['RECAPTCHA_USE_SSL']= False
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
+
+app.config['RECAPTCHA_SITE_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'  # <-- Add your site key
+app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'  # <-- Add your secret key
+# TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
 # TODO: argfile???
 # reading from /mnt/captures/snort_internal/alert
@@ -230,9 +243,33 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact', strict_slashes=False, methods=["GET"])
+@app.route('/contact', strict_slashes=False, methods=["GET", "POST"])
 def contact():
-    return render_template('contact.html')
+    form = EmailForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        interests = request.form.getlist('interest')
+        data_contact = {
+            'date': dt.date.today(),
+            'firstname': request.form.get('first_name'),
+            'lastname': request.form.get('last_name'),
+            'email': request.form.get('email'),
+            'org': request.form.get('org'),
+            'more_info': 1 if 'More Information' in interests else 0,
+            'data_sharing': 1 if 'Data Sharing' in interests else 0,
+            'collaboration': 1 if 'Collaboration' in interests else 0,
+            'contacted': 0
+        }
+        df_contact = pd.DataFrame(data_contact, index=[0])
+        df_contact.to_csv('static/contact_list.csv', mode='a', index=False, header=False)
+        # EMAIL HERE
+
+        return redirect(url_for('submit'))
+    return render_template('contact.html', form=form)
+
+
+@app.route('/submit', methods=["GET"])
+def submit():
+    return render_template('submit.html')
 
 
 if __name__ == '__main__':
