@@ -1,3 +1,5 @@
+import datetime as dt
+
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
@@ -7,7 +9,6 @@ from pyvis.network import Network
 
 from dash import Dash, html, dcc, Output, Input
 
-from flask_recaptcha import ReCaptcha
 from forms import EmailForm
 from honey_flows import flow_tracker
 
@@ -199,9 +200,22 @@ def about():
 def contact():
     form = EmailForm()
     if request.method == 'POST' and form.validate_on_submit():
-        test = request.form.getlist('interest')
+        interests = request.form.getlist('interest')
+        data_contact = {
+            'date': dt.date.today(),
+            'firstname': request.form.get('first_name'),
+            'lastname': request.form.get('last_name'),
+            'email': request.form.get('email'),
+            'org': request.form.get('org'),
+            'more_info': 1 if 'More Information' in interests else 0,
+            'data_sharing': 1 if 'Data Sharing' in interests else 0,
+            'collaboration': 1 if 'Collaboration' in interests else 0,
+            'contacted': 0
+        }
+        df_contact = pd.DataFrame(data_contact, index=[0])
+        df_contact.to_csv('static/contact_list.csv', mode='a', index=False, header=False)
         # EMAIL HERE
-        print(test)
+
         return redirect(url_for('submit'))
     return render_template('contact.html', form=form)
 
