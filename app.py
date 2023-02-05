@@ -15,6 +15,7 @@ import visdcc
 from honey_flows import flow
 from honey_flows import t_flows
 
+
 df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
@@ -73,16 +74,21 @@ def create_dash_micro(flask_app):
     destIP_set = set(destIPs)
     uniqueDestIPs = (list(destIP_set))
 
-    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10} for IP in uniqueSrcIPs]
+    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'title': "Test title"} for IP in uniqueSrcIPs]
     for IP in uniqueDestIPs:
         if(IP not in uniqueSrcIPs):
-            nodes.append({'id': IP, 'label': "dest: " + IP, 'shape': 'dot', 'size': 10})
+            nodes.append({'id': IP, 'label': "dest: " + IP, 'title': "Test title", 'shape': 'dot', 'size': 10})
 
-    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/')
+    external_stylesheets = [
+    'https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css',]
+    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/', external_stylesheets=external_stylesheets)
     dash_app1.layout = html.Div([
         visdcc.Network(id = 'net',
         data = {'nodes': nodes, 'edges': edges},
-        options = dict(height= '600px', width= '100%'))
+        selection = {'nodes':[], 'edges':[]},
+        options = dict(height= '600px', width= '100%')),
+
+        html.Div(id = 'nodes')
     ])
 
     return dash_app1
@@ -220,6 +226,17 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     fig = px.pie(data_frame=df1, title="{} Expanded: {}".format(curve, date1), names=df_filt_dict.keys(),
                  values=df_filt_dict.values()).update_traces(hoverinfo='label+percent')
     return total, fig
+
+@dash_app_micro.callback(
+    Output('nodes', 'children'),
+    Input(component_id='net', component_property='selection'))
+def microSelectedNodes(selection=None):
+    if(len(selection['nodes']) > 0):
+        print(selection['nodes'])
+    if(len(selection['edges']) > 0):
+        print(selection['edges'])
+    #for item in selection:
+    #    print(item)
 
 
 @app.route('/', strict_slashes=False, methods=["GET"])
