@@ -3,6 +3,7 @@ import datetime as dt
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
+import re
 from bs4 import BeautifulSoup
 import sys
 from pyvis.network import Network
@@ -73,7 +74,12 @@ def create_dash_micro(flask_app):
             'to': destIP,
             'label': destPort,
             'width': 2,
-            'title': "edge test"
+            'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
+                key,
+                t_flows.test_flows[key].ip_pkt_tot_num,
+                t_flows.test_flows[key].ip_pkt_tot_len,
+                t_flows.test_flows[key].ip_all_flow_duration,
+                t_flows.test_flows[key].flow_alert)
             }
         if new_edge not in edges:
             edges.append(new_edge)
@@ -85,7 +91,7 @@ def create_dash_micro(flask_app):
     destIP_set = set(destIPs)
     uniqueDestIPs = (list(destIP_set))
 
-    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'title': "Test title", 'color': 'purple'} for IP in uniqueSrcIPs]
+    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'color': 'purple', 'title': "{}<br>number of flows = {}".format(IP, len(re.findall(IP+':', ''.join(list(t_flows.test_flows.keys())))))} for IP in uniqueSrcIPs]
     for IP in uniqueDestIPs:
         if(IP not in uniqueSrcIPs):
             nodes.append({'id': IP, 'label': "dest: " + IP, 'title': "Test title", 'shape': 'dot', 'size': 10, 'color': 'green'})
