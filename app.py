@@ -36,6 +36,7 @@ app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3' 
 # reading from /mnt/captures/snort_internal/alert
 t = flow_tracker.FlowTracker(iface='eno1', stop=86400, timeout=60)
 #t.sniffer.start()
+flow_dict = {}
 
 
 def create_dash_micro(flask_app):
@@ -43,7 +44,12 @@ def create_dash_micro(flask_app):
     srcIPs = []
     destIPs = []
     edges = []
+    
+    #print("Printing dictioanry")
+    #print(t_flows.test_flows)
+    
     for key in t_flows.test_flows.keys():
+        #print("Key: " + str(key))
         #print(key)
         IPandPort = key.split(" ")
         #print("src: " + IPandPort[0] + "\tdest: " + IPandPort[1])
@@ -62,23 +68,26 @@ def create_dash_micro(flask_app):
         destIPs.append(destIP)
         # jarrod: Maybe add port in id so we can get flow info from dict based on edge id
         new_edge = {
-            'id': srcIP + "__" + destIP,
+            'id': IPandPort[0] + "__" + IPandPort[1],
             'from': srcIP,
             'to': destIP,
+            'label': destPort,
             'width': 2
             }
         if new_edge not in edges:
             edges.append(new_edge)
+            flow_dict[IPandPort[0] + "__" + IPandPort[1]] = t_flows.test_flows[key]
+        #print(t_flows.test_flows[key])
     
     srcIP_set = set(srcIPs)
     uniqueSrcIPs = (list(srcIP_set))
     destIP_set = set(destIPs)
     uniqueDestIPs = (list(destIP_set))
 
-    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'title': "Test title"} for IP in uniqueSrcIPs]
+    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'title': "Test title", 'color': 'purple'} for IP in uniqueSrcIPs]
     for IP in uniqueDestIPs:
         if(IP not in uniqueSrcIPs):
-            nodes.append({'id': IP, 'label': "dest: " + IP, 'title': "Test title", 'shape': 'dot', 'size': 10})
+            nodes.append({'id': IP, 'label': "dest: " + IP, 'title': "Test title", 'shape': 'dot', 'size': 10, 'color': 'green'})
 
     external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css',]
@@ -232,12 +241,13 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     Output('nodes', 'children'),
     Input(component_id='net', component_property='selection'))
 def microSelectedNodes(selection=None):
-    if(len(selection['nodes']) > 0):
-        print(selection['nodes'])
-    if(len(selection['edges']) > 0):
+    #Check if an edge has been clicked (if a node is clicked, all the connected edges will be returned)
+    if(len(selection['nodes']) == 0 and len(selection['edges']) > 0):
         print(selection['edges'])
-    #for item in selection:
-    #    print(item)
+        #get the dictionary entry of the clicked edge
+        flow = flow_dict[selection['edges'][0]]
+        print(flow)
+        print("Duration of flow: " + str(flow.ip_all_flow_duration))
 
 
 @app.route('/', strict_slashes=False, methods=["GET"])
