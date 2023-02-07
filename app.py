@@ -72,7 +72,8 @@ def create_dash_micro(flask_app):
             'from': srcIP,
             'to': destIP,
             'label': destPort,
-            'width': 2
+            'width': 2,
+            'title': "edge test"
             }
         if new_edge not in edges:
             edges.append(new_edge)
