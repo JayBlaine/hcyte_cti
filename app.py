@@ -69,7 +69,7 @@ def create_dash_micro(flask_app):
 
         srcIPs.append(srcIP)
         destIPs.append(destIP)
-        # jarrod: Maybe add port in id so we can get flow info from dict based on edge id
+        # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
         new_edge = {
             'id': IPandPort[0] + "__" + IPandPort[1],
             'from': srcIP,
