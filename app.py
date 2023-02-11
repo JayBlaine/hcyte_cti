@@ -15,6 +15,7 @@ from honey_flows import flow_tracker
 import visdcc
 from honey_flows import flow
 from honey_flows import t_flows
+from netaddr import IPNetwork
 
 
 df = pd.read_csv('static/website_data.csv')
@@ -38,7 +39,8 @@ app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3' 
 t = flow_tracker.FlowTracker(iface='eno1', stop=86400, timeout=60)
 #t.sniffer.start()
 flow_dict = {}
-
+home_net = IPNetwork("192.168.50.0/24")
+broadcast_net = IPNetwork("224.0.0.0/4")
 
 def create_dash_micro(flask_app):
     #create visdcc thing here
