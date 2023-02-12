@@ -410,6 +410,7 @@ def alert_follow():
 
 def build_app():
     try:
+        global app
         app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
         app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
