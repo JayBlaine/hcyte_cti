@@ -60,7 +60,6 @@ def alert_follow():
                 continue
 
 
-app = None
 def build_app():
     try:
         global app
@@ -72,6 +71,8 @@ def build_app():
     except KeyboardInterrupt:
         print('exiting')
         # flow_sniffer.sniffer.stop()
+
+app = build_app()
 
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
