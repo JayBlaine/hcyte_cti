@@ -1,4 +1,5 @@
 import datetime as dt
+import os
 import threading
 import time
 import re
@@ -68,22 +69,13 @@ home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
 
 
-def build_app():
-    try:
-        app = Flask(__name__)
-
-        # flow_sniffer.sniffer.start()
-        # follow_thread.start()
-        #app.run(port=80, debug=False)
-        return app
-    except KeyboardInterrupt:
-        print('exiting')
-        # flow_sniffer.sniffer.stop()
-
 #app = build_app()
 
+#df = pd.read_csv('static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
+#df_flows = pd.read_csv('static/website_flow_data.csv')
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
+
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 
