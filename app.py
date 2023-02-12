@@ -21,12 +21,6 @@ df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 
 app = Flask(__name__)
-app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
-app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
-
-app.config['RECAPTCHA_USE_SSL'] = False
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
@@ -416,6 +410,12 @@ def alert_follow():
 
 def build_app():
     try:
+        app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
+        app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
+
+        app.config['RECAPTCHA_USE_SSL'] = False
+        app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+        app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
         # flow_sniffer.sniffer.start()
         follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
         # follow_thread.start()
