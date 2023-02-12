@@ -15,7 +15,7 @@ from webApp import forms
 from webApp import flow_tracker
 from webApp import t_flows
 
-app = Flask(__name__)
+
 app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
 app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
