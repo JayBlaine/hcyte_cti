@@ -24,15 +24,17 @@ app.config['RECAPTCHA_USE_SSL'] = False
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 # flow_sniffer.sniffer.start()
-follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
 
+
+app = None
 def build_app():
     try:
         global app
         app = Flask(__name__)
-
+        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
         # follow_thread.start()
         #app.run(port=80, debug=False)
+        return app
     except KeyboardInterrupt:
         print('exiting')
         # flow_sniffer.sniffer.stop()
