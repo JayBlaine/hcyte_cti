@@ -17,14 +17,13 @@ class FlowTracker:
     interface: str
     timeout: int = 60
 
-    def __init__(self, iface: str, flows: dict = None, timeout: int = None, stop: int = 90):
+    def __init__(self, iface: str, flows: dict = None, timeout: int = None):
         """
         Main handler for tracking flows from live capture
 
         :param iface: Interface to listen on
         :param flows: Dictionary of active flows
         :param timeout: Int for how long after a packet to call a flow inactive
-        :param stop: Int for how long the sniffer is active
         """
         if flows is not None:
             self.flows = flows
@@ -35,7 +34,7 @@ class FlowTracker:
 
         self.sniffer = AsyncSniffer(iface=self.interface, session=IPSession,
                                     prn=prn_scapy(flows=self.flows, timeout=self.timeout),
-                                    filter='ip and (tcp or udp) and (net 64.183.181.215 or net 192.168.50.0/24)', timeout=stop)
+                                    filter='ip and (tcp or udp) and (net 64.183.181.215 or net 192.168.50.0/24)')
 
 
 def prn_scapy(flows: dict, timeout: int):

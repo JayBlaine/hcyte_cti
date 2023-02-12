@@ -4,9 +4,7 @@ from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
 import re
-from bs4 import BeautifulSoup
-import sys
-from pyvis.network import Network
+import copy
 
 from dash import Dash, html, dcc, Output, Input
 
@@ -16,101 +14,186 @@ import visdcc
 from honey_flows import flow
 from honey_flows import t_flows
 from netaddr import IPNetwork
-
+from flask import session
 
 df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
-#df['date'] = pd.to_datetime(df['date'])
 app = Flask(__name__)
+app.config['SESSION_COOKIE_SAMESITE'] = "None"
+app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
 app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
-app.config['RECAPTCHA_USE_SSL']= False
+app.config['RECAPTCHA_USE_SSL'] = False
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 
-app.config['RECAPTCHA_SITE_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'  # <-- Add your site key
-app.config['RECAPTCHA_SECRET_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'  # <-- Add your secret key
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
-# TODO: argfile???
 # reading from /mnt/captures/snort_internal/alert
-t = flow_tracker.FlowTracker(iface='eno1', stop=86400, timeout=60)
-#t.sniffer.start()
-flow_dict = {}
+t = flow_tracker.FlowTracker(iface='eno1', timeout=60)
+visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
 
+
+def get_anonymized_label(addr: str):
+    addr_type = 1  # 1 = outside home sub, 2 = insdie home/net, 3 = broad/multicast
+    if addr in home_net:
+        addr_type = 2
+    elif addr in broadcast_net:
+        addr_type = 3
+
+    if addr not in home_net and addr not in broadcast_net:
+        IP_label_split = addr.split('.')
+        for i in range(len(IP_label_split)):
+            IP_label_split[i] = IP_label_split[i][:-1] + 'X'
+        IP_label = '.'.join(IP_label_split)
+    else:
+        IP_label = addr
+    return IP_label, addr_type
+
+
+micro_node_color_code = {
+    1: 'yellow',
+    2: 'green',
+    3: 'purple',
+    4: 'red',
+    5: 'red'
+}
+
+
 def create_dash_micro(flask_app):
-    #create visdcc thing here
+    external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
+    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
+                     external_stylesheets=external_stylesheets)
+
+    dash_app1.layout = html.Div([html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
+                                                        value=['live'])),
+                                 html.Div(dcc.Checklist(id='vis_filter', options=
+                                 [{'label': 'Internal', 'value': 'internal'},
+                                  {'label': 'External', 'value': 'external'},
+                                  {'label': 'Multi/Broadcast', 'value': 'multi'},
+                                  {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
+                                  {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
+                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
+                                 visdcc.Network(id='net',
+                                                options=dict(height='600px', width='100%')),
+
+                                 dcc.Interval(
+                                     id='interval_component',
+                                     interval=5 * 1000,  # in milliseconds
+                                     n_intervals=0
+                                 ), html.Div(id='hidden_div', style={'display': 'none'})])
+
+    return dash_app1
+
+
+dash_app_micro = create_dash_micro(flask_app=app)
+dash_app_micro.scripts.config.serve_locally = True
+
+
+@dash_app_micro.callback(
+    Output(component_id='net', component_property='data'),
+    Input(component_id='interval_component', component_property='n_intervals'),
+    Input(component_id='live_check', component_property='value'),
+    Input(component_id='vis_filter', component_property='value')
+)
+def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
+    # create visdcc thing here
     srcIPs = []
     destIPs = []
     edges = []
-    
-    #print("Printing dictioanry")
-    #print(t_flows.test_flows)
-    
-    for key in t_flows.test_flows.keys():
-        #print("Key: " + str(key))
-        #print(key)
+    nodes = []
+
+    # switches match with codes returned from anon checks for addr type
+    external_switch = 1 if 'external' in vis_filter else 0
+    internal_switch = 2 if 'internal' in vis_filter else 0
+    multi_switch = 3 if 'multi' in vis_filter else 0
+    int_sus_switch = 4 if 'internal_suspicious' in vis_filter else 0
+    ext_sus_switch = 5 if 'external_suspicious' in vis_filter else 0
+    vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
+    global visdcc_display_dict
+    if live_check or n_intervals == 0:  # init build or update with live flows
+        visdcc_display_dict = copy.deepcopy(t_flows.test_flows)  # change to sniffer dict when live
+
+    # TODO: Change from full rebuild to something more efficient
+    for key in visdcc_display_dict.keys():  # edges
         IPandPort = key.split(" ")
-        #print("src: " + IPandPort[0] + "\tdest: " + IPandPort[1])
-        
+
         srcIPandPort = IPandPort[0].split(":")
         srcIP = srcIPandPort[0]
         srcPort = srcIPandPort[1]
-        #print("srcIP: " + srcIP + "\tsrcPort: " + srcPort)
-        
+
         destIPandPort = IPandPort[1].split(":")
         destIP = destIPandPort[0]
         destPort = destIPandPort[1]
-        #print("destIP: " + destIP + "\tdestPort: " + destPort)
 
         srcIPs.append(srcIP)
         destIPs.append(destIP)
+        destIP_label, destIP_type = get_anonymized_label(destIP)
+        srcIP_label, srcIP_type = get_anonymized_label(srcIP)  # TODO: CLEAN UP AND REMOVE REDUNDANT
+
+
+        """
+        if visdcc_display_dict[key].label == 1:  # set type to correct maliciousness
+            if srcIP in home_net:
+                srcIP_type = 4
+            else:
+                srcIP_type = 5
+            if destIP in home_net:
+                destIP_type = 4
+            else:
+                destIP_type = 5
+        """
+
+
         # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
         new_edge = {
             'id': IPandPort[0] + "__" + IPandPort[1],
             'from': srcIP,
             'to': destIP,
-            'label': destPort,
+            'label': '{}'.format(destPort),
             'width': 2,
             'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
-                key,
-                t_flows.test_flows[key].ip_pkt_tot_num,
-                t_flows.test_flows[key].ip_pkt_tot_len,
-                t_flows.test_flows[key].ip_all_flow_duration,
-                t_flows.test_flows[key].flow_alert)
-            }
+                '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
+                visdcc_display_dict[key].ip_pkt_tot_num,
+                visdcc_display_dict[key].ip_pkt_tot_len,
+                visdcc_display_dict[key].ip_all_flow_duration,
+                visdcc_display_dict[key].flow_alert)
+        }
         if new_edge not in edges:
-            edges.append(new_edge)
-            flow_dict[IPandPort[0] + "__" + IPandPort[1]] = t_flows.test_flows[key]
-        #print(t_flows.test_flows[key])
-    
-    srcIP_set = set(srcIPs)
-    uniqueSrcIPs = (list(srcIP_set))
-    destIP_set = set(destIPs)
-    uniqueDestIPs = (list(destIP_set))
+            if srcIP_type in vis_switches or destIP_type in vis_switches:
+                edges.append(new_edge)
 
-    nodes = [{'id': IP, 'label': "src: " + IP, 'shape': 'dot', 'size': 10, 'color': 'purple', 'title': "{}<br>number of flows = {}".format(IP, len(re.findall(IP+':', ''.join(list(t_flows.test_flows.keys())))))} for IP in uniqueSrcIPs]
-    for IP in uniqueDestIPs:
-        if(IP not in uniqueSrcIPs):
-            nodes.append({'id': IP, 'label': "dest: " + IP, 'title': "Test title", 'shape': 'dot', 'size': 10, 'color': 'green'})
+    ip_all = set(srcIPs + destIPs)
 
-    external_stylesheets = [
-    'https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css',]
-    dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/', external_stylesheets=external_stylesheets)
-    dash_app1.layout = html.Div([
-        visdcc.Network(id = 'net',
-        data = {'nodes': nodes, 'edges': edges},
-        selection = {'nodes':[], 'edges':[]},
-        options = dict(height= '600px', width= '100%')),
+    for ip in ip_all:  # nodes
+        ip_label, ip_type = get_anonymized_label(ip)
+        num_malicious = 0
+        for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
+            if ip not in broadcast_net and visdcc_display_dict[key].label == 1 and ip+':' in key:
+                # colon to prevent partial match on last digit i.e 4 and 46
+                num_malicious += 1
+                if ip in home_net:
+                    ip_type = 4
+                else:
+                    ip_type = 5
+        new_node = {
+            'id': ip,
+            'label': ip_label,
+            'shape': 'dot', 'size': 10, 'color': micro_node_color_code[ip_type],
 
-        html.Div(id = 'nodes')
-    ])
+            'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip, len(re.findall(ip + ':', ''.join(
+                list(visdcc_display_dict.keys())))), num_malicious)}  # replace with live capturer
+        if new_node not in nodes:
+            if ip_type in vis_switches:
+                nodes.append(new_node)
 
-    return dash_app1
+    data = {'nodes': nodes, 'edges': edges}
+    return data
+
 
 def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
@@ -118,7 +201,8 @@ def create_dash_macro(flask_app):
         html.Div([
             dcc.Graph(
                 id='main_graph_line',
-                figure=px.line(df, x='date', y=df.columns.values.tolist()[1:6], title='H-CyTE Stuff')  # TODO: FIX FROM HARD CODE COL CALL
+                figure=px.line(df, x='date', y=df.columns.values.tolist()[1:6],
+                               title='H-CyTE Stuff')  # TODO: FIX FROM HARD CODE COL CALL
                     .update_xaxes(rangeslider_visible=True)
                     .update_layout(width=1200, height=400, clickmode='event+select').update_traces(marker_size=20),
                 style={
@@ -129,14 +213,17 @@ def create_dash_macro(flask_app):
                     "padding-left": "1px",
                 }
             ),
-            html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}), html.Div(id='total_value', style={'display': 'inline-block'}),
+            html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
+                      html.Div(id='total_value', style={'display': 'inline-block'}),
                       html.Div(dcc.Dropdown(
                           df_flows_drop,
                           'num_flows',
                           id='yaxis-column'), style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
                       ], style={'margin-bottom': '20px'}),
-            html.Div([html.Div(dcc.Graph(id='secondary_graph_pie'), style={'width': '50%', 'display': 'inline-block'}),
-                      html.Div(dcc.Graph(id='secondary_graph_flow'), style={'width': '50%', 'display': 'inline-block'})]),
+            html.Div([html.Div(dcc.Graph(id='secondary_graph_pie'),
+                               style={'width': '50%', 'display': 'inline-block'}),
+                      html.Div(dcc.Graph(id='secondary_graph_flow'),
+                               style={'width': '50%', 'display': 'inline-block'})]),
 
         ])
 
@@ -146,9 +233,6 @@ def create_dash_macro(flask_app):
 
 dash_app_macro = create_dash_macro(flask_app=app)
 dash_app_macro.scripts.config.serve_locally = True
-
-dash_app_micro = create_dash_micro(flask_app=app)
-dash_app_micro.scripts.config.serve_locally = True
 
 curve_nums = {
     0: 'scan_num',
@@ -195,7 +279,8 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     y_name = flow_y[curve] + yaxis_column_name
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
-                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(rangeslider_visible=True)
+                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
+        rangeslider_visible=True)
     return fig
 
 
@@ -224,7 +309,8 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     if curve != 'all_alerts':
         curve_regex = '^{}_'.format(curve.split('_')[0])
         # If not all, can apply strict regex based on first word. Otherwise, need to be more casual (but still get rud of flow stuff when added)
-        curve_columns = df1.filter(regex=curve_regex, axis=1).columns.tolist()  # regex for first word as id as enumerated in curve_nums
+        curve_columns = df1.filter(regex=curve_regex,
+                                   axis=1).columns.tolist()  # regex for first word as id as enumerated in curve_nums
         total = df1[curve_columns[0]]  # Will be first one since line columns are first in df
         subtotals = curve_columns[1:]  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
     else:
@@ -246,31 +332,16 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
                  values=df_filt_dict.values()).update_traces(hoverinfo='label+percent')
     return total, fig
 
-@dash_app_micro.callback(
-    Output('nodes', 'children'),
-    Input(component_id='net', component_property='selection'))
-def microSelectedNodes(selection=None):
-    #Check if an edge has been clicked (if a node is clicked, all the connected edges will be returned)
-    if(len(selection['nodes']) == 0 and len(selection['edges']) > 0):
-        print(selection['edges'])
-        #get the dictionary entry of the clicked edge
-        flow = flow_dict[selection['edges'][0]]
-        print(flow)
-        print("Duration of flow: " + str(flow.ip_all_flow_duration))
-
 
 @app.route('/', strict_slashes=False, methods=["GET"])
 @app.route('/macro', strict_slashes=False, methods=["GET"])
 def macro():
-
     dash_macro = dash_app_macro.index()
     return render_template('macro.html', dash_html=dash_macro)
 
 
 @app.route('/micro', strict_slashes=False)
 def micro():
-    #print("In micro")
-    #print(test_flows)
     dash_micro = dash_app_micro.index()
     return render_template('micro.html', vis_html=dash_micro)
 
@@ -310,4 +381,9 @@ def submit():
 
 
 if __name__ == '__main__':
-    app.run(port=80)
+    try:
+        # t.sniffer.start()
+        app.run(debug=True)
+    except KeyboardInterrupt:
+        print('exiting')
+        # t.sniffer.stop()
