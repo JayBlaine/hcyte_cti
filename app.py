@@ -16,12 +16,12 @@ from webApp import flow_tracker
 from webApp import t_flows
 
 
-app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
-app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
+application.config['SESSION_COOKIE_SAMESITE'] = "Secure"
+application.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
-app.config['RECAPTCHA_USE_SSL'] = False
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
+application.config['RECAPTCHA_USE_SSL'] = False
+application.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+application.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 # flow_sniffer.sniffer.start()
 
 
@@ -144,7 +144,7 @@ def create_dash_micro(flask_app):
     return dash_app1
 
 
-dash_app_micro = create_dash_micro(flask_app=app)
+dash_app_micro = create_dash_micro(flask_app=application)
 dash_app_micro.scripts.config.serve_locally = True
 
 
@@ -285,7 +285,7 @@ def create_dash_macro(flask_app):
     return dash_app
 
 
-dash_app_macro = create_dash_macro(flask_app=app)
+dash_app_macro = create_dash_macro(flask_app=application)
 dash_app_macro.scripts.config.serve_locally = True
 
 curve_nums = {
@@ -387,25 +387,25 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     return total, fig
 
 
-@app.route('/', strict_slashes=False, methods=["GET"])
-@app.route('/macro', strict_slashes=False, methods=["GET"])
+@application.route('/', strict_slashes=False, methods=["GET"])
+@application.route('/macro', strict_slashes=False, methods=["GET"])
 def macro():
     dash_macro = dash_app_macro.index()
     return render_template('macro.html', dash_html=dash_macro)
 
 
-@app.route('/micro', strict_slashes=False)
+@application.route('/micro', strict_slashes=False)
 def micro():
     dash_micro = dash_app_micro.index()
     return render_template('micro.html', vis_html=dash_micro)
 
 
-@app.route('/about', strict_slashes=False)
+@application.route('/about', strict_slashes=False)
 def about():
     return render_template('about.html')
 
 
-@app.route('/contact', strict_slashes=False, methods=["GET", "POST"])
+@application.route('/contact', strict_slashes=False, methods=["GET", "POST"])
 def contact():
     form = forms.EmailForm()
     if request.method == 'POST' and form.validate_on_submit():
@@ -429,7 +429,7 @@ def contact():
     return render_template('contact.html', form=form)
 
 
-@app.route('/submit', methods=["GET"])
+@application.route('/submit', methods=["GET"])
 def submit():
     return render_template('submit.html')
 
