@@ -15,8 +15,8 @@ from webApp import forms
 from webApp import flow_tracker
 from webApp import t_flows
 
-df = pd.read_csv('webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
-df_flows = pd.read_csv('webApp/static/website_flow_data.csv')
+df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
+df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 
