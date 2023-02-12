@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import (StringField, BooleanField, RadioField, EmailField, SelectMultipleField, widgets)
+from wtforms import (StringField, EmailField, SelectMultipleField, widgets)
 from wtforms.validators import InputRequired, Length
-import wtforms
 
 
 class MultiCheckboxField(SelectMultipleField):
