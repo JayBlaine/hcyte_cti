@@ -60,11 +60,18 @@ def alert_follow():
                 continue
 
 
+# reading from /mnt/captures/snort_internal/alert
+flow_sniffer = flow_tracker.FlowTracker(iface='eno1', timeout=60)
+visdcc_display_dict = {}
+home_net = IPNetwork("192.168.50.0/24")
+broadcast_net = IPNetwork("224.0.0.0/4")
+
+
 def build_app():
     try:
-        global app
         app = Flask(__name__)
         follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
+        # flow_sniffer.sniffer.start()
         # follow_thread.start()
         #app.run(port=80, debug=False)
         return app
@@ -83,11 +90,6 @@ df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for 
 
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
-# reading from /mnt/captures/snort_internal/alert
-flow_sniffer = flow_tracker.FlowTracker(iface='eno1', timeout=60)
-visdcc_display_dict = {}
-home_net = IPNetwork("192.168.50.0/24")
-broadcast_net = IPNetwork("224.0.0.0/4")
 
 
 def get_anonymized_label(addr: str):
