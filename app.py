@@ -19,7 +19,7 @@ df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHAN
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
-app = None
+app = Flask(__name__)
 
 
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
@@ -410,8 +410,6 @@ def alert_follow():
 
 def build_app():
     try:
-        global app
-        app = Flask(__name__)
         app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
         app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
