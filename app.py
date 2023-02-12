@@ -11,9 +11,9 @@ from dash import Dash, html, dcc, Output, Input
 import visdcc
 from netaddr import IPNetwork
 
-import forms
-import flow_tracker
-import t_flows
+from webApp import forms
+from webApp import flow_tracker
+from webApp import t_flows
 
 df = pd.read_csv('static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('static/website_flow_data.csv')
