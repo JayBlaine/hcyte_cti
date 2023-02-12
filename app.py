@@ -15,11 +15,31 @@ from webApp import forms
 from webApp import flow_tracker
 from webApp import t_flows
 
+app = None
+
+def build_app():
+    try:
+        global app
+        app = Flask(__name__)
+        app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
+        app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
+
+        app.config['RECAPTCHA_USE_SSL'] = False
+        app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+        app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
+        # flow_sniffer.sniffer.start()
+        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
+        # follow_thread.start()
+        #app.run(port=80, debug=False)
+    except KeyboardInterrupt:
+        print('exiting')
+        # flow_sniffer.sniffer.stop()
+
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
-app = Flask(__name__)
+
 
 
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
@@ -406,23 +426,3 @@ def alert_follow():
             except KeyError:
                 # Key error: Some snort rules (port sweep) don'flow_sniffer have port number -> can'flow_sniffer find reliably
                 continue
-
-
-def build_app():
-    try:
-        global app
-        app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
-        app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
-
-        app.config['RECAPTCHA_USE_SSL'] = False
-        app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
-        app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
-        # flow_sniffer.sniffer.start()
-        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
-        # follow_thread.start()
-        #app.run(port=80, debug=False)
-    except KeyboardInterrupt:
-        print('exiting')
-        # flow_sniffer.sniffer.stop()
-
-
