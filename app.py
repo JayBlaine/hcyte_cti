@@ -67,7 +67,7 @@ flow_sniffer.sniffer.start()
 follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
 follow_thread.start()  # TODO: MAKE THIS CLEANER
 t = open('/home/jragsdale/test123', 'w')
-t.write('this is an entry test')
+t.write(os.getlogin())
 t.close()
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
