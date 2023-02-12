@@ -6,7 +6,6 @@ import pandas as pd
 import plotly.express as px
 import re
 import copy
-import threading
 
 from dash import Dash, html, dcc, Output, Input
 
@@ -20,6 +19,7 @@ df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
+
 app = Flask(__name__)
 app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
 app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
@@ -115,7 +115,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = copy.deepcopy(t_flows.test_flows)  # change to sniffer dict when live
+        visdcc_display_dict = copy.deepcopy(t_flows.test_flows)  # change to flow_sniffer.flows dict when live
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
@@ -412,14 +412,3 @@ def alert_follow():
             except KeyError:
                 # Key error: Some snort rules (port sweep) don'flow_sniffer have port number -> can'flow_sniffer find reliably
                 continue
-
-
-if __name__ == '__main__':
-    try:
-        # flow_sniffer.sniffer.start()
-        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
-        # follow_thread.start()
-        app.run(debug=True)
-    except KeyboardInterrupt:
-        print('exiting')
-        # flow_sniffer.sniffer.stop()
