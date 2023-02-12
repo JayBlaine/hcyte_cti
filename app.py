@@ -23,12 +23,8 @@ app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 app.config['RECAPTCHA_USE_SSL'] = False
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
-app.config.update(
-    SESSION_COOKIE_SECURE=True,
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE='Lax',
-)
-# flow_sniffer.sniffer.start()
+# TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
+app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 
 
 def follow(file):
@@ -67,27 +63,21 @@ def alert_follow():
 
 
 # reading from /mnt/captures/snort_internal/alert
-flow_sniffer = flow_tracker.FlowTracker(iface='eno1', timeout=60)
+flow_sniffer = flow_tracker.FlowTracker(iface='enp0s31f6', timeout=60)
 follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
+follow_thread.start()  # TODO: MAKE THIS CLEANER
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
 
-
-#app = build_app()
-
-#df = pd.read_csv('static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
+#df = pd.read_csv('static/website_data.csv')
 #df_flows = pd.read_csv('static/website_flow_data.csv')
-df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
+# TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
+df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
-
-
-
-# TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
-
 
 
 def get_anonymized_label(addr: str):
@@ -168,7 +158,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = copy.deepcopy(t_flows.test_flows)  # change to flow_sniffer.flows dict when live
+        visdcc_display_dict = copy.deepcopy(flow_sniffer.flows)
+        # TODO: change to flow_sniffer.flows dict when live
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
