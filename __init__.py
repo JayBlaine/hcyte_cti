@@ -11,9 +11,9 @@ from dash import Dash, html, dcc, Output, Input
 import visdcc
 from netaddr import IPNetwork
 
-from .forms import EmailForm
-from .honey_flows import flow_tracker, t_flows
-
+import forms
+import flow_tracker
+import t_flows
 
 df = pd.read_csv('static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('static/website_flow_data.csv')
@@ -352,7 +352,7 @@ def about():
 
 @app.route('/contact', strict_slashes=False, methods=["GET", "POST"])
 def contact():
-    form = EmailForm()
+    form = forms.EmailForm()
     if request.method == 'POST' and form.validate_on_submit():
         interests = request.form.getlist('interest')
         data_contact = {
