@@ -79,7 +79,7 @@ def build_app():
         print('exiting')
         # flow_sniffer.sniffer.stop()
 
-app = build_app()
+#app = build_app()
 
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')  # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
