@@ -1,27 +1,26 @@
 import datetime as dt
+import time
 
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
 import re
 import copy
+import threading
 
 from dash import Dash, html, dcc, Output, Input
 
 from forms import EmailForm
 from honey_flows import flow_tracker
 import visdcc
-from honey_flows import flow
 from honey_flows import t_flows
 from netaddr import IPNetwork
-from flask import session
 
 df = pd.read_csv('static/website_data.csv')
 df_flows = pd.read_csv('static/website_flow_data.csv')
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
 app = Flask(__name__)
-app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
 app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
@@ -32,7 +31,7 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 # TODO: REGENERATE WHEN LIVE HOSTING  https://www.google.com/recaptcha/admin/create
 
 # reading from /mnt/captures/snort_internal/alert
-t = flow_tracker.FlowTracker(iface='eno1', timeout=60)
+flow_sniffer = flow_tracker.FlowTracker(iface='eno1', timeout=60)
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
@@ -380,10 +379,47 @@ def submit():
     return render_template('submit.html')
 
 
+def follow(file):
+    """
+    Behaves like tail -f: follows file and returns new lines as they're appended
+    :param file: followed file
+    :return: yields lines as they're appended, continues execution.
+    """
+    file.seek(0, 2)
+    while True:
+        line = file.readline()
+        if not line:
+            time.sleep(0.1)
+            continue
+        yield line
+
+
+def alert_follow():
+    alert_file = open('/mnt/captures/snort_internal/alert', "r")
+    alert_lines = follow(alert_file)
+
+    for line in alert_lines:
+        line_list = line.split()
+        src = line_list[-3:][0]
+        dst = line_list[-1:][0]
+        try:
+            flow_sniffer.flows["{} {}".format(src, dst)].label = 1
+            flow_sniffer.flows["{} {}".format(src, dst)].flow_alert = re.split(r'\[\*\*]', line)[1]
+        except KeyError:
+            try:
+                flow_sniffer.flows["{} {}".format(dst, src)].label = 1
+                flow_sniffer.flows["{} {}".format(src, dst)].flow_alert = re.split(r'\[\*\*]', line)[1]
+            except KeyError:
+                # Key error: Some snort rules (port sweep) don'flow_sniffer have port number -> can'flow_sniffer find reliably
+                continue
+
+
 if __name__ == '__main__':
     try:
-        # t.sniffer.start()
+        # flow_sniffer.sniffer.start()
+        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
+        # follow_thread.start()
         app.run(debug=True)
     except KeyboardInterrupt:
         print('exiting')
-        # t.sniffer.stop()
+        # flow_sniffer.sniffer.stop()

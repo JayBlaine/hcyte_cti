@@ -83,6 +83,7 @@ def create_flow_entry(pkt: Packet):
 def update_flow_entry(flow: Flow, pkt: Packet, direction: int):  # dir 1 = fwd, 2 = bwd
     updated_flow = flow
     updated_flow.flow_cur_time = time.time()
+    updated_flow.ip_all_flow_duration = updated_flow.flow_cur_time - updated_flow.flow_start
 
     updated_flow.ip_pkt_tot_num += 1
     updated_flow.ip_pkt_tot_len += int(pkt[IP].len)
@@ -256,7 +257,6 @@ def flow_cleanup(flow: Flow):
         final_flow.ip_fwd_pkts_sec = final_flow.ip_fwd_pkt_tot_num / final_flow.ip_all_flow_duration
         final_flow.ip_fwd_bytes_sec = final_flow.ip_fwd_pkt_tot_len / final_flow.ip_all_flow_duration
 
-
         final_flow.ip_bwd_pkts_sec = final_flow.ip_bwd_pkt_tot_num / final_flow.ip_all_flow_duration
         final_flow.ip_bwd_bytes_sec = final_flow.ip_bwd_pkt_tot_len / final_flow.ip_all_flow_duration
 
@@ -267,9 +267,7 @@ def flow_cleanup(flow: Flow):
         final_flow.ip_fwd_pkts_sec = final_flow.ip_fwd_pkt_tot_num
         final_flow.ip_fwd_bytes_sec = final_flow.ip_fwd_pkt_tot_len
 
-
         final_flow.ip_bwd_pkts_sec = final_flow.ip_bwd_pkt_tot_num
         final_flow.ip_bwd_bytes_sec = final_flow.ip_bwd_pkt_tot_len
-
 
     return final_flow

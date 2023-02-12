@@ -42,7 +42,6 @@ def prn_scapy(flows: dict, timeout: int):
     Wrapper for prn in sniffer to allow passing of arguments
 
     :param flows: Dictionary of active flows
-    :param writefile: CSV to write finished flows to
     :param timeout: Int for how long after a packet to call a flow inactive
     :return: Function with pkt argument for prn in sniffer
     """

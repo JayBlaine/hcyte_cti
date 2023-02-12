@@ -764,7 +764,7 @@ div.vis-network button.vis-edit-mode {
   height: 30px;
 }
 
-/* FIXME: shouldn't the vis-close button be a child of the vis-manipulation div? */
+/* FIXME: shouldn'flow_sniffer the vis-close button be a child of the vis-manipulation div? */
 
 div.vis-network button.vis-close {
   position: absolute;
