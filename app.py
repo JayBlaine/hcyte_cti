@@ -15,13 +15,13 @@ from webApp import forms
 from webApp import flow_tracker
 from webApp import t_flows
 
+app = Flask(__name__)
+app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
+app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
-application.config['SESSION_COOKIE_SAMESITE'] = "Secure"
-application.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
-
-application.config['RECAPTCHA_USE_SSL'] = False
-application.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
-application.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
+app.config['RECAPTCHA_USE_SSL'] = False
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld81k4kAAAAAHaEuoxKtg7N2QE11yjP3ySy8X-U'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 # flow_sniffer.sniffer.start()
 
 
@@ -62,6 +62,7 @@ def alert_follow():
 
 # reading from /mnt/captures/snort_internal/alert
 flow_sniffer = flow_tracker.FlowTracker(iface='eno1', timeout=60)
+follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
@@ -70,7 +71,7 @@ broadcast_net = IPNetwork("224.0.0.0/4")
 def build_app():
     try:
         app = Flask(__name__)
-        follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
+
         # flow_sniffer.sniffer.start()
         # follow_thread.start()
         #app.run(port=80, debug=False)
@@ -144,7 +145,7 @@ def create_dash_micro(flask_app):
     return dash_app1
 
 
-dash_app_micro = create_dash_micro(flask_app=application)
+dash_app_micro = create_dash_micro(flask_app=app)
 dash_app_micro.scripts.config.serve_locally = True
 
 
@@ -285,7 +286,7 @@ def create_dash_macro(flask_app):
     return dash_app
 
 
-dash_app_macro = create_dash_macro(flask_app=application)
+dash_app_macro = create_dash_macro(flask_app=app)
 dash_app_macro.scripts.config.serve_locally = True
 
 curve_nums = {
@@ -387,25 +388,25 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     return total, fig
 
 
-@application.route('/', strict_slashes=False, methods=["GET"])
-@application.route('/macro', strict_slashes=False, methods=["GET"])
+@app.route('/', strict_slashes=False, methods=["GET"])
+@app.route('/macro', strict_slashes=False, methods=["GET"])
 def macro():
     dash_macro = dash_app_macro.index()
     return render_template('macro.html', dash_html=dash_macro)
 
 
-@application.route('/micro', strict_slashes=False)
+@app.route('/micro', strict_slashes=False)
 def micro():
     dash_micro = dash_app_micro.index()
     return render_template('micro.html', vis_html=dash_micro)
 
 
-@application.route('/about', strict_slashes=False)
+@app.route('/about', strict_slashes=False)
 def about():
     return render_template('about.html')
 
 
-@application.route('/contact', strict_slashes=False, methods=["GET", "POST"])
+@app.route('/contact', strict_slashes=False, methods=["GET", "POST"])
 def contact():
     form = forms.EmailForm()
     if request.method == 'POST' and form.validate_on_submit():
@@ -429,7 +430,7 @@ def contact():
     return render_template('contact.html', form=form)
 
 
-@application.route('/submit', methods=["GET"])
+@app.route('/submit', methods=["GET"])
 def submit():
     return render_template('submit.html')
 
