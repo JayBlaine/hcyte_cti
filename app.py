@@ -15,7 +15,7 @@ from webApp import forms
 from webApp import flow_tracker
 from webApp import t_flows
 
-app = None
+app = Flask(__name__)
 
 def build_app():
     try:
