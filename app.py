@@ -63,15 +63,17 @@ class web_flask(Flask):  # superclass to start background threads before app run
 
 # reading from /mnt/captures/snort_internal/alert
 flow_sniffer = flow_tracker.FlowTracker(iface='enp0s31f6', timeout=60)
-#flow_sniffer.sniffer.start()
+flow_sniffer.sniffer.start()
 follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
-#follow_thread.start()  # TODO: MAKE THIS CLEANER
+follow_thread.start()  # TODO: MAKE THIS CLEANER
+t = open('test123', 'w')
+t.write('this is an entry test')
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 broadcast_net = IPNetwork("224.0.0.0/4")
 
 
-app = web_flask(__name__)
+app = Flask(__name__)
 app.config['SESSION_COOKIE_SAMESITE'] = "Secure"
 app.config['SECRET_KEY'] = 'b6821eaa9fce8996030370c7831fd2cc2d7a509254551bdb'
 
