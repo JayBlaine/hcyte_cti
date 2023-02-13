@@ -73,7 +73,7 @@ def create_dash_micro(flask_app):
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
                      external_stylesheets=external_stylesheets)
 
-    dash_app1.layout = html.Div([html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
+    dash_app1.layout = html.Div([html.Div(id='num_flows'), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
                                  html.Div(dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
@@ -127,6 +127,7 @@ def csv_to_flow_dict():
 
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
+    Output(component_id='num_flows', component_property='children'),
     Input(component_id='interval_component', component_property='n_intervals'),
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value')
@@ -232,7 +233,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     ##nodes = nodes[:500]
     #edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
-    return data
+    return data, len(visdcc_display_dict.keys())
 
 
 def create_dash_macro(flask_app):
