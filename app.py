@@ -96,6 +96,19 @@ def create_dash_micro(flask_app):
 
     return dash_app1
 
+"""
+layout={
+'improvedLayout': True,
+'hierarchical': {
+'enabled': False,
+'blockShifting': True,
+'edgeMinimization': True,
+'parentCentralization': True,
+'direction': 'UD',  # UD, DU, LR, RL
+'sortMethod': 'hubsize'  # hubsize, directed
+}}
+"""
+
 
 dash_app_micro = create_dash_micro(flask_app=app)
 dash_app_micro.scripts.config.serve_locally = True
