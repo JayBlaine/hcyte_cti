@@ -193,8 +193,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
                 'to': destIP,
                 'label': '{}'.format(destPort),
                 'width':  width,
-                'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
+                'title': "flow: {}<br>protocol: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
+                    visdcc_display_dict[key].ip_proto,
                     visdcc_display_dict[key].ip_pkt_tot_num,
                     visdcc_display_dict[key].ip_pkt_tot_len,
                     visdcc_display_dict[key].ip_all_flow_duration,
