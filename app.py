@@ -83,7 +83,21 @@ def create_dash_micro(flask_app):
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
                                                         value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
                                  visdcc.Network(id='net',
-                                                options=dict(height='1200px', width='100%')),
+                                                options=dict(height='1200px', width='100%',
+                                                             layout={
+                                                                'improvedLayout': 'True',
+                                                                'hierarchical': {
+                                                                'enabled': 'False',
+                                                                'levelSeparation': '150',
+                                                                'nodeSpacing': '100',
+                                                                'treeSpacing': '200',
+                                                                'blockShifting': 'True',
+                                                                'edgeMinimization': 'True',
+                                                                'parentCentralization': 'True',
+                                                                'direction': 'UD',  # UD, DU, LR, RL
+                                                                'sortMethod': 'hubsize'  # hubsize, directed
+                                                                }}
+    )),
 
                                  dcc.Interval(
                                      id='interval_component',
