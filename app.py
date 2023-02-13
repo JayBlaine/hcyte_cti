@@ -90,7 +90,7 @@ def create_dash_micro(flask_app):
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
                                                         value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
                                  visdcc.Network(id='net',
-                                                options=dict(height='600px', width='100%')),
+                                                options=dict(height='100%', width='100%')),
 
                                  dcc.Interval(
                                      id='interval_component',
