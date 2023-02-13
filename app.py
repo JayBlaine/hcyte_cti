@@ -73,7 +73,7 @@ def create_dash_micro(flask_app):
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
                      external_stylesheets=external_stylesheets)
 
-    dash_app1.layout = html.Div([html.Div(id='num_flows'), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
+    dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
                                  html.Div(dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
@@ -233,7 +233,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     ##nodes = nodes[:500]
     #edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
-    return data, len(visdcc_display_dict.keys())
+    active_flows = "Active flows: {}".format(len(visdcc_display_dict.keys()))
+    return data, active_flows
 
 
 def create_dash_macro(flask_app):
