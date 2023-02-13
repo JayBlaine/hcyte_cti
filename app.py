@@ -83,10 +83,7 @@ def create_dash_micro(flask_app):
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
                                                         value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
                                  visdcc.Network(id='net',
-                                                options=dict(height='1200px', width='100%',
-
-
-    )),
+                                                options=dict(height='1200px', width='100%')),
 
                                  dcc.Interval(
                                      id='interval_component',
@@ -154,7 +151,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
         visdcc_display_dict = csv_to_flow_dict()
-        # TODO: change to flow_sniffer.flows dict when live
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
@@ -235,8 +231,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         if new_node not in nodes and ip_type in vis_switches:
             nodes.append(new_node)
 
-    ##nodes = nodes[:500]
-    #edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
     active_flows = "Active flows: {}".format(len(visdcc_display_dict.keys()))
 
