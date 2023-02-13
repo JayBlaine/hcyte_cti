@@ -1,3 +1,4 @@
+import csv
 import datetime as dt
 import os
 import threading
@@ -13,65 +14,15 @@ import visdcc
 from netaddr import IPNetwork
 
 from webApp import forms
-from webApp import flow_tracker
-from webApp import t_flows
-
-
-def follow(file):
-    """
-    Behaves like tail -f: follows file and returns new lines as they're appended
-    :param file: followed file
-    :return: yields lines as they're appended, continues execution.
-    """
-    file.seek(0, 2)
-    while True:
-        line = file.readline()
-        if not line:
-            time.sleep(0.1)
-            continue
-        yield line
-
-
-def alert_follow():
-    alert_file = open('/mnt/captures/snort_internal/alert', "r")
-    alert_lines = follow(alert_file)
-
-    for line in alert_lines:
-        line_list = line.split()
-        src = line_list[-3:][0]
-        dst = line_list[-1:][0]
-        try:
-            flow_sniffer.flows["{} {}".format(src, dst)].label = 1
-            flow_sniffer.flows["{} {}".format(src, dst)].flow_alert = re.split(r'\[\*\*]', line)[1]
-        except KeyError:
-            try:
-                flow_sniffer.flows["{} {}".format(dst, src)].label = 1
-                flow_sniffer.flows["{} {}".format(src, dst)].flow_alert = re.split(r'\[\*\*]', line)[1]
-            except KeyError:
-                # Key error: Some snort rules (port sweep) don'flow_sniffer have port number -> can'flow_sniffer find reliably
-                continue
-
-
-class web_flask(Flask):  # superclass to start background threads before app run
-    def run(self, host=None, port=None, debug=None, load_dotenv=True, **options):
-        if not self.debug or os.getenv('WERKZEUG_RUN_MAIN') == 'true':
-            with self.app_context():
-                flow_sniffer.sniffer.start()
-                follow_thread.start()
-        super(web_flask, self).run(host=host, port=port, debug=debug, load_dotenv=load_dotenv, **options)
 
 
 # reading from /mnt/captures/snort_internal/alert
-flow_sniffer = flow_tracker.FlowTracker(iface='enp0s31f6', timeout=60)
-flow_sniffer.sniffer.start()
-follow_thread = threading.Thread(target=alert_follow, name="alert_follower")
-follow_thread.start()  # TODO: MAKE THIS CLEANER
-t = open('/home/jragsdale/test123', 'w')
-#t.write(str(os.getuid()))
-t.close()
+from webApp.flow import Flow
+
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
-broadcast_net = IPNetwork("224.0.0.0/4")
+multi_net = IPNetwork("224.0.0.0/4")
+broad_net = IPNetwork("255.255.255.0/24")
 
 
 app = Flask(__name__)
@@ -87,9 +38,11 @@ app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESS
 
 #df = pd.read_csv('static/website_data.csv')
 #df_flows = pd.read_csv('static/website_flow_data.csv')
+#live_micro_file = 'static/micro_live.csv'
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
+live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -99,10 +52,10 @@ def get_anonymized_label(addr: str):
     addr_type = 1  # 1 = outside home sub, 2 = insdie home/net, 3 = broad/multicast
     if addr in home_net:
         addr_type = 2
-    elif addr in broadcast_net:
+    elif addr in multi_net or addr in broad_net:
         addr_type = 3
 
-    if addr not in home_net and addr not in broadcast_net:
+    if addr not in home_net and addr not in multi_net and addr not in broad_net:
         IP_label_split = addr.split('.')
         for i in range(len(IP_label_split)):
             IP_label_split[i] = IP_label_split[i][:-1] + 'X'
@@ -151,6 +104,22 @@ dash_app_micro = create_dash_micro(flask_app=app)
 dash_app_micro.scripts.config.serve_locally = True
 
 
+def csv_to_flow_dict():
+    ret_dict = {}
+    with open(live_micro_file, 'r') as f:
+        r_obj = csv.reader(f)
+        cols = next(r_obj)
+        for row in r_obj:
+            key = row[0]
+            temp_flow = Flow()
+            for col in range(1, len(cols)):
+                setattr(temp_flow, cols[col], row[col])
+            ret_dict[key] = temp_flow
+    return ret_dict
+
+
+
+
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
     Input(component_id='interval_component', component_property='n_intervals'),
@@ -173,7 +142,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = copy.deepcopy(flow_sniffer.flows)
+        visdcc_display_dict = csv_to_flow_dict()
         # TODO: change to flow_sniffer.flows dict when live
 
     # TODO: Change from full rebuild to something more efficient
@@ -193,7 +162,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         destIP_label, destIP_type = get_anonymized_label(destIP)
         srcIP_label, srcIP_type = get_anonymized_label(srcIP)  # TODO: CLEAN UP AND REMOVE REDUNDANT
 
-
         """
         if visdcc_display_dict[key].label == 1:  # set type to correct maliciousness
             if srcIP in home_net:
@@ -205,8 +173,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
             else:
                 destIP_type = 5
         """
-
-
         # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
         new_edge = {
             'id': IPandPort[0] + "__" + IPandPort[1],
@@ -231,7 +197,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         ip_label, ip_type = get_anonymized_label(ip)
         num_malicious = 0
         for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
-            if ip not in broadcast_net and visdcc_display_dict[key].label == 1 and ip+':' in key:
+            if ip not in multi_net and ip not in broad_net and visdcc_display_dict[key].label == 1 and ip+ ':' in key:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
