@@ -70,7 +70,7 @@ micro_node_color_code = {
     1: 'yellow',
     2: 'green',
     3: 'purple',
-    4: 'red',
+    4: 'orange',
     5: 'red'
 }
 
@@ -199,7 +199,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         num_malicious = 0
         for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
             if ip not in multi_net and ip not in broad_net and \
-                    ip not in broad_inner and visdcc_display_dict[key].label == 1 and ip+ ':' in key:
+                    ip not in broad_inner and '1' in visdcc_display_dict[key].label and ip+ ':' in key:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
@@ -212,10 +212,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
             'shape': 'dot', 'size': 10, 'color': micro_node_color_code[ip_type],
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip, len(re.findall(ip + ':', ''.join(
-                list(visdcc_display_dict.keys())))), num_malicious)}  # replace with live capturer
-        if new_node not in nodes:
-            if ip_type in vis_switches:
-                nodes.append(new_node)
+                list(visdcc_display_dict.keys())))), num_malicious)}
+        if new_node not in nodes and ip_type in vis_switches:
+            nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
     return data

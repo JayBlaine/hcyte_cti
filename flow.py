@@ -95,7 +95,7 @@ class Flow:
     tcp_bwd_init_win: int = -1
     # TCP header len???
 
-    label: int = 0  # 0: benign   1: malicious
+    label: str = 0  # 0: benign   1: malicious
     flow_alert: str = "benign flow"
 
     def __str__(self):
