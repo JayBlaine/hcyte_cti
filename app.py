@@ -209,8 +209,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         if new_node not in nodes and ip_type in vis_switches:
             nodes.append(new_node)
 
-    nodes = nodes[:500]
-    edges = edges[:500]
+    ##nodes = nodes[:500]
+    #edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
     return data
 
