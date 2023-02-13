@@ -23,7 +23,7 @@ visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 multi_net = IPNetwork("224.0.0.0/4")
 broad_net = IPNetwork("255.255.255.0/24")
-broad_inner = IPNetwork("192.168.50.255")
+broad_inner = IPNetwork("192.168.50.255/32")
 
 
 app = Flask(__name__)
