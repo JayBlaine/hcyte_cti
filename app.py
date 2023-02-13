@@ -88,9 +88,6 @@ def create_dash_micro(flask_app):
                                                                 'improvedLayout': True,
                                                                 'hierarchical': {
                                                                 'enabled': False,
-                                                                'levelSeparation': 150,
-                                                                'nodeSpacing': 100,
-                                                                'treeSpacing': 200,
                                                                 'blockShifting': True,
                                                                 'edgeMinimization': True,
                                                                 'parentCentralization': True,
@@ -155,7 +152,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if int(visdcc_display_dict[key].ip_pkt_tot_num) > 3:
+        if int(visdcc_display_dict[key].ip_pkt_tot_num) > 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
