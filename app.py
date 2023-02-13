@@ -1,10 +1,6 @@
 import csv
 import datetime as dt
-import os
-import threading
-import time
 import re
-import copy
 
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
@@ -14,9 +10,6 @@ import visdcc
 from netaddr import IPNetwork
 
 from webApp import forms
-
-
-# reading from /mnt/captures/snort_internal/alert
 from webApp.flow import Flow
 
 visdcc_display_dict = {}
@@ -37,13 +30,13 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 
 
-#df = pd.read_csv('static/website_data.csv')
-#df_flows = pd.read_csv('static/website_flow_data.csv')
-#live_micro_file = 'static/micro_live.csv'
+df = pd.read_csv('static/website_data.csv')
+df_flows = pd.read_csv('static/website_flow_data.csv')
+live_micro_file = 'static/micro_live.csv'
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
-df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
-df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
-live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
+#df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
+#df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
+#live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -216,6 +209,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         if new_node not in nodes and ip_type in vis_switches:
             nodes.append(new_node)
 
+    nodes = nodes[:500]
+    edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
     return data
 
