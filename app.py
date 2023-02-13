@@ -239,6 +239,14 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     #edges = edges[:500]
     data = {'nodes': nodes, 'edges': edges}
     active_flows = "Active flows: {}".format(len(visdcc_display_dict.keys()))
+
+    alerts = {}  # TODO: RETURN ACTIVE ALERTS TO BE DISPLAYED SOMEWHERE
+    for key in visdcc_display_dict.keys():
+        if int(visdcc_display_dict[key].label) == 1 and visdcc_display_dict[key].flow_alert not in alerts.keys():
+            alerts[visdcc_display_dict[key].flow_alert] = 0
+        elif int(visdcc_display_dict[key].label) == 1:
+            alerts[visdcc_display_dict[key].flow_alert] += 1
+
     return data, active_flows
 
 
