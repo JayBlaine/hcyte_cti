@@ -184,9 +184,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
             """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
             width1 = int(visdcc_display_dict[key].ip_pkt_tot_num)
-            if width1 > 1000:
+            if width1 > 100:
                 width = 3
-            elif width1 > 100:
+            elif width1 > 10:
                 width = 2
             else:
                 width = 1
