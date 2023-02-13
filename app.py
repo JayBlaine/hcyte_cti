@@ -155,49 +155,50 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        IPandPort = key.split(" ")
+        if visdcc_display_dict[key].ip_pkt_tot_num > 3:
+            IPandPort = key.split(" ")
 
-        srcIPandPort = IPandPort[0].split(":")
-        srcIP = srcIPandPort[0]
-        srcPort = srcIPandPort[1]
+            srcIPandPort = IPandPort[0].split(":")
+            srcIP = srcIPandPort[0]
+            srcPort = srcIPandPort[1]
 
-        destIPandPort = IPandPort[1].split(":")
-        destIP = destIPandPort[0]
-        destPort = destIPandPort[1]
+            destIPandPort = IPandPort[1].split(":")
+            destIP = destIPandPort[0]
+            destPort = destIPandPort[1]
 
-        srcIPs.append(srcIP)
-        destIPs.append(destIP)
-        destIP_label, destIP_type = get_anonymized_label(destIP)
-        srcIP_label, srcIP_type = get_anonymized_label(srcIP)  # TODO: CLEAN UP AND REMOVE REDUNDANT
+            srcIPs.append(srcIP)
+            destIPs.append(destIP)
+            destIP_label, destIP_type = get_anonymized_label(destIP)
+            srcIP_label, srcIP_type = get_anonymized_label(srcIP)  # TODO: CLEAN UP AND REMOVE REDUNDANT
 
-        """
-        if visdcc_display_dict[key].label == 1:  # set type to correct maliciousness
-            if srcIP in home_net:
-                srcIP_type = 4
-            else:
-                srcIP_type = 5
-            if destIP in home_net:
-                destIP_type = 4
-            else:
-                destIP_type = 5
-        """
-        # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
-        new_edge = {
-            'id': IPandPort[0] + "__" + IPandPort[1],
-            'from': srcIP,
-            'to': destIP,
-            'label': '{}'.format(destPort),
-            'width': 2,
-            'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
-                '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
-                visdcc_display_dict[key].ip_pkt_tot_num,
-                visdcc_display_dict[key].ip_pkt_tot_len,
-                visdcc_display_dict[key].ip_all_flow_duration,
-                visdcc_display_dict[key].flow_alert)
-        }
-        if new_edge not in edges:
-            if srcIP_type in vis_switches or destIP_type in vis_switches:
-                edges.append(new_edge)
+            """
+            if visdcc_display_dict[key].label == 1:  # set type to correct maliciousness
+                if srcIP in home_net:
+                    srcIP_type = 4
+                else:
+                    srcIP_type = 5
+                if destIP in home_net:
+                    destIP_type = 4
+                else:
+                    destIP_type = 5
+            """
+            # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
+            new_edge = {
+                'id': IPandPort[0] + "__" + IPandPort[1],
+                'from': srcIP,
+                'to': destIP,
+                'label': '{}'.format(destPort),
+                'width': (visdcc_display_dict[key].ip_pkt_tot_num // 100) % 3 + 1,
+                'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
+                    '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
+                    visdcc_display_dict[key].ip_pkt_tot_num,
+                    visdcc_display_dict[key].ip_pkt_tot_len,
+                    visdcc_display_dict[key].ip_all_flow_duration,
+                    visdcc_display_dict[key].flow_alert)
+            }
+            if new_edge not in edges:
+                if srcIP_type in vis_switches or destIP_type in vis_switches:
+                    edges.append(new_edge)
 
     ip_all = set(srcIPs + destIPs)
 
@@ -216,7 +217,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         new_node = {
             'id': ip,
             'label': ip_label,
-            'shape': 'dot', 'size': 10, 'color': micro_node_color_code[ip_type],
+            'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict.keys())))), num_malicious)}
