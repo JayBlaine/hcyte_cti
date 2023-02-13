@@ -23,6 +23,7 @@ visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
 multi_net = IPNetwork("224.0.0.0/4")
 broad_net = IPNetwork("255.255.255.0/24")
+broad_inner = IPNetwork("192.168.50.255")
 
 
 app = Flask(__name__)
@@ -52,10 +53,10 @@ def get_anonymized_label(addr: str):
     addr_type = 1  # 1 = outside home sub, 2 = insdie home/net, 3 = broad/multicast
     if addr in home_net:
         addr_type = 2
-    elif addr in multi_net or addr in broad_net:
+    elif addr in multi_net or addr in broad_net or addr in broad_inner:
         addr_type = 3
 
-    if addr not in home_net and addr not in multi_net and addr not in broad_net:
+    if addr not in home_net and addr not in multi_net and addr not in broad_net and addr not in broad_inner:
         IP_label_split = addr.split('.')
         for i in range(len(IP_label_split)):
             IP_label_split[i] = IP_label_split[i][:-1] + 'X'
@@ -197,7 +198,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
         ip_label, ip_type = get_anonymized_label(ip)
         num_malicious = 0
         for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
-            if ip not in multi_net and ip not in broad_net and visdcc_display_dict[key].label == 1 and ip+ ':' in key:
+            if ip not in multi_net and ip not in broad_net and \
+                    ip not in broad_inner and visdcc_display_dict[key].label == 1 and ip+ ':' in key:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
