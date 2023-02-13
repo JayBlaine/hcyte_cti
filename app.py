@@ -183,12 +183,19 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
                     destIP_type = 5
             """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
+            width1 = int(visdcc_display_dict[key].ip_pkt_tot_num)
+            if width1 > 1000:
+                width = 3
+            elif width1 > 100:
+                width = 2
+            else:
+                width = 1
             new_edge = {
                 'id': IPandPort[0] + "__" + IPandPort[1],
                 'from': srcIP,
                 'to': destIP,
                 'label': '{}'.format(destPort),
-                'width': (int(visdcc_display_dict[key].ip_pkt_tot_num) // 100) % 3 + 1,
+                'width':  width,
                 'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
                     visdcc_display_dict[key].ip_pkt_tot_num,
