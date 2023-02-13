@@ -230,7 +230,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
             'label': ip_label,
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
-            'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip, len(re.findall(ip + ':', ''.join(
+            'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict.keys())))), num_malicious)}
         if new_node not in nodes and ip_type in vis_switches:
             nodes.append(new_node)
