@@ -342,22 +342,20 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     if hoverData is not None:
         date1 = hoverData['points'][0]['x']
         curve = curve_nums[hoverData['points'][0]['curveNumber']]
-        df1 = df.loc[df['date'] == date1]
 
     elif clickData is not None:
         date1 = clickData['points'][0]['x']
         curve = curve_nums[clickData['points'][0]['curveNumber']]
-        df1 = df.loc[df['date'] == date1]
 
     else:
         date1 = "2023-01-04"
         # TODO: CHANGE TO dt.date.today() - timedelta(days=1) when day to day updating is implemented
         curve = curve_nums[1]
-        df1 = df.loc[df['date'] == date1]
 
+    df1 = df.loc[df['date'] == date1]  # gets row from selected day, gets rid of rest
     if curve != 'all_alerts':
         curve_regex = '^{}_'.format(curve.split('_')[0])
-        # If not all, can apply strict regex based on first word. Otherwise, need to be more casual (but still get rud of flow stuff when added)
+        # If not all, can apply strict regex based on first word. Otherwise, need to be more casual
         curve_columns = df1.filter(regex=curve_regex,
                                    axis=1).columns.tolist()  # regex for first word as id as enumerated in curve_nums
         total = df1[curve_columns[0]]  # Will be first one since line columns are first in df
@@ -366,7 +364,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
         # all alerts curve selected
         curve_columns = df1.drop(columns=['date'], axis=1).drop(
             columns=df1.filter(regex='^scan_', axis=1).columns.tolist(), axis=1)
-        # Remove date and scan (not relevant results (remove flow when added as well if not stored in seperate csv)
+        # Remove date and scan (not relevant for snort all alerts)
         total = curve_columns['all_alerts']
 
         sub_col_list = list(curve_nums.values())
