@@ -51,7 +51,7 @@ df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for 
 
 def get_anonymized_label(addr: str):
     addr_type = 1  # 1 = outside home sub, 2 = insdie home/net, 3 = broad/multicast
-    if addr in home_net:
+    if addr in home_net and addr not in broad_inner:
         addr_type = 2
     elif addr in multi_net or addr in broad_net or addr in broad_inner:
         addr_type = 3
