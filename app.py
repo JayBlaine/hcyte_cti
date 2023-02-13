@@ -155,7 +155,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if visdcc_display_dict[key].ip_pkt_tot_num > 3:
+        if int(visdcc_display_dict[key].ip_pkt_tot_num) > 3:
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -188,7 +188,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
                 'from': srcIP,
                 'to': destIP,
                 'label': '{}'.format(destPort),
-                'width': (visdcc_display_dict[key].ip_pkt_tot_num // 100) % 3 + 1,
+                'width': (int(visdcc_display_dict[key].ip_pkt_tot_num) // 100) % 3 + 1,
                 'title': "flow: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
                     visdcc_display_dict[key].ip_pkt_tot_num,
