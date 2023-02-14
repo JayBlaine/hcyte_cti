@@ -89,7 +89,7 @@ def create_dash_micro(flask_app):
                                                         value=['tcp', 'udp'])),
 
                                  html.Div([
-                                           html.Div(html.B('Packets In Flow (WARNING: LOW VALUE MAY RESULT IN PERFORMANCE LOSS)')),
+                                           html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS)')),
                                            html.Div(dcc.Slider(1, 1000, 1, value=4, marks=None,
                                                      tooltip={"placement": "bottom", "always_visible": True}, id='flow_slider'))
                                            ]),
@@ -133,7 +133,7 @@ def csv_to_flow_dict():
         read_rows = 0
 
         for row in rows:
-            if read_rows != 0:
+            if read_rows != 0:  # skip header
                 key = row[0]
                 temp_flow = Flow()
                 for col in range(1, len(cols)):
