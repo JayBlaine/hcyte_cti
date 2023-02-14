@@ -225,7 +225,14 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     for ip in ip_all:  # nodes
         ip_label, ip_type = get_anonymized_label(ip)
         num_malicious = 0
+        num_udp = 0
+        num_tcp = 0
         for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
+            if ip + ':' in visdcc_display_dict[key]:
+                if visdcc_display_dict[key].ip_proto == 'UDP':
+                    num_udp += 1
+                elif visdcc_display_dict[key].ip_proto == 'TCP':
+                    num_tcp += 1
             if ip not in multi_net and ip not in broad_net and \
                     ip not in broad_inner and '1' in visdcc_display_dict[key].label and ip+ ':' in key:
                 # colon to prevent partial match on last digit i.e 4 and 46
@@ -242,7 +249,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict.keys())))), num_malicious)}
         if new_node not in nodes and ip_type in vis_switches:
-            nodes.append(new_node)
+            if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
+                nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
     active_flows = "Active flows: {}".format(len(visdcc_display_dict.keys()))
