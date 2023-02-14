@@ -30,13 +30,13 @@ app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld81k4kAAAAANDMNw2lbt5hzjXg71XbErsN37S3'
 app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 
 
-df = pd.read_csv('static/website_data.csv')
-df_flows = pd.read_csv('static/website_flow_data.csv')
-live_micro_file = 'static/micro_live.csv'
+#df = pd.read_csv('static/website_data.csv')
+#df_flows = pd.read_csv('static/website_flow_data.csv')
+#live_micro_file = 'static/micro_live.csv'
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
-#df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
-#df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
-#live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
+df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
+df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
+live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
