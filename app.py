@@ -120,9 +120,9 @@ dash_app_micro.scripts.config.serve_locally = True
 def csv_to_flow_dict():
     ret_dict = {}
     with open(live_micro_file, 'r') as f:
-        next(f)
         cols = list(Flow.__dict__.keys())[3:64]
         r_obj = csv.reader(f)
+        next(r_obj)
 
         for row in r_obj:
             key = row[0]
