@@ -125,7 +125,6 @@ def csv_to_flow_dict():
         r_obj = csv.reader(f)
         rows = list(r_obj)
         read_rows = 0
-        print(rows)
 
         for row in rows:
             if read_rows != 0:
