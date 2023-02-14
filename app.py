@@ -412,7 +412,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
 
     df_no_zero_dict = {}
     df_filtered = df.loc[:, (df != 0).any(axis=0)]
-    for key in df_filt_dict.keys:
+    for key in df_filt_dict.keys():
         if df_filt_dict[key] > 0:
             df_no_zero_dict[key] = df_filt_dict[key]
 
