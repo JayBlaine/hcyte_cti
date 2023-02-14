@@ -154,7 +154,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if int(visdcc_display_dict[key].ip_pkt_tot_num) > 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+        if int(visdcc_display_dict[key].ip_pkt_tot_num) >= 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -355,7 +355,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
     df1 = df.loc[df['date'] == date1]  # gets row from selected day, gets rid of rest
     if curve != 'all_alerts':
         curve_regex = '^{}_'.format(curve.split('_')[0])
-        # If not all, can apply strict regex based on first word. Otherwise, need to be more casual
+        # If not all, can apply strict regex based on first word in each column (MAKE SURE TO INCLUDE). Otherwise, no need to filter
         curve_columns = df1.filter(regex=curve_regex,
                                    axis=1).columns.tolist()  # regex for first word as id as enumerated in curve_nums
         total = df1[curve_columns[0]]  # Will be first one since line columns are first in df
@@ -371,7 +371,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
         sub_col_list.remove('scan_num')  # Need to remove since key error (scan_num dropped by filter)
         subtotals = curve_columns.drop(columns=sub_col_list,
                                        axis=1).columns.tolist()  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
-        # Drop less stringent columns that make up main line graph
+        # Drop generalized columns (used in big graph)
 
     df_filtered = df1[subtotals]
     df_filt_dict = df_filtered.to_dict('records')[0]
