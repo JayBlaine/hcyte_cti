@@ -88,7 +88,11 @@ def create_dash_micro(flask_app):
                                   {'label': 'UDP', 'value': 'udp'}],
                                                         value=['tcp', 'udp'])),
 
-                                 html.Div(dcc.Slider(0, 50, 1, value=4, id='flow_slider')),
+                                 html.Div([
+                                           html.Div(html.B('Packets In Flow')),
+                                           html.Div(dcc.Slider(1, 1000, 1, value=4, marks=None,
+                                                     tooltip={"placement": "bottom", "always_visible": True}, id='flow_slider'))
+                                           ]),
 
                                  visdcc.Network(id='net',
                                                 options=dict(height='1200px', width='100%')),
