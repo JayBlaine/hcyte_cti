@@ -393,7 +393,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
         curve_columns = df1.filter(regex=curve_regex,
                                    axis=1).columns.tolist()  # regex for first word as id as enumerated in curve_nums
         total = df1[curve_columns[0]]  # Will be first one since line columns are first in df
-        subtotals = curve_columns[1:]  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
+        specific_alerts = curve_columns[1:]  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
     else:
         # all alerts curve selected
         curve_columns = df1.drop(columns=['date'], axis=1).drop(
@@ -403,15 +403,16 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
 
         sub_col_list = list(curve_nums.values())
         sub_col_list.remove('scan_num')  # Need to remove since key error (scan_num dropped by filter)
-        subtotals = curve_columns.drop(columns=sub_col_list,
-                                       axis=1).columns.tolist()  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
+        specific_alerts = curve_columns.drop(columns=sub_col_list,
+                                             axis=1).columns.tolist()  # may not add up until all alerts are enumerated (PAIN IN THE ASS)
         # Drop generalized columns (used in big graph)
 
-    df_filtered = df1[subtotals]
+    df_filtered = df1[specific_alerts]
     df_filt_dict = df_filtered.to_dict('records')[0]
 
     df_no_zero_dict = {}
     df_filtered = df.loc[:, (df != 0).any(axis=0)]
+    # drop 0 columns and update dict accordigly (didnt work if updating df then doing to_dict
     for key in df_filt_dict.keys():
         if df_filt_dict[key] > 0:
             df_no_zero_dict[key] = df_filt_dict[key]
