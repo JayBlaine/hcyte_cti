@@ -122,7 +122,6 @@ def csv_to_flow_dict():
     with open(live_micro_file, 'r') as f:
         next(f)
         cols = list(Flow.__dict__.keys())[3:64]
-        print(cols)
         r_obj = csv.reader(f)
 
         for row in r_obj:
