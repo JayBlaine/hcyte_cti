@@ -408,12 +408,16 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
         # Drop generalized columns (used in big graph)
 
     df_filtered = df1[subtotals]
-
-    df_filtered = df_filtered.loc[:, (df != 0).any(axis=0)]
-
     df_filt_dict = df_filtered.to_dict('records')[0]
-    fig = px.pie(data_frame=df_filtered, title="{} Expanded: {}".format(curve, date1), names=df_filt_dict.keys(),
-                 values=df_filt_dict.values()).update_traces(hoverinfo='label+percent')
+
+    df_no_zero_dict = {}
+    df_filtered = df.loc[:, (df != 0).any(axis=0)]
+    for key in df_filt_dict.keys:
+        if df_filt_dict[key] > 0:
+            df_no_zero_dict[key] = df_filt_dict[key]
+
+    fig = px.pie(data_frame=df_filtered, title="{} Expanded: {}".format(curve, date1), names=df_no_zero_dict.keys(),
+                 values=df_no_zero_dict.values()).update_traces(hoverinfo='label+percent')
     return total, fig
 
 
