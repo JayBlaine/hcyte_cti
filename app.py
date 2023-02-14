@@ -82,6 +82,12 @@ def create_dash_micro(flask_app):
                                   {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
                                                         value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
+
+                                 html.Div(dcc.Checklist(id='proto_filter', options=
+                                 [{'label': 'TCP', 'value': 'tcp'},
+                                  {'label': 'UDP', 'value': 'udp'}],
+                                                        value=['tcp', 'udp'])),
+
                                  visdcc.Network(id='net',
                                                 options=dict(height='1200px', width='100%')),
 
@@ -132,9 +138,10 @@ def csv_to_flow_dict():
     Output(component_id='num_flows', component_property='children'),
     Input(component_id='interval_component', component_property='n_intervals'),
     Input(component_id='live_check', component_property='value'),
-    Input(component_id='vis_filter', component_property='value')
+    Input(component_id='vis_filter', component_property='value'),
+    Input(component_id='proto_filter', component_property='value')
 )
-def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
+def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None):
     # create visdcc thing here
     srcIPs = []
     destIPs = []
@@ -148,6 +155,11 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
     int_sus_switch = 4 if 'internal_suspicious' in vis_filter else 0
     ext_sus_switch = 5 if 'external_suspicious' in vis_filter else 0
     vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
+
+    tcp_switch = 'TCP' if 'tcp' in proto_filter else '0'  # in str since ip_proto field is str
+    udp_switch = 'UDP' if 'udp' in proto_filter else '0'
+    proto_switches = [tcp_switch, udp_switch]  # TODO: TCP/UDP switches from checkbox to be implemented
+
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
         visdcc_display_dict = csv_to_flow_dict()
@@ -205,7 +217,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None):
             }
             if new_edge not in edges:
                 if srcIP_type in vis_switches or destIP_type in vis_switches:
-                    edges.append(new_edge)
+                    if visdcc_display_dict[key].ip_proto in proto_switches:
+                        edges.append(new_edge)
 
     ip_all = set(srcIPs + destIPs)
 
