@@ -167,7 +167,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= 3.0:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
