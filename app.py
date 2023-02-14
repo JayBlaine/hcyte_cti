@@ -88,6 +88,8 @@ def create_dash_micro(flask_app):
                                   {'label': 'UDP', 'value': 'udp'}],
                                                         value=['tcp', 'udp'])),
 
+                                 html.Div(dcc.Slider(0, 50, 1, value=4, id='flow_slider')),
+
                                  visdcc.Network(id='net',
                                                 options=dict(height='1200px', width='100%')),
 
@@ -145,9 +147,10 @@ def csv_to_flow_dict():
     Input(component_id='interval_component', component_property='n_intervals'),
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value'),
-    Input(component_id='proto_filter', component_property='value')
+    Input(component_id='proto_filter', component_property='value'),
+    Input(component_id='flow_slider', component_property='value')
 )
-def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None):
+def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None):
     # create visdcc thing here
     srcIPs = []
     destIPs = []
@@ -172,7 +175,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= 3.0:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
