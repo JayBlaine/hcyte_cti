@@ -228,7 +228,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         num_udp = 0
         num_tcp = 0
         for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
-            if ip + ':' in visdcc_display_dict[key]:
+            if ip + ':' in key:  # protocol filtering for each node based on flow protos
                 if visdcc_display_dict[key].ip_proto == 'UDP':
                     num_udp += 1
                 elif visdcc_display_dict[key].ip_proto == 'TCP':
@@ -248,8 +248,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict.keys())))), num_malicious)}
-        if new_node not in nodes and ip_type in vis_switches:
-            if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
+        if new_node not in nodes and ip_type in vis_switches:  # ip filtering
+            if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):  # protocol filtering of nodes
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
