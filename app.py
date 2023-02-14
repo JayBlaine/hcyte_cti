@@ -126,8 +126,8 @@ def csv_to_flow_dict():
         for row in r_obj:
             key = row[0]
             temp_flow = Flow()
-            for col in list(Flow.__dict__.keys())[3:64]:
-                setattr(temp_flow, col, row[col])
+            for col in range(len(list(Flow.__dict__.keys())[3:64])):
+                setattr(temp_flow, list(Flow.__dict__.keys())[col+3], row[col])
             ret_dict[key] = temp_flow
     return ret_dict
 
