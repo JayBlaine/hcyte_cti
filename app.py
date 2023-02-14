@@ -167,7 +167,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
-        if int(visdcc_display_dict[key].ip_pkt_tot_num) >= 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= 3:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -195,7 +195,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     destIP_type = 5
             """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
-            width1 = int(visdcc_display_dict[key].ip_pkt_tot_num)
+            width1 = float(visdcc_display_dict[key].ip_pkt_tot_num)
             if width1 > 100:
                 width = 3
             elif width1 > 10:
