@@ -121,14 +121,15 @@ def csv_to_flow_dict():
     ret_dict = {}
     with open(live_micro_file, 'r') as f:
         cols = list(Flow.__dict__.keys())[3:64]
+        cols.insert(0, 'empty')
         r_obj = csv.reader(f)
         next(r_obj)
 
         for row in r_obj:
             key = row[0]
             temp_flow = Flow()
-            for col in range(len(cols)):
-                setattr(temp_flow, cols[col], row[col+1])
+            for col in range(1, len(cols)):
+                setattr(temp_flow, cols[col], row[col])
             ret_dict[key] = temp_flow
     return ret_dict
 
