@@ -124,18 +124,17 @@ def csv_to_flow_dict():
         cols.insert(0, 'empty')
         r_obj = csv.reader(f)
         rows = list(r_obj)
-        read = 0
+        read_rows = 0
         print(rows)
 
         for row in rows:
-            if read == 0:
-                continue
-            key = row[0]
-            temp_flow = Flow()
-            for col in range(1, len(cols)):
-                setattr(temp_flow, cols[col], row[col])
-            ret_dict[key] = temp_flow
-            read += 1
+            if read_rows != 0:
+                key = row[0]
+                temp_flow = Flow()
+                for col in range(1, len(cols)):
+                    setattr(temp_flow, cols[col], row[col])
+                ret_dict[key] = temp_flow
+            read_rows += 1
     return ret_dict
 
 
