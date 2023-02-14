@@ -123,9 +123,10 @@ def csv_to_flow_dict():
         cols = list(Flow.__dict__.keys())[3:64]
         cols.insert(0, 'empty')
         r_obj = csv.reader(f)
+        rows = list(r_obj)
         read = 0
 
-        for row in r_obj:
+        for row in rows:
             if read == 0:
                 continue
             key = row[0]
@@ -239,8 +240,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     num_udp += 1
                 elif visdcc_display_dict[key].ip_proto == 'TCP':
                     num_tcp += 1
-            if ip not in multi_net and ip not in broad_net and \
-                    ip not in broad_inner and '1' in visdcc_display_dict[key].label and ip+ ':' in key:
+            if ip + ':' in key and ip not in multi_net and ip not in broad_net and \
+                    ip not in broad_inner and '1' in visdcc_display_dict[key].label:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
