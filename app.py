@@ -409,9 +409,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
 
     df_filtered = df1[subtotals]
 
-    indices = df_filtered.loc[(df_filtered == 0).any(axis=1), :].index.tolist()  ## multi-index values that contain 0
-    for ind in indices:
-        df_filtered = df_filtered.drop(ind[0])
+    df_filtered = df_filtered.loc[:, (df != 0).any(axis=0)]
 
     df_filt_dict = df_filtered.to_dict('records')[0]
     fig = px.pie(data_frame=df_filtered, title="{} Expanded: {}".format(curve, date1), names=df_filt_dict.keys(),
