@@ -282,7 +282,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     ip_type = 5
 
         for key in mal_alerts.keys():  # converting from dict to str
-            mal_alert_label += "{}: {}<br>".format(key, mal_alerts[key])
+            mal_alert_label += "<br>{}: {}".format(key, mal_alerts[key])
 
         new_node = {
             'id': ip,
