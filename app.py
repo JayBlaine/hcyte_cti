@@ -200,8 +200,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
     # TODO: Change from full rebuild to something more efficient
-    for key in visdcc_display_dict[active_file].keys():  # edges
-        if float(visdcc_display_dict[active_file][key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+    for key in visdcc_display_dict[active_int].keys():  # edges
+        if float(visdcc_display_dict[active_int][key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -229,7 +229,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     destIP_type = 5
             """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
-            width1 = float(visdcc_display_dict[active_file][key].ip_pkt_tot_num)
+            width1 = float(visdcc_display_dict[active_int][key].ip_pkt_tot_num)
             if width1 > 100:
                 width = 3
             elif width1 > 10:
@@ -244,15 +244,15 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 'width':  width,
                 'title': "flow: {}<br>protocol: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
-                    visdcc_display_dict[active_file][key].ip_proto,
-                    visdcc_display_dict[active_file][key].ip_pkt_tot_num,
-                    visdcc_display_dict[active_file][key].ip_pkt_tot_len,
-                    visdcc_display_dict[active_file][key].ip_all_flow_duration,
-                    visdcc_display_dict[active_file][key].flow_alert)
+                    visdcc_display_dict[active_int][key].ip_proto,
+                    visdcc_display_dict[active_int][key].ip_pkt_tot_num,
+                    visdcc_display_dict[active_int][key].ip_pkt_tot_len,
+                    visdcc_display_dict[active_int][key].ip_all_flow_duration,
+                    visdcc_display_dict[active_int][key].flow_alert)
             }
             if new_edge not in edges:
                 if srcIP_type in vis_switches or destIP_type in vis_switches:
-                    if visdcc_display_dict[active_file][key].ip_proto in proto_switches:
+                    if visdcc_display_dict[active_int][key].ip_proto in proto_switches:
                         edges.append(new_edge)
 
     ip_all = set(srcIPs + destIPs)
@@ -262,14 +262,14 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         num_malicious = 0
         num_udp = 0
         num_tcp = 0
-        for key in visdcc_display_dict[active_file].keys():  # checking for if node has any malicious flows
+        for key in visdcc_display_dict[active_int].keys():  # checking for if node has any malicious flows
             if ip + ':' in key:  # protocol filtering for each node based on flow protos
-                if visdcc_display_dict[active_file][key].ip_proto == 'UDP':
+                if visdcc_display_dict[active_int][key].ip_proto == 'UDP':
                     num_udp += 1
-                elif visdcc_display_dict[active_file][key].ip_proto == 'TCP':
+                elif visdcc_display_dict[active_int][key].ip_proto == 'TCP':
                     num_tcp += 1
             if ip + ':' in key and ip not in multi_net and ip not in broad_net and \
-                    ip not in broad_inner and '1' in visdcc_display_dict[active_file][key].label:
+                    ip not in broad_inner and '1' in visdcc_display_dict[active_int][key].label:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
@@ -282,20 +282,20 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
-                list(visdcc_display_dict[active_file].keys())))), num_malicious)}
+                list(visdcc_display_dict[active_int].keys())))), num_malicious)}
         if new_node not in nodes and ip_type in vis_switches:  # ip filtering
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):  # protocol filtering of nodes
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
-    active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_file].keys()))
+    active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
 
     alerts = {}  # TODO: RETURN ACTIVE ALERTS TO BE DISPLAYED SOMEWHERE
-    for key in visdcc_display_dict[active_file].keys():
-        if int(visdcc_display_dict[active_file][key].label) == 1 and visdcc_display_dict[active_file][key].flow_alert not in alerts.keys():
-            alerts[visdcc_display_dict[active_file][key].flow_alert] = 0
-        elif int(visdcc_display_dict[active_file][key].label) == 1:
-            alerts[visdcc_display_dict[active_file][key].flow_alert] += 1
+    for key in visdcc_display_dict[active_int].keys():
+        if int(visdcc_display_dict[active_int][key].label) == 1 and visdcc_display_dict[active_int][key].flow_alert not in alerts.keys():
+            alerts[visdcc_display_dict[active_int][key].flow_alert] = 0
+        elif int(visdcc_display_dict[active_int][key].label) == 1:
+            alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
 
     return data, active_flows
 
