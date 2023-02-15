@@ -18,6 +18,8 @@ visdcc_display_dict = {'internal': {},
 micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv',
                    'external': '/var/www/webApp/webApp/static/int_micro_live.csv',
                    'tap': '/var/www/webApp/webApp/static/int_micro_live.csv'}
+active_int = 'internal'
+
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
 multi_net = IPNetwork("224.0.0.0/4")
@@ -42,8 +44,6 @@ app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESS
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
-
-active_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -172,7 +172,7 @@ def csv_to_flow_dict(live_micro_file):
 )
 def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
     print(interface_dropdown)
-    global active_file
+    global active_int
     # create visdcc thing here
     srcIPs = []
     destIPs = []
