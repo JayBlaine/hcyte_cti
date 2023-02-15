@@ -320,7 +320,7 @@ def create_dash_macro(flask_app):
             dcc.Graph(
                 id='main_graph_line',
                 figure=px.line(df, x='date', y=df.columns.values.tolist()[1:6],
-                               title='H-CyTE Stuff')  # TODO: FIX FROM HARD CODE COL CALL
+                               title='H-CyTE Alerts')  # TODO: FIX FROM HARD CODE COL CALL
                     .update_xaxes(rangeslider_visible=True)
                     .update_layout(width=1200, height=400, clickmode='event+select').update_traces(marker_size=20),
                 style={
