@@ -94,7 +94,7 @@ def create_dash_micro(flask_app):
                                  [{'label': 'TCP', 'value': 'tcp'},
                                   {'label': 'UDP', 'value': 'udp'}],
                                                         value=['tcp', 'udp']), style={'display': 'inline-block', 'padding-right': '10px'}),
-                                           html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block', 'padding-right': '5px'}),
+                                           html.Div(html.B('Interface'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                            html.Div(dcc.Dropdown(id='interface_dropdown',
                                                         options=[
                                                             {'label': 'Internal Interface', 'value': 'internal'},
@@ -102,7 +102,8 @@ def create_dash_micro(flask_app):
                                                             {'label': 'WiFi Tap Interface', 'value': 'tap'},
                                                         ],
                                                         value='internal', style={'position':'relative', 'top': '5px'}
-                                                        ), style={'width': '30%', 'display': 'inline-block'})]),
+                                                        ), style={'width': '30%', 'display': 'inline-block', 'padding-right': '5px'}),
+                                           html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block'})]),
 
                                  html.Div([
                                            html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS)')),
