@@ -199,7 +199,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
     print(active_int)
-    print(visdcc_display_dict[active_int])
+    #print(visdcc_display_dict[active_int])
+    print(micro_int_files[active_int])
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict[active_int].keys():  # edges
