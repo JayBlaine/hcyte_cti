@@ -98,7 +98,7 @@ def create_dash_micro(flask_app):
                                                             {'label': 'External Interface', 'value': '/var/www/webApp/webApp/static/ext_micro_live.csv'},
                                                             {'label': 'WiFi Tap Interface', 'value': '/var/www/webApp/webApp/static/tap_micro_live.csv'},
                                                         ],
-                                                        value='/var/www/webApp/webApp/static/int_micro_live.csv', style={'height': '5px'}
+                                                        value='/var/www/webApp/webApp/static/int_micro_live.csv', style={'height': '30%'}
                                                         ), style={'width': '30%', 'display': 'inline-block'})]),
 
                                  html.Div([
