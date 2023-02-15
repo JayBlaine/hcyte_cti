@@ -266,6 +266,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         num_malicious = 0
         num_udp = 0
         num_tcp = 0
+        mal_alerts = ""
         for key in visdcc_display_dict[active_int].keys():  # checking for if node has any malicious flows
             if ip + ':' in key:  # protocol filtering for each node based on flow protos
                 if visdcc_display_dict[active_int][key].ip_proto == 'UDP':
@@ -276,6 +277,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     ip not in broad_inner and '1' in visdcc_display_dict[active_int][key].label:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
+                mal_alerts += visdcc_display_dict[active_int][key].flow_alert
+                mal_alerts += '<br>'
                 if ip in home_net:
                     ip_type = 4
                 else:
@@ -285,8 +288,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             'label': ip_label,
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
-            'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
-                list(visdcc_display_dict[active_int].keys())))), num_malicious)}
+            'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>Alerts: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
+                list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alerts)}
         if new_node not in nodes and ip_type in vis_switches:  # ip filtering
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):  # protocol filtering of nodes
                 nodes.append(new_node)
