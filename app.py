@@ -82,15 +82,17 @@ def create_dash_micro(flask_app):
 
     dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
-                                 html.Div([dcc.Checklist(id='vis_filter', options=
+                                 html.Div([html.Div(html.B('Displayed Nodes'), style={'display': 'inline-block', 'padding-right': '5px'}),
+                                     dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
                                   {'label': 'External', 'value': 'external'},
                                   {'label': 'Multi/Broadcast', 'value': 'multi'},
                                   {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
-                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious']),]),
+                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'],style={'display': 'inline-block'}),]),
 
-                                 html.Div([html.Div(dcc.Checklist(id='proto_filter', options=
+                                 html.Div([html.Div(html.B('Protocol'), style={'display': 'inline-block', 'padding-right': '5px'}),
+                                 html.Div(dcc.Checklist(id='proto_filter', options=
                                  [{'label': 'TCP', 'value': 'tcp'},
                                   {'label': 'UDP', 'value': 'udp'}],
                                                         value=['tcp', 'udp']), style={'display': 'inline-block', 'padding-right': '10px'}),
