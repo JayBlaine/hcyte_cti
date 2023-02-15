@@ -1,5 +1,6 @@
 import csv
 import datetime as dt
+import math
 import re
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -221,32 +222,18 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             destIP_label, destIP_type = get_anonymized_label(destIP)
             srcIP_label, srcIP_type = get_anonymized_label(srcIP)  # TODO: CLEAN UP AND REMOVE REDUNDANT
 
-            """
-            if visdcc_display_dict[key].label == 1:  # set type to correct maliciousness
-                if srcIP in home_net:
-                    srcIP_type = 4
-                else:
-                    srcIP_type = 5
-                if destIP in home_net:
-                    destIP_type = 4
-                else:
-                    destIP_type = 5
-            """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
             width1 = float(visdcc_display_dict[active_int][key].ip_pkt_tot_num)
-            if width1 > 100:
-                width = 3
-            elif width1 > 10:
-                width = 2
-            else:
-                width = 1
+            width = int(math.log((width1//10), 10))
             new_edge = {
                 'id': IPandPort[0] + "__" + IPandPort[1],
                 'from': srcIP,
                 'to': destIP,
                 'label': '{}'.format(destPort),
                 'width':  width,
-                'title': "flow: {}<br>protocol: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
+                'title':
+                    "flow: {}<br>protocol: {}<br>number of packets: {}"
+                    "<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
                     visdcc_display_dict[active_int][key].ip_proto,
                     visdcc_display_dict[active_int][key].ip_pkt_tot_num,
@@ -266,33 +253,49 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         num_malicious = 0
         num_udp = 0
         num_tcp = 0
-        mal_alerts = ""
+        mal_alerts = {}
+        mal_alert_label = ""
         for key in visdcc_display_dict[active_int].keys():  # checking for if node has any malicious flows
-            if ip + ':' in key:  # protocol filtering for each node based on flow protos
+
+            # protocol filtering for each node based on flow protos
+            if ip + ':' in key:
                 if visdcc_display_dict[active_int][key].ip_proto == 'UDP':
                     num_udp += 1
                 elif visdcc_display_dict[active_int][key].ip_proto == 'TCP':
                     num_tcp += 1
+
+            # colon to prevent partial match on last digit i.e 4 and 46
             if ip + ':' in key and ip not in multi_net and ip not in broad_net and \
                     ip not in broad_inner and '1' in visdcc_display_dict[active_int][key].label:
-                # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
-                if visdcc_display_dict[active_int][key].flow_alert not in mal_alerts:
-                    mal_alerts += visdcc_display_dict[active_int][key].flow_alert
-                    mal_alerts += '<br>'
+
+                # adding alert type to dict for printing in node
+                if visdcc_display_dict[active_int][key].flow_alert not in mal_alerts.keys():
+                    mal_alerts[visdcc_display_dict[active_int][key].flow_alert] = 1
+                else:
+                    mal_alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
+
+                # converting type for coloring/filtering for malicious nodes
                 if ip in home_net:
                     ip_type = 4
                 else:
                     ip_type = 5
+
+        for key in mal_alerts.keys():  # converting from dict to str
+            mal_alert_label += "{}: {}<br>".format(key, mal_alerts[key])
+
         new_node = {
             'id': ip,
             'label': ip_label,
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>Alerts: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
-                list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alerts)}
-        if new_node not in nodes and ip_type in vis_switches:  # ip filtering
-            if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):  # protocol filtering of nodes
+                list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
+
+        # ip filtering of nodes
+        if new_node not in nodes and ip_type in vis_switches:
+            # protocol filtering of nodes
+            if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
