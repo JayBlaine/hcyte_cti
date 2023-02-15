@@ -39,6 +39,7 @@ df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 int_micro_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
 ext_micro_file = '/var/www/webApp/webApp/static/ext_micro_live.csv'
 tap_micro_file = '/var/www/webApp/webApp/static/tap_micro_live.csv'
+active_file = int_micro_file
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -184,14 +185,12 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     tcp_switch = 'TCP' if 'tcp' in proto_filter else '0'  # in str since ip_proto field is str
     udp_switch = 'UDP' if 'udp' in proto_filter else '0'
     proto_switches = [tcp_switch, udp_switch]  # TODO: TCP/UDP switches from checkbox to be implemented
-    print(exec(interface_dropdown))
+    if interface_dropdown is not None:
+        active_file = exec(interface_dropdown)
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        if n_intervals == 0:
-            visdcc_display_dict = csv_to_flow_dict(int_micro_file)
-        else:
-            visdcc_display_dict = csv_to_flow_dict(exec(interface_dropdown))
+        visdcc_display_dict = csv_to_flow_dict(active_file)
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
