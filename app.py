@@ -184,6 +184,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     tcp_switch = 'TCP' if 'tcp' in proto_filter else '0'  # in str since ip_proto field is str
     udp_switch = 'UDP' if 'udp' in proto_filter else '0'
     proto_switches = [tcp_switch, udp_switch]  # TODO: TCP/UDP switches from checkbox to be implemented
+    print(interface_dropdown)
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
