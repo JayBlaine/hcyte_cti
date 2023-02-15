@@ -93,7 +93,7 @@ def create_dash_micro(flask_app):
                                  html.Div([html.Div(dcc.Checklist(id='proto_filter', options=
                                  [{'label': 'TCP', 'value': 'tcp'},
                                   {'label': 'UDP', 'value': 'udp'}],
-                                                        value=['tcp', 'udp']), style={'display': 'inline-block'}),
+                                                        value=['tcp', 'udp']), style={'display': 'inline-block', 'padding-right': '10px'}),
                                            html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block'}),
                                            html.Div(dcc.Dropdown(id='interface_dropdown',
                                                         options=[
