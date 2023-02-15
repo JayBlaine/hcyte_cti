@@ -101,7 +101,7 @@ def create_dash_micro(flask_app):
                                                             {'label': 'External Interface', 'value': 'external'},
                                                             {'label': 'WiFi Tap Interface', 'value': 'tap'},
                                                         ],
-                                                        value='internal', style={'height': '30%', 'padding-right': '10px'}
+                                                        value='internal', style={'position':'relative', 'top': '-5px', 'padding-right': '10px'}
                                                         ), style={'width': '30%', 'display': 'inline-block'})]),
 
                                  html.Div([
