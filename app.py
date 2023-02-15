@@ -224,7 +224,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
             width1 = float(visdcc_display_dict[active_int][key].ip_pkt_tot_num)
-            width = int(math.log((width1//10), 10))
+            width = int(math.log(int(width1//10)+1, 10)) + 1
             new_edge = {
                 'id': IPandPort[0] + "__" + IPandPort[1],
                 'from': srcIP,
