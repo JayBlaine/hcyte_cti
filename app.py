@@ -14,6 +14,7 @@ from webApp.flow import Flow
 
 visdcc_display_dict = {}
 home_net = IPNetwork("192.168.50.0/24")
+home_ext = IPNetwork("64.183.181.215/32")
 multi_net = IPNetwork("224.0.0.0/4")
 broad_net = IPNetwork("255.255.255.0/24")
 broad_inner = IPNetwork("192.168.50.255/32")
@@ -47,8 +48,8 @@ df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for 
 
 
 def get_anonymized_label(addr: str):
-    addr_type = 1  # 1 = outside home sub, 2 = insdie home/net, 3 = broad/multicast
-    if addr in home_net and addr not in broad_inner:
+    addr_type = 1  # 1 = outside home sub, 2 = inside home/net, 3 = broad/multicast
+    if (addr in home_net or addr in home_ext) and addr not in broad_inner:
         addr_type = 2
     elif addr in multi_net or addr in broad_net or addr in broad_inner:
         addr_type = 3
@@ -98,7 +99,7 @@ def create_dash_micro(flask_app):
                                                             {'label': 'WiFi Tap Interface', 'value': '/var/www/webApp/webApp/static/tap_micro_live.csv'},
                                                         ],
                                                         value='/var/www/webApp/webApp/static/int_micro_live.csv'
-                                                        ), style={'width': '50%', 'display': 'inline-block'})]),
+                                                        ), style={'width': '30%', 'display': 'inline-block'})]),
 
                                  html.Div([
                                            html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS)')),
