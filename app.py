@@ -39,7 +39,7 @@ df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
 int_micro_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
 ext_micro_file = '/var/www/webApp/webApp/static/ext_micro_live.csv'
 tap_micro_file = '/var/www/webApp/webApp/static/tap_micro_live.csv'
-active_file = int_micro_file
+active_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -92,9 +92,9 @@ def create_dash_micro(flask_app):
                                                         value=['tcp', 'udp']), style={'width': '50%', 'display': 'inline-block'}),
                                            html.Div(dcc.Dropdown(id='interface_dropdown',
                                                         options=[
-                                                            {'label': 'Internal Interface', 'value': 'int_micro_file'},
-                                                            {'label': 'External Interface', 'value': 'ext_micro_file'},
-                                                            {'label': 'WiFi Tap Interface', 'value': 'tap_micro_file'},
+                                                            {'label': 'Internal Interface', 'value': '/var/www/webApp/webApp/static/int_micro_live.csv'},
+                                                            {'label': 'External Interface', 'value': '/var/www/webApp/webApp/static/ext_micro_live.csv'},
+                                                            {'label': 'WiFi Tap Interface', 'value': '/var/www/webApp/webApp/static/tap_micro_live.csv'},
                                                         ],
                                                         value='int_micro_file'
                                                         ), style={'width': '50%', 'display': 'inline-block'})]),
@@ -187,7 +187,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     udp_switch = 'UDP' if 'udp' in proto_filter else '0'
     proto_switches = [tcp_switch, udp_switch]  # TODO: TCP/UDP switches from checkbox to be implemented
     if interface_dropdown is not None:
-        active_file = exec(exec(interface_dropdown))
+        active_file = interface_dropdown
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
