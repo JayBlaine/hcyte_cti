@@ -171,7 +171,6 @@ def csv_to_flow_dict(live_micro_file):
     Input(component_id='interface_dropdown', component_property='value')
 )
 def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
-    print(interface_dropdown)
     global active_int
     # create visdcc thing here
     srcIPs = []
@@ -198,6 +197,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         visdcc_display_dict['internal'] = csv_to_flow_dict(micro_int_files['internal'])
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
+
+    print(active_int)
+    print(visdcc_display_dict[active_int])
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict[active_int].keys():  # edges
