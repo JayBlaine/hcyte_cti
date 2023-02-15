@@ -36,7 +36,9 @@ app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESS
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
-live_micro_file = '/var/www/webApp/webApp/static/micro_live.csv'
+int_micro_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
+ext_micro_file = '/var/www/webApp/webApp/static/ext_micro_live.csv'
+tap_micro_file = '/var/www/webApp/webApp/static/tap_micro_live.csv'
 
 df_flows_drop = df_flows.filter(regex='^all_', axis=1).columns.tolist()
 df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for other protocol filters
@@ -75,13 +77,21 @@ def create_dash_micro(flask_app):
 
     dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
-                                 html.Div(dcc.Checklist(id='vis_filter', options=
+                                 html.Div([dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
                                   {'label': 'External', 'value': 'external'},
                                   {'label': 'Multi/Broadcast', 'value': 'multi'},
                                   {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
-                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'])),
+                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious']),
+                                           dcc.Dropdown(id='interface_dropdown',
+                                                        options=[
+                                                            {'label': 'Internal Interface', 'value': 'int_micro_file'},
+                                                            {'label': 'External Interface', 'value': 'ext_micro_file'},
+                                                            {'label': 'WiFi Tap Interface', 'value': 'tap_micro_file'},
+                                                        ],
+                                                        value='int_micro_file'
+                                                        )]),
 
                                  html.Div(dcc.Checklist(id='proto_filter', options=
                                  [{'label': 'TCP', 'value': 'tcp'},
@@ -123,7 +133,7 @@ dash_app_micro = create_dash_micro(flask_app=app)
 dash_app_micro.scripts.config.serve_locally = True
 
 
-def csv_to_flow_dict():
+def csv_to_flow_dict(live_micro_file):
     ret_dict = {}
     with open(live_micro_file, 'r') as f:
         cols = list(Flow.__dict__.keys())[3:64]
@@ -152,9 +162,10 @@ def csv_to_flow_dict():
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value'),
     Input(component_id='proto_filter', component_property='value'),
-    Input(component_id='flow_slider', component_property='value')
+    Input(component_id='flow_slider', component_property='value'),
+    Input(component_id='interface_dropdown', component_property='value')
 )
-def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None):
+def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
     # create visdcc thing here
     srcIPs = []
     destIPs = []
@@ -175,7 +186,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = csv_to_flow_dict()
+        visdcc_display_dict = csv_to_flow_dict(interface_dropdown)
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
