@@ -166,6 +166,7 @@ def csv_to_flow_dict(live_micro_file):
     Input(component_id='interface_dropdown', component_property='value')
 )
 def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
+    print(interface_dropdown)
     # create visdcc thing here
     srcIPs = []
     destIPs = []
