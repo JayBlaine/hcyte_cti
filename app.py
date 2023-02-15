@@ -16,8 +16,8 @@ visdcc_display_dict = {'internal': {},
                        'external': {},
                        'tap': {}}
 micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv',
-                   'external': '/var/www/webApp/webApp/static/int_micro_live.csv',
-                   'tap': '/var/www/webApp/webApp/static/int_micro_live.csv'}
+                   'external': '/var/www/webApp/webApp/static/ext_micro_live.csv',
+                   'tap': '/var/www/webApp/webApp/static/tap_micro_live.csv'}
 active_int = 'internal'
 
 home_net = IPNetwork("192.168.50.0/24")
@@ -198,9 +198,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
-    print(active_int)
-    #print(visdcc_display_dict[active_int])
-    print(micro_int_files[active_int])
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict[active_int].keys():  # edges
