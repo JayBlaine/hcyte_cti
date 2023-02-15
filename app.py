@@ -277,8 +277,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     ip not in broad_inner and '1' in visdcc_display_dict[active_int][key].label:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
-                mal_alerts += visdcc_display_dict[active_int][key].flow_alert
-                mal_alerts += '<br>'
+                if visdcc_display_dict[active_int][key].flow_alert not in mal_alerts:
+                    mal_alerts += visdcc_display_dict[active_int][key].flow_alert
+                    mal_alerts += '<br>'
                 if ip in home_net:
                     ip_type = 4
                 else:
