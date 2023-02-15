@@ -168,6 +168,7 @@ def csv_to_flow_dict(live_micro_file):
 )
 def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
     print(interface_dropdown)
+    global active_file
     # create visdcc thing here
     srcIPs = []
     destIPs = []
