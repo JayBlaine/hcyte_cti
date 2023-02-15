@@ -12,7 +12,12 @@ from netaddr import IPNetwork
 from webApp import forms
 from webApp.flow import Flow
 
-visdcc_display_dict = {}
+visdcc_display_dict = {'internal': {},
+                       'external': {},
+                       'tap': {}}
+micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv',
+                   'external': '/var/www/webApp/webApp/static/int_micro_live.csv',
+                   'tap': '/var/www/webApp/webApp/static/int_micro_live.csv'}
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
 multi_net = IPNetwork("224.0.0.0/4")
@@ -37,9 +42,6 @@ app.config.update(SESSION_COOKIE_SECURE=True, SESSION_COOKIE_HTTPONLY=True, SESS
 # TODO: CHANGE TO STATIC /var/www/webApp/webApp/static
 df = pd.read_csv('/var/www/webApp/webApp/static/website_data.csv')
 df_flows = pd.read_csv('/var/www/webApp/webApp/static/website_flow_data.csv')
-int_micro_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
-ext_micro_file = '/var/www/webApp/webApp/static/ext_micro_live.csv'
-tap_micro_file = '/var/www/webApp/webApp/static/tap_micro_live.csv'
 
 active_file = '/var/www/webApp/webApp/static/int_micro_live.csv'
 
@@ -94,11 +96,11 @@ def create_dash_micro(flask_app):
                                                         value=['tcp', 'udp']), style={'width': '30%', 'display': 'inline-block'}),
                                            html.Div(dcc.Dropdown(id='interface_dropdown',
                                                         options=[
-                                                            {'label': 'Internal Interface', 'value': '/var/www/webApp/webApp/static/int_micro_live.csv'},
-                                                            {'label': 'External Interface', 'value': '/var/www/webApp/webApp/static/ext_micro_live.csv'},
-                                                            {'label': 'WiFi Tap Interface', 'value': '/var/www/webApp/webApp/static/tap_micro_live.csv'},
+                                                            {'label': 'Internal Interface', 'value': 'internal'},
+                                                            {'label': 'External Interface', 'value': 'external'},
+                                                            {'label': 'WiFi Tap Interface', 'value': 'tap'},
                                                         ],
-                                                        value='/var/www/webApp/webApp/static/int_micro_live.csv', style={'height': '30%'}
+                                                        value='internal', style={'height': '30%'}
                                                         ), style={'width': '30%', 'display': 'inline-block'})]),
 
                                  html.Div([
@@ -189,15 +191,17 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     udp_switch = 'UDP' if 'udp' in proto_filter else '0'
     proto_switches = [tcp_switch, udp_switch]  # TODO: TCP/UDP switches from checkbox to be implemented
     if interface_dropdown is not None:
-        active_file = interface_dropdown
+        active_int = interface_dropdown
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = csv_to_flow_dict(active_file)
+        visdcc_display_dict['internal'] = csv_to_flow_dict(micro_int_files['internal'])
+        visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
+        visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
     # TODO: Change from full rebuild to something more efficient
-    for key in visdcc_display_dict.keys():  # edges
-        if float(visdcc_display_dict[key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
+    for key in visdcc_display_dict[active_file].keys():  # edges
+        if float(visdcc_display_dict[active_file][key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -225,7 +229,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     destIP_type = 5
             """
             # Add IP check for home/multicast -> if not in either, anonymize. Color depending on both checks
-            width1 = float(visdcc_display_dict[key].ip_pkt_tot_num)
+            width1 = float(visdcc_display_dict[active_file][key].ip_pkt_tot_num)
             if width1 > 100:
                 width = 3
             elif width1 > 10:
@@ -240,15 +244,15 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 'width':  width,
                 'title': "flow: {}<br>protocol: {}<br>number of packets: {}<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
                     '{}:{} -> {}:{}'.format(srcIP_label, srcPort, destIP_label, destPort),
-                    visdcc_display_dict[key].ip_proto,
-                    visdcc_display_dict[key].ip_pkt_tot_num,
-                    visdcc_display_dict[key].ip_pkt_tot_len,
-                    visdcc_display_dict[key].ip_all_flow_duration,
-                    visdcc_display_dict[key].flow_alert)
+                    visdcc_display_dict[active_file][key].ip_proto,
+                    visdcc_display_dict[active_file][key].ip_pkt_tot_num,
+                    visdcc_display_dict[active_file][key].ip_pkt_tot_len,
+                    visdcc_display_dict[active_file][key].ip_all_flow_duration,
+                    visdcc_display_dict[active_file][key].flow_alert)
             }
             if new_edge not in edges:
                 if srcIP_type in vis_switches or destIP_type in vis_switches:
-                    if visdcc_display_dict[key].ip_proto in proto_switches:
+                    if visdcc_display_dict[active_file][key].ip_proto in proto_switches:
                         edges.append(new_edge)
 
     ip_all = set(srcIPs + destIPs)
@@ -258,14 +262,14 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         num_malicious = 0
         num_udp = 0
         num_tcp = 0
-        for key in visdcc_display_dict.keys():  # checking for if node has any malicious flows
+        for key in visdcc_display_dict[active_file].keys():  # checking for if node has any malicious flows
             if ip + ':' in key:  # protocol filtering for each node based on flow protos
-                if visdcc_display_dict[key].ip_proto == 'UDP':
+                if visdcc_display_dict[active_file][key].ip_proto == 'UDP':
                     num_udp += 1
-                elif visdcc_display_dict[key].ip_proto == 'TCP':
+                elif visdcc_display_dict[active_file][key].ip_proto == 'TCP':
                     num_tcp += 1
             if ip + ':' in key and ip not in multi_net and ip not in broad_net and \
-                    ip not in broad_inner and '1' in visdcc_display_dict[key].label:
+                    ip not in broad_inner and '1' in visdcc_display_dict[active_file][key].label:
                 # colon to prevent partial match on last digit i.e 4 and 46
                 num_malicious += 1
                 if ip in home_net:
@@ -278,20 +282,20 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
-                list(visdcc_display_dict.keys())))), num_malicious)}
+                list(visdcc_display_dict[active_file].keys())))), num_malicious)}
         if new_node not in nodes and ip_type in vis_switches:  # ip filtering
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):  # protocol filtering of nodes
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
-    active_flows = "Active flows: {}".format(len(visdcc_display_dict.keys()))
+    active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_file].keys()))
 
     alerts = {}  # TODO: RETURN ACTIVE ALERTS TO BE DISPLAYED SOMEWHERE
-    for key in visdcc_display_dict.keys():
-        if int(visdcc_display_dict[key].label) == 1 and visdcc_display_dict[key].flow_alert not in alerts.keys():
-            alerts[visdcc_display_dict[key].flow_alert] = 0
-        elif int(visdcc_display_dict[key].label) == 1:
-            alerts[visdcc_display_dict[key].flow_alert] += 1
+    for key in visdcc_display_dict[active_file].keys():
+        if int(visdcc_display_dict[active_file][key].label) == 1 and visdcc_display_dict[active_file][key].flow_alert not in alerts.keys():
+            alerts[visdcc_display_dict[active_file][key].flow_alert] = 0
+        elif int(visdcc_display_dict[active_file][key].label) == 1:
+            alerts[visdcc_display_dict[active_file][key].flow_alert] += 1
 
     return data, active_flows
 
