@@ -94,14 +94,14 @@ def create_dash_micro(flask_app):
                                  [{'label': 'TCP', 'value': 'tcp'},
                                   {'label': 'UDP', 'value': 'udp'}],
                                                         value=['tcp', 'udp']), style={'display': 'inline-block', 'padding-right': '10px'}),
-                                           html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block'}),
+                                           html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                            html.Div(dcc.Dropdown(id='interface_dropdown',
                                                         options=[
                                                             {'label': 'Internal Interface', 'value': 'internal'},
                                                             {'label': 'External Interface', 'value': 'external'},
                                                             {'label': 'WiFi Tap Interface', 'value': 'tap'},
                                                         ],
-                                                        value='internal', style={'position':'relative', 'top': '10px', 'padding-right': '10px'}
+                                                        value='internal', style={'position':'relative', 'top': '10px'}
                                                         ), style={'width': '30%', 'display': 'inline-block'})]),
 
                                  html.Div([
