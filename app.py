@@ -281,6 +281,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 else:
                     ip_type = 5
 
+        if len(mal_alerts.keys()) > 0:
+            mal_alert_label += 'Alerts:'
         for key in mal_alerts.keys():  # converting from dict to str
             mal_alert_label += "<br>{}: {}".format(key, mal_alerts[key])
 
@@ -289,7 +291,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             'label': ip_label,
             'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
 
-            'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>Alerts: {}".format(ip_label, len(re.findall(ip + ':', ''.join(
+            'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
 
         # ip filtering of nodes
