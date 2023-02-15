@@ -83,20 +83,19 @@ def create_dash_micro(flask_app):
                                   {'label': 'Multi/Broadcast', 'value': 'multi'},
                                   {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
                                   {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
-                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious']),
-                                           dcc.Dropdown(id='interface_dropdown',
+                                                        value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious']),]),
+
+                                 html.Div([dcc.Checklist(id='proto_filter', options=
+                                 [{'label': 'TCP', 'value': 'tcp'},
+                                  {'label': 'UDP', 'value': 'udp'}],
+                                                        value=['tcp', 'udp']), dcc.Dropdown(id='interface_dropdown',
                                                         options=[
                                                             {'label': 'Internal Interface', 'value': 'int_micro_file'},
                                                             {'label': 'External Interface', 'value': 'ext_micro_file'},
                                                             {'label': 'WiFi Tap Interface', 'value': 'tap_micro_file'},
                                                         ],
                                                         value='int_micro_file'
-                                                        )]),
-
-                                 html.Div(dcc.Checklist(id='proto_filter', options=
-                                 [{'label': 'TCP', 'value': 'tcp'},
-                                  {'label': 'UDP', 'value': 'udp'}],
-                                                        value=['tcp', 'udp'])),
+                                                        )], style={'display': 'inline-block'}),
 
                                  html.Div([
                                            html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS)')),
@@ -187,7 +186,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     global visdcc_display_dict
     if live_check or n_intervals == 0:  # init build or update with live flows
-        visdcc_display_dict = csv_to_flow_dict(interface_dropdown)
+        visdcc_display_dict = csv_to_flow_dict(exec(interface_dropdown))
 
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict.keys():  # edges
