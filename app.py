@@ -140,7 +140,8 @@ def create_dash_micro(flask_app):
                                                         'updateInterval': 100,
                                                         'onlyDynamicEdges': False,
                                                         'fit': True
-                                                    }
+                                                    },
+                                                    'nodes': {'color': {'border': '#FFFFFF'}}
                                                 }
                                                              )),
 
