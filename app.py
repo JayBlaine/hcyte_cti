@@ -123,7 +123,29 @@ def create_dash_micro(flask_app):
                                                         'blockShifting': True,
                                                         'edgeMinimization': True
                                                     }
-                                                })),
+                                                }, physics={
+                                                    'enabled': True,
+                                                    'maxVelocity': 25,
+                                                    'solver': 'forceAtlas2Based',
+                                                    'forceAtlas2Based': {
+                                                        'theta': 0.5,
+                                                        'gravitationalConstant': -50,
+                                                        'centralGravity': 0.01,
+                                                        'springConstant': 0.08,
+                                                        'springLength': 100,
+                                                        'damping': 0.4,
+                                                        'avoidOverlap': 0
+                                                    },
+                                                    'stabilization': {
+                                                        'enabled': True,
+                                                        'iterations': 1000,
+                                                        'updateInterval': 100,
+                                                        'onlyDynamicEdges': False,
+                                                        'fit': True
+
+                                                    }
+                                                }
+                                                             )),
 
                                  dcc.Interval(
                                      id='interval_component',
