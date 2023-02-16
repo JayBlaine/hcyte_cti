@@ -189,7 +189,7 @@ def csv_to_flow_dict(live_micro_file):
                     try:
                         setattr(temp_flow, cols[col], row[col])
                     except IndexError:
-                        print('COL: ' + str(col[col]))
+                        print('COL: ' + str(cols[col]))
                         print('ROW: ' + str(row[col]))
                 ret_dict[key] = temp_flow
             read_rows += 1
