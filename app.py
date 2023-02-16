@@ -115,7 +115,16 @@ def create_dash_micro(flask_app):
                                            ]),
 
                                  visdcc.Network(id='net',
-                                                options=dict(height='1200px', width='100%')),
+                                                options=dict(height='1200px', width='100%', layout={
+                                                    'improvedLayout': True,
+                                                    'clusterThreshold': 150,
+                                                    'hierarchical': {
+                                                        'enabled': False,
+                                                        'blockShifting': True,
+                                                        'edgeMinimization': True,
+
+                                                    }
+                                                })),
 
                                  dcc.Interval(
                                      id='interval_component',
