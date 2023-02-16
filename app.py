@@ -426,7 +426,7 @@ def displayHoverDataGraph(hoverData=None, clickData=None):
         curve = curve_nums[clickData['points'][0]['curveNumber']]
 
     else:
-        date1 = "2023-01-04"
+        date1 = str(dt.date.today() - dt.timedelta(days=1))
         # TODO: CHANGE TO dt.date.today() - timedelta(days=1) when day to day updating is implemented
         curve = curve_nums[1]
 
