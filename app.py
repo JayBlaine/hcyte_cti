@@ -176,7 +176,6 @@ def csv_to_flow_dict(live_micro_file):
     ret_dict = {}
     with open(live_micro_file, 'r') as f:
         cols = list(Flow.__dict__.keys())[3:64]
-        print(cols)
         cols.insert(0, 'empty')
         r_obj = csv.reader(f)
         rows = list(r_obj)
