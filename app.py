@@ -136,22 +136,12 @@ def create_dash_micro(flask_app):
                                                         'damping': 0.09,
                                                         'avoidOverlap': 0
                                                     },
-                                                    'forceAtlas2Based': {
-                                                        'theta': 0.5,
-                                                        'gravitationalConstant': -50,
-                                                        'centralGravity': 0.01,
-                                                        'springConstant': 0.08,
-                                                        'springLength': 25,
-                                                        'damping': 0.4,
-                                                        'avoidOverlap': 0
-                                                    },
                                                     'stabilization': {
                                                         'enabled': True,
                                                         'iterations': 1000,
                                                         'updateInterval': 100,
                                                         'onlyDynamicEdges': False,
                                                         'fit': True
-
                                                     }
                                                 }
                                                              )),
