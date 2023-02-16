@@ -117,12 +117,11 @@ def create_dash_micro(flask_app):
                                  visdcc.Network(id='net',
                                                 options=dict(height='1200px', width='100%', layout={
                                                     'improvedLayout': True,
-                                                    'clusterThreshold': 150,
+                                                    'clusterThreshold': 1000,
                                                     'hierarchical': {
-                                                        'enabled': False,
+                                                        'enabled': True,
                                                         'blockShifting': True,
-                                                        'edgeMinimization': True,
-
+                                                        'edgeMinimization': True
                                                     }
                                                 })),
 
