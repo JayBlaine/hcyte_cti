@@ -176,7 +176,7 @@ def csv_to_flow_dict(live_micro_file):
     ret_dict = {}
     with open(live_micro_file, 'r') as f:
         cols = list(Flow.__dict__.keys())[3:64]
-        cols.insert(0, 'empty')
+        cols.insert(0, 'empty')  # for key
         r_obj = csv.reader(f)
         rows = list(r_obj)
         read_rows = 0
@@ -185,7 +185,7 @@ def csv_to_flow_dict(live_micro_file):
             if read_rows != 0:  # skip header
                 key = row[0]
                 temp_flow = Flow()
-                for col in range(len(cols)):
+                for col in range(1, len(cols)):
                     try:
                         setattr(temp_flow, cols[col], row[col])
                     except IndexError:
