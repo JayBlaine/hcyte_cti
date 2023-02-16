@@ -320,7 +320,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         new_node = {
             'id': ip,
             'label': ip_label,
-            'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type], 'border': '000000',
+            'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type], 'border': '#000000',
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
