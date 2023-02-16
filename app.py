@@ -299,7 +299,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     num_tcp += 1
 
             # colon to prevent partial match on last digit i.e 4 and 46
-            if ip + ':' in key and ip not in multi_net and ip not in broad_net and ip not in broad_inner and '1' in visdcc_display_dict[active_int][key].label:
+            if ip + ':' in key and ip not in multi_net and ip not in broad_net and ip not in broad_inner and visdcc_display_dict[active_int][key].label == 1:
                 num_malicious += 1
 
                 # adding alert type to dict for printing in node
