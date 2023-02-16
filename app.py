@@ -126,7 +126,16 @@ def create_dash_micro(flask_app):
                                                 }, physics={
                                                     'enabled': True,
                                                     'maxVelocity': 25,
-                                                    'solver': 'forceAtlas2Based',
+                                                    'solver': 'barnesHut',
+                                                    'barnesHut': {
+                                                        'theta': 0.5,
+                                                        'gravitationalConstant': -2000,
+                                                        'centralGravity': 0.3,
+                                                        'springLength': 95,
+                                                        'springConstant': 0.04,
+                                                        'damping': 0.09,
+                                                        'avoidOverlap': 0
+                                                    },
                                                     'forceAtlas2Based': {
                                                         'theta': 0.5,
                                                         'gravitationalConstant': -50,
