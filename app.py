@@ -128,7 +128,7 @@ def create_dash_micro(flask_app):
                                                     'maxVelocity': 25,
                                                     'solver': 'barnesHut',
                                                     'barnesHut': {
-                                                        'theta': 0.3,
+                                                        'theta': 0.5,
                                                         'gravitationalConstant': -2000,
                                                         'centralGravity': 0.75,
                                                         'springLength': 85,
