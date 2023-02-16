@@ -109,7 +109,7 @@ def create_dash_micro(flask_app):
                                            html.Div(html.B('Note: Tap Interface Prone to breaking'), style={'display': 'inline-block'})]),
 
                                  html.Div([
-                                           html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS)')),
+                                           html.Div(html.B('Packets In Flow (WARNING: VALUE < 4 MAY RESULT IN PERFORMANCE LOSS FROM INCOMPLETE FLOWS)')),
                                            html.Div(dcc.Slider(1, 1000, 1, value=4, marks=None,
                                                      tooltip={"placement": "bottom", "always_visible": True}, id='flow_slider'))
                                            ]),
