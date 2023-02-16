@@ -141,7 +141,7 @@ def create_dash_micro(flask_app):
                                                         'onlyDynamicEdges': False,
                                                         'fit': True
                                                     }
-                                                }, nodes={'color': {'border': '#FFFFFF'}}
+                                                }, nodes={'color': {'border': '#000000'}}
                                                              )),
 
                                  dcc.Interval(
