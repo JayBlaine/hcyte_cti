@@ -186,7 +186,11 @@ def csv_to_flow_dict(live_micro_file):
                 key = row[0]
                 temp_flow = Flow()
                 for col in range(1, len(cols)):
-                    setattr(temp_flow, cols[col], row[col])
+                    try:
+                        setattr(temp_flow, cols[col], row[col])
+                    except IndexError:
+                        print('COL: ' + str(col))
+                        print('ROW: ' + str(row))
                 ret_dict[key] = temp_flow
             read_rows += 1
     return ret_dict
