@@ -119,7 +119,7 @@ def create_dash_micro(flask_app):
                                                     'improvedLayout': True,
                                                     'clusterThreshold': 1000,
                                                     'hierarchical': {
-                                                        'enabled': False,
+                                                        'enabled': True,
                                                         'blockShifting': True,
                                                         'edgeMinimization': True
                                                     }
