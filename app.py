@@ -130,7 +130,7 @@ def create_dash_micro(flask_app):
                                                     'barnesHut': {
                                                         'theta': 0.4,
                                                         'gravitationalConstant': -1000,
-                                                        'centralGravity': 0.3,
+                                                        'centralGravity': 0.5,
                                                         'springLength': 95,
                                                         'springConstant': 0.04,
                                                         'damping': 0.09,
