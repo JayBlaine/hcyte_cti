@@ -189,9 +189,9 @@ def csv_to_flow_dict(live_micro_file):
                     try:
                         setattr(temp_flow, cols[col], row[col])
                     except IndexError:
-                        print('ERROR: BAD FILE READ AT {}: INCOMPLETE FLOW ENTRY'.format(live_micro_file))
+                        #print('ERROR: BAD FILE READ AT {}: INCOMPLETE FLOW ENTRY'.format(live_micro_file))
                         read_rows += 1
-                        continue  # imcomplete row, throw out
+                        continue  # incomplete row from WAR/concurrent access with sniffer, throw out
                 ret_dict[key] = temp_flow
             read_rows += 1
     return ret_dict
