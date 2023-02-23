@@ -388,7 +388,7 @@ def display_sweeps_and_scans(scans):
     #if(len(scans['nodes']) > 0):
     #    print("you clicked a node")
     #print("Printing clicked stuff: " + str(scans))
-    #return scans
+    return scans
     #print(selection)
 
 
