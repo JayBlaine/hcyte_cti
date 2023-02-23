@@ -115,6 +115,7 @@ def create_dash_micro(flask_app):
                                            ]),
 
                                  visdcc.Network(id='net',
+                                                selection = {'nodes':[], 'edges':[]},
                                                 options=dict(height='1200px', width='100%', layout={
                                                     'improvedLayout': True,
                                                     'hierarchical': {
@@ -379,7 +380,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-   # Output(component_id='net', component_property='data'),
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(scans=None):
