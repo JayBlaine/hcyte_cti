@@ -290,7 +290,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 #print("Scan match incremented")
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
-        if(matches > 5): #5 is just an arbitrary threshold
+        if(matches > 2): #5 is just an arbitrary threshold
             print("Scan found") 
             scans[edges[i]["from"]] = edges[i]["to"]
     print(scans)
