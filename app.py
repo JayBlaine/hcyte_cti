@@ -380,10 +380,12 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
+    Output('nodes', 'children'),
     [Input(component_id='net', component_property='selection')]
 )
 def display_sweeps_and_scans(scans):
     print(scans)
+    return scans
     #print(selection)
 
 
