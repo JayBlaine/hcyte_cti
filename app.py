@@ -293,21 +293,22 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         if(matches > 2): #5 is just an arbitrary threshold
             print("Scan found") 
             scans[edges[i]["from"]] = edges[i]["to"]
-    print(scans)
+    print("Scans: " + str(scans))
 
     #search for potential sweeps within the edges
-    #sweeps = {}
-    #for i in range(edges):
-    #    matches = 0
+    sweeps = {}
+    for i in range(len(edges)):
+        matches = 0
         #get the dest port by spliting the edge id
-    #    cur_dest = edges[i]["id"].split("__")[1].split(":")[1]
-    #    for edge in edges:
-    #        edge_dest = edge["id"].split("__")[1].split(":")[1]
+        cur_dest = edges[i]["id"].split("__")[1].split(":")[1]
+        for edge in edges:
+            edge_dest = edge["id"].split("__")[1].split(":")[1]
             #if the from IPs and dest ports match, it is a potential scan
-    #        if(edges[i]["from"] == edge["from"] and cur_dest == edge_dest):
-    #            matches += 1
-    #    if(matches > 5):
-    #        sweeps[edges[i]["from"]] = cur_dest
+            if(edges[i]["from"] == edge["from"] and cur_dest == edge_dest):
+                matches += 1
+        if(matches > 2):
+            sweeps[edges[i]["from"]] = cur_dest
+    print("Sweeps: " + str(sweeps))
     
     
     ip_all = set(srcIPs + destIPs)
