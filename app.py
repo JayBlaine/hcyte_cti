@@ -291,7 +291,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
         if(matches > 2): #5 is just an arbitrary threshold
-            print("Scan found") 
+            #print("Scan found") 
             scans[edges[i]["from"]] = edges[i]["to"]
     print("Scans: " + str(scans))
 
@@ -375,6 +375,15 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
 
     return data, active_flows
+
+#input: 
+#output: net, data
+@dash_app_micro.callback(
+    Output(component_id='net', component_property='data'),
+    Input(component_id='net', component_property='selection'),
+)
+def display_sweeps_and_scans(scans=None, sweeps=None):
+    print(selection)
 
 
 def create_dash_macro(flask_app):
