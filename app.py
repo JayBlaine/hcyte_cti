@@ -382,8 +382,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 @dash_app_micro.callback(
     Input(component_id='net', component_property='selection')
 )
-def display_sweeps_and_scans(scans=None):
-    pass
+def display_sweeps_and_scans(scans):
+    print(scans)
     #print(selection)
 
 
