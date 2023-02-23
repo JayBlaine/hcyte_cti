@@ -281,18 +281,18 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     #search for potential scans by checking for edges with matching to and from IPs
     scans = {}
     #focus on one edge
-    #for i in range(edges):
-    #    matches = 0
+    for i in range(len(edges)):
+        matches = 0
         #loop through the other edges
-    #    for edge in edges:
+        for edge in edges:
             #increment matches if both the to and from IPs match
-    #        if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"]):
-    #            print("Scan match incremented")
-    #            matches += 1
+            if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"]):
+                print("Scan match incremented")
+                matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
-    #    if(matches > 5): #5 is just an arbitrary threshold
-    #        print("Scan found") 
-    #        scans[edges[i]["from"]] = edges[i]["to"]
+        if(matches > 5): #5 is just an arbitrary threshold
+            print("Scan found") 
+            scans[edges[i]["from"]] = edges[i]["to"]
 
     #search for potential sweeps within the edges
     #sweeps = {}
