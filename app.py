@@ -383,7 +383,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(scans=None, sweeps=None):
-    print(selection)
+    pass
+    #print(selection)
 
 
 def create_dash_macro(flask_app):
