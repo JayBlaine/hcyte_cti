@@ -384,6 +384,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     [Input(component_id='net', component_property='selection')]
 )
 def display_sweeps_and_scans(scans):
+    print("running click function")
     print("Printing clicked stuff: " + str(scans))
     return scans
     #print(selection)
