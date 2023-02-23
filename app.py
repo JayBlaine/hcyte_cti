@@ -379,16 +379,16 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
 #input: 
 #output: net, data
-@dash_app_micro.callback(
-    Output('nodes', 'children'),
-    [Input(component_id='net', component_property='selection')]
-)
-def display_sweeps_and_scans(scans):
-    print("running click function")
+#@dash_app_micro.callback(
+#    Output('nodes', 'children'),
+#    [Input(component_id='net', component_property='selection')]
+#)
+#def display_sweeps_and_scans(scans):
+#    print("running click function")
     #if(len(scans['nodes']) > 0):
     #    print("you clicked a node")
     #print("Printing clicked stuff: " + str(scans))
-    return scans
+#    return scans
     #print(selection)
 
 
