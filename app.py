@@ -294,7 +294,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         if(matches > 2): #5 is just an arbitrary threshold
             #print("Scan found") 
             scans[edges[i]["from"]] = edges[i]["to"]
-    print("Scans: " + str(scans))
+    #print("Scans: " + str(scans))
 
     #search for potential sweeps within the edges
     sweeps = {}
@@ -309,7 +309,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 matches += 1
         if(matches > 2):
             sweeps[edges[i]["from"]] = cur_dest
-    print("Sweeps: " + str(sweeps))
+    #print("Sweeps: " + str(sweeps))
     
     
     ip_all = set(srcIPs + destIPs)
@@ -384,7 +384,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     [Input(component_id='net', component_property='selection')]
 )
 def display_sweeps_and_scans(scans):
-    print(scans)
+    print("Printing clicked stuff: " + str(scans))
     return scans
     #print(selection)
 
