@@ -21,6 +21,8 @@ micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv
                    'tap': '/var/www/webApp/webApp/static/tap_micro_live.csv'}
 active_int = 'internal'
 
+scans_dict = {}
+
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
 multi_net = IPNetwork("224.0.0.0/4")
@@ -283,7 +285,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                         edges.append(new_edge)
 
     #search for potential scans by checking for edges with matching to and from IPs
-    global scans_dict
     #scans = {}
     #focus on one edge
     for i in range(len(edges)):
