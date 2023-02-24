@@ -23,6 +23,8 @@ active_int = 'internal'
 
 scans_dict = {}
 sweeps_dict = {}
+sweepNodes = []
+scanNodes = []
 
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
@@ -222,6 +224,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     edges = []
     nodes = []
 
+
     # switches match with codes returned from anon checks for addr type
     external_switch = 1 if 'external' in vis_filter else 0
     internal_switch = 2 if 'internal' in vis_filter else 0
@@ -300,7 +303,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 #print("Scan match incremented")
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
-        if(matches > 1): #5 is just an arbitrary threshold
+        if(matches > 1): #arbitrary threshold
             #print("Scan found") 
             scans_dict[edges[i]["from"]] = edges[i]["to"]
     #print("Scans: " + str(scans))
@@ -374,13 +377,23 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node['id'] in scans_dict and new_node['id'] in sweeps_dict:
                     new_node['color'] = 'brown'
+                    scanNodes.append(new_node)
+                    sweepNodes.append(new_node)
+                    continue
                 elif new_node['id'] in scans_dict:
                     new_node['color'] = 'blue'
+                    scanNodes.append(new_node)
+                    continue
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
+                    sweepNodes.append(new_node)
+                    continue
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
+
+
+
     active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
 
     alerts = {}  # TODO: RETURN ACTIVE ALERTS TO BE DISPLAYED SOMEWHERE
@@ -395,6 +408,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
+    Output(component_id='net', component_property='data')
     Output(component_id='nodes', component_property='children'),
     Input(component_id='net', component_property='data'),
     Input(component_id='net', component_property='selection')
@@ -407,8 +421,9 @@ def display_sweeps_and_scans(current_data, clicked_node):
         print(clicked_node['nodes'][0])
         print("Scans: " + str(scans_dict))
         print("Sweeps: " + str(sweeps_dict))
+        total_data = current_data + scanNodes + sweepNodes
     #print("Printing clicked stuff: " + str(scans))
-    return clicked_node
+    return total_data, clicked_node
     #print(selection)
 
 
