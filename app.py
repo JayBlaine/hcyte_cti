@@ -149,7 +149,10 @@ def create_dash_micro(flask_app):
                                      id='interval_component',
                                      interval=5 * 1000,  # in milliseconds
                                      n_intervals=0
-                                 ), html.Div(id='hidden_div', style={'display': 'none'})])
+                                 ), html.Div(id='hidden_div', style={'display': 'none'})
+                                 html.Div(id='nodes'),
+                                 html.Div(id='edges')
+                                 ])
 
     return dash_app1
 
@@ -380,7 +383,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-    Output(component_id='net', component_property='data'),
+    Output(component_id='nodes', component_property='children'),
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(scans):
