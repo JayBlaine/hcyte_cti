@@ -290,9 +290,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     #search for potential scans by checking for edges with matching to and from IPs
     #scans = {}
-    for edge in edges:
-        print("From: " + str(edge["from"]))
-        print("To: " + str(edge["to"]))
     #focus on one edge
     for i in range(len(edges)):
         matches = 0
