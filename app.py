@@ -149,7 +149,7 @@ def create_dash_micro(flask_app):
                                      id='interval_component',
                                      interval=5 * 1000,  # in milliseconds
                                      n_intervals=0
-                                 ), html.Div(id='hidden_div', style={'display': 'none'})
+                                 ), html.Div(id='hidden_div', style={'display': 'none'}),
                                  html.Div(id='nodes'),
                                  html.Div(id='edges')
                                  ])
