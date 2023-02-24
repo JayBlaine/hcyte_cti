@@ -393,12 +393,13 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 )
 def display_sweeps_and_scans(current_data, clicked_node):
     print("running click function")
+    print(current_data)
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         print(scans['nodes'][0])
         print(scans_dict)
     #print("Printing clicked stuff: " + str(scans))
-    return current_data, clicked_node
+    return clicked_node
     #print(selection)
 
 
