@@ -294,7 +294,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         #loop through the other edges
         for edge in edges:
             #increment matches if both the to and from IPs match
-            if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"] and edges[i] != edge):
+            if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"]) or (edges[i]["from"] == edge["to"] and edges[i]["to"] == edge["from"]) and edges[i] != edge:
                 #print("Scan match incremented")
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
