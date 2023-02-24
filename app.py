@@ -370,9 +370,11 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         if new_node not in nodes and ip_type in vis_switches:
             # protocol filtering of nodes
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
-                if new_node['id'] in scans_dict:
+                if new_node['id'] in scans_dict and new_node['id'] in sweeps_dict:
+                    new_node['color'] = 'brown'
+                elif new_node['id'] in scans_dict:
                     new_node['color'] = 'blue'
-                if new_node['id'] in sweeps_dict:
+                elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
                 nodes.append(new_node)
 
