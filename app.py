@@ -22,6 +22,7 @@ micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv
 active_int = 'internal'
 
 scans_dict = {}
+sweeps_dict = {}
 
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
@@ -302,7 +303,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     #print("Scans: " + str(scans))
 
     #search for potential sweeps within the edges
-    sweeps = {}
+    #sweeps = {}
     for i in range(len(edges)):
         matches = 0
         #get the dest port by spliting the edge id
@@ -313,7 +314,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             if(edges[i]["from"] == edge["from"] and cur_dest == edge_dest):
                 matches += 1
         if(matches > 2):
-            sweeps[edges[i]["from"]] = cur_dest
+            sweeps_dict[edges[i]["from"]] = cur_dest
     #print("Sweeps: " + str(sweeps))
     
     
@@ -370,6 +371,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node['id'] in scans_dict:
                     new_node['color'] = 'blue'
+                if new_node['id'] in sweeps_dict:
+                    new_node['color'] = 'pink'
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
