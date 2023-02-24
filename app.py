@@ -283,7 +283,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                         edges.append(new_edge)
 
     #search for potential scans by checking for edges with matching to and from IPs
-    scans = {}
+    global scans_dict
+    #scans = {}
     #focus on one edge
     for i in range(len(edges)):
         matches = 0
@@ -296,7 +297,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
         if(matches > 2): #5 is just an arbitrary threshold
             #print("Scan found") 
-            scans[edges[i]["from"]] = edges[i]["to"]
+            scans_dict[edges[i]["from"]] = edges[i]["to"]
     #print("Scans: " + str(scans))
 
     #search for potential sweeps within the edges
@@ -391,6 +392,7 @@ def display_sweeps_and_scans(scans):
     if(len(scans['nodes']) > 0):
         print("you clicked a node")
         print(scans['nodes'][0])
+        print(scans_dict)
     #print("Printing clicked stuff: " + str(scans))
     return scans
     #print(selection)
