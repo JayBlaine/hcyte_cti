@@ -403,7 +403,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     current_data['nodes'] = nodes
     current_data['edges'] = edges
 
-    print("Data to display: " + str(current_data['edges']))
+    print("Data to display: " + str(data['nodes']))
 
 
     active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
@@ -415,7 +415,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         elif int(visdcc_display_dict[active_int][key].label) == 1:
             alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
 
-    return current_data, active_flows
+    return data, active_flows
 
 
 #input: 
