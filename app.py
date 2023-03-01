@@ -381,7 +381,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     scanNodes.append(new_node)
                     sweepNodes.append(new_node)
                     continue
-                #if the node is scanning other nodes
+                #if the node is scanning other nodes, display it
                 elif new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
@@ -398,6 +398,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
+    #current data is a global dictionary to be used in the scans/sweeps callback function
     current_data['nodes'] = nodes
     current_data['edges'] = edges
 
