@@ -408,17 +408,18 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     return data, active_flows
 
+    #Output(component_id='nodes', component_property='children'),
+    #Input(component_id='net', component_property='data'),
+
 #input: 
 #output: net, data
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
-    #Output(component_id='nodes', component_property='children'),
-    #Input(component_id='net', component_property='data'),
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(clicked_node):
     #print("running click function")
-    total_data = []
+    total_data = {}
     #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
@@ -427,7 +428,7 @@ def display_sweeps_and_scans(clicked_node):
         #print("Sweeps: " + str(sweeps_dict))
         #total_data = current_data['nodes'] + scanNodes + sweepNodes
     #return total_data, clicked_node
-        return total_data
+    return total_data
 
 
 def create_dash_macro(flask_app):
