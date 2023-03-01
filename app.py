@@ -377,13 +377,16 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     scanNodes.append(new_node)
                     sweepNodes.append(new_node)
                     continue
+                #if the node is scanning other nodes
                 elif new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
                     continue
+                #if the node is being scanned, hide it
                 elif new_node['id'] in scans_dict.values():
                     scanNodes.append(new_node)
+                    continue
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
                     sweepNodes.append(new_node)
@@ -408,8 +411,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-    #Output(component_id='net', component_property='data'),
-    Output(component_id='nodes', component_property='children'),
+    Output(component_id='net', component_property='data'),
+    #Output(component_id='nodes', component_property='children'),
     Input(component_id='net', component_property='data'),
     Input(component_id='net', component_property='selection')
 )
@@ -420,11 +423,12 @@ def display_sweeps_and_scans(current_data, clicked_node):
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         print(clicked_node['nodes'][0])
-        print("Scans: " + str(scans_dict))
-        print("Sweeps: " + str(sweeps_dict))
+        #print("Scans: " + str(scans_dict))
+        #print("Sweeps: " + str(sweeps_dict))
         total_data = current_data['nodes'] + scanNodes + sweepNodes
     #print("Printing clicked stuff: " + str(scans))
-    return total_data, clicked_node
+    #return total_data, clicked_node
+    return total_data
     #print(selection)
 
 
