@@ -413,7 +413,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
     #Output(component_id='nodes', component_property='children'),
-    Input(component_id='net', component_property='data'),
+    #Input(component_id='net', component_property='data'),
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(current_data, clicked_node):
