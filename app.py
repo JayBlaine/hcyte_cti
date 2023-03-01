@@ -26,7 +26,7 @@ sweeps_dict = {}
 sweepNodes = []
 scanNodes = []
 
-current_data = {}
+current_data = {'nodes': [], 'edges': []}
 
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
@@ -396,7 +396,8 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
-    current_data = data
+    current_data['nodes'] = nodes
+    current_data['edges'] = edges
 
 
     active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
