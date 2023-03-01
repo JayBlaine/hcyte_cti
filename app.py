@@ -156,7 +156,7 @@ def create_dash_micro(flask_app):
 
                                  dcc.Interval(
                                      id='interval_component',
-                                     interval=10 * 1000,  # in milliseconds
+                                     interval=5 * 1000,  # in milliseconds
                                      n_intervals=0
                                  ), html.Div(id='hidden_div', style={'display': 'none'}),
                                  html.Div(id='nodes'),
@@ -417,8 +417,6 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
     return current_data, active_flows
 
-    
-    #Input(component_id='net', component_property='data'),
 
 #input: 
 #output: net, data
