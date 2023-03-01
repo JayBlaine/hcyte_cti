@@ -437,6 +437,7 @@ def display_sweeps_and_scans(clicked_node):
         #print("Sweeps: " + str(sweeps_dict))
         #total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
     else:
+        print("Returning current data")
         return current_data, clicked_node
     #final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
     #return clicked_node
