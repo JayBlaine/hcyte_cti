@@ -124,7 +124,7 @@ def create_dash_micro(flask_app):
                                            ]),
 
                                  visdcc.Network(id='net',
-                                                data=current_data
+                                                data=current_data,
                                                 selection = {'nodes':[], 'edges':[]},
                                                 options=dict(height='1200px', width='100%', layout={
                                                     'improvedLayout': True,
