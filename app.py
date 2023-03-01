@@ -426,6 +426,7 @@ def display_sweeps_and_scans(clicked_node):
     #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
+        print("All the data: " + str(current_data))
         print(clicked_node['nodes'][0])
         total_data['nodes'] = clicked_node['nodes']
         #print("Scans: " + str(scans_dict))
