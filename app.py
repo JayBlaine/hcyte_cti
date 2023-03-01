@@ -377,10 +377,13 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     scanNodes.append(new_node)
                     sweepNodes.append(new_node)
                     continue
-                elif new_node['id'] in scans_dict:
+                elif new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'blue'
-                    scanNodes.append(new_node)
+                    nodes.append(new_node)
+                    #scanNodes.append(new_node)
                     continue
+                elif new_node['id'] in scans_dict.values():
+                    scanNodes.append(new_node)
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
                     sweepNodes.append(new_node)
@@ -411,7 +414,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(current_data, clicked_node):
-    print("running click function")
+    #print("running click function")
     total_data = []
     #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
