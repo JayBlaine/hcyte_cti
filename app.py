@@ -425,7 +425,7 @@ def display_sweeps_and_scans(clicked_node):
     print("running click function")
     print("nodes clicked: " + str(clicked_node))
     total_data = {'nodes': [], 'edges': []}
-    #print(current_data['nodes'])
+    print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         #print("All the data: " + str(current_data))
@@ -439,7 +439,7 @@ def display_sweeps_and_scans(clicked_node):
         return current_data, clicked_node
     #final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
     #return clicked_node
-    return current_data, clicked_node
+    #return current_data, clicked_node
 
 
 def create_dash_macro(flask_app):
