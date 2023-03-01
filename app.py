@@ -403,7 +403,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     current_data['nodes'] = nodes
     current_data['edges'] = edges
 
-    print("Data to display: " + str(current_data['edges']))
+    #print("Data to display: " + str(current_data['edges']))
 
 
     active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
@@ -423,12 +423,12 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-    Output(component_id='net', component_property='data'),
     Output(component_id='nodes', component_property='children'),
+    Output(component_id='net', component_property='data'),
     Input('net', 'data'),
     Input(component_id='net', component_property='selection')
 )
-def display_sweeps_and_scans(net_data, clicked_node):
+def display_sweeps_and_scans(clicked_node, net_data):
     #time.sleep(5)
     print("running click function")
     print("Current net data: " + str(net_data))
