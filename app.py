@@ -435,7 +435,7 @@ def display_sweeps_and_scans(clicked_node):
         #total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
     #final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
     #return clicked_node
-    return clicked_node, total_data
+    return current_data, clicked_node
 
 
 def create_dash_macro(flask_app):
