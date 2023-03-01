@@ -417,7 +417,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-    #Output(component_id='net', component_property='data'),
+    Output('net', 'data'),
     Output(component_id='nodes', component_property='children'),
     Input(component_id='net', component_property='selection')
 )
@@ -429,13 +429,13 @@ def display_sweeps_and_scans(clicked_node):
         print("you clicked a node")
         #print("All the data: " + str(current_data))
         print(clicked_node['nodes'][0])
-        total_data['nodes'] = clicked_node['nodes']
+        #total_data['nodes'] = clicked_node['nodes']
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
         #total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
     #final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
     #return clicked_node
-    return total_data
+    return total_data, clicked_node
 
 
 def create_dash_macro(flask_app):
