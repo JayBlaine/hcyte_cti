@@ -26,6 +26,8 @@ sweeps_dict = {}
 sweepNodes = []
 scanNodes = []
 
+current_data = {}
+
 home_net = IPNetwork("192.168.50.0/24")
 home_ext = IPNetwork("64.183.181.215/32")
 multi_net = IPNetwork("224.0.0.0/4")
@@ -394,7 +396,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                 nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
-
+    current_data = data
 
 
     active_flows = "Active flows: {}".format(len(visdcc_display_dict[active_int].keys()))
@@ -420,15 +422,16 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 )
 def display_sweeps_and_scans(clicked_node):
     #print("running click function")
-    total_data = {}
+    total_data = {'nodes': [], 'edges': []}
     #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         print(clicked_node['nodes'][0])
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
-        #total_data = current_data['nodes'] + scanNodes + sweepNodes
-    return total_data, clicked_node
+        total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
+    final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
+    return final_data, clicked_node
     #return total_data
 
 
