@@ -422,9 +422,10 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #output: net, data
 @dash_app_micro.callback(
     Output(component_id='nodes', component_property='children'),
-    Output(component_id='net', component_property='data'),
+    #Output(component_id='net', component_property='data'),
     Input('net', 'data'),
-    Input(component_id='net', component_property='selection')
+    Input(component_id='net', component_property='selection'),
+    prevent_initial_call=True
 )
 def display_sweeps_and_scans(net_data, clicked_node):
     #time.sleep(5)
