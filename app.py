@@ -415,7 +415,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
         elif int(visdcc_display_dict[active_int][key].label) == 1:
             alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
 
-    return current_data, active_flows
+    return data, active_flows
 
 
 #input: 
