@@ -220,6 +220,7 @@ def csv_to_flow_dict(live_micro_file):
 )
 def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
     global active_int
+    print("Running build function")
     # create visdcc thing here
     srcIPs = []
     destIPs = []
@@ -417,7 +418,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #input: 
 #output: net, data
 @dash_app_micro.callback(
-    Output(component_id='net', component_property='data'),
+    #Output(component_id='net', component_property='data'),
     Output(component_id='nodes', component_property='children'),
     Input(component_id='net', component_property='selection')
 )
@@ -425,7 +426,7 @@ def display_sweeps_and_scans(clicked_node):
     print("running click function")
     print("nodes clicked: " + str(clicked_node))
     total_data = {'nodes': [], 'edges': []}
-    print(current_data['nodes'])
+    #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         #print("All the data: " + str(current_data))
