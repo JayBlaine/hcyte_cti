@@ -422,7 +422,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 #output: net, data
 @dash_app_micro.callback(
     Output(component_id='nodes', component_property='children'),
-    #Output(component_id='net', component_property='data'),
+    Output(component_id='net', component_property='data'),
     Input('net', 'data'),
     Input(component_id='net', component_property='selection'),
     prevent_initial_call=True
