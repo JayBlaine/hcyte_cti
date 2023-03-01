@@ -2,6 +2,7 @@ import csv
 import datetime as dt
 import math
 import re
+import time
 
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
@@ -423,6 +424,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     Input(component_id='net', component_property='selection')
 )
 def display_sweeps_and_scans(clicked_node):
+    time.sleep(5)
     print("running click function")
     print("nodes clicked: " + str(clicked_node))
     total_data = {'nodes': [], 'edges': []}
