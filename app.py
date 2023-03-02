@@ -311,7 +311,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             #print("Scan found") 
             #if the node is already scanning something, add the newly found scan node to its list
             if(edges[i]["from"] in scans_dict.keys() and edges[i]["to"] not in scans_dict[edges[i]["from"]]):
-                scans_dict[edges[i]["from"]].append(edges[i]["to"])
+                pass
+                #scans_dict[edges[i]["from"]].append(edges[i]["to"])
             #if this is the first thing it is scanning, create a list to hold all potential scans
             else:
                 scans_dict[edges[i]["from"]] = [edges[i]["to"]]
