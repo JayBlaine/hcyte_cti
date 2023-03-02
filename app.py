@@ -425,7 +425,7 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
     Input(component_id='net', component_property='selection'),
     prevent_initial_call=True
 )
-def display_sweeps_and_scans(net_data, clicked_node):
+def display_sweeps_and_scans(clicked_node):
     #time.sleep(5)
     print("running click function")
     #print("Current net data: " + str(net_data))
@@ -439,7 +439,7 @@ def display_sweeps_and_scans(net_data, clicked_node):
         #print(clicked_node['nodes'][0])
         for node in clicked_node['nodes']:
             print(node)
-        return clicked_node # net_data #, 
+        return net_data #, 
 
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
