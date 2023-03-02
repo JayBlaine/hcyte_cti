@@ -23,10 +23,10 @@ micro_int_files = {'internal': '/var/www/webApp/webApp/static/int_micro_live.csv
                    'tap': '/var/www/webApp/webApp/static/tap_micro_live.csv'}
 active_int = 'internal'
 
-scans_dict = {}
-sweeps_dict = {}
-sweepNodes = []
-scanNodes = []
+#scans_dict = {}
+#sweeps_dict = {}
+#sweepNodes = []
+#scanNodes = []
 
 current_data = {'nodes': [], 'edges': []}
 
@@ -230,6 +230,11 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     destIPs = []
     edges = []
     nodes = []
+
+    scans_dict = {}
+    sweeps_dict = {}
+    sweepNodes = []
+    scanNodes = []
 
 
     # switches match with codes returned from anon checks for addr type
