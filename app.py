@@ -407,11 +407,20 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #if the node is being scanned, hide it
                 elif new_node['id'] in scans_dict.values():
                     scanNodes.append(new_node)
+                #if the node is sweeping other nodes, display it
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
-                    sweepNodes.append(new_node)
-                else:
                     nodes.append(new_node)
+                    #sweepNodes.append(new_node)
+                else:
+                    found_in_sweeps = False
+                    for edge in edges:
+                        if(edge["id"].split("__")[1].split(":")[1] in sweeps_dict.values() and edge['to'] == new_node['id']):
+                            sweepNodes.append(new_node)
+                            found_in_sweeps = True
+                            break
+                    if(found_in_sweeps == False):
+                        nodes.append(new_node)
 
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node: " + str(clicked_node['nodes'][0]))
