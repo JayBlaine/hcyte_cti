@@ -382,22 +382,19 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     new_node['color'] = 'brown'
                     scanNodes.append(new_node)
                     sweepNodes.append(new_node)
-                    continue
                 #if the node is scanning other nodes, display it
                 elif new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
-                    continue
                 #if the node is being scanned, hide it
                 elif new_node['id'] in scans_dict.values():
                     scanNodes.append(new_node)
-                    continue
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'pink'
                     sweepNodes.append(new_node)
-                    continue
-                nodes.append(new_node)
+                else:
+                    nodes.append(new_node)
 
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
@@ -451,7 +448,7 @@ def display_sweeps_and_scans(net_data, clicked_node):
         print("Preventing update")
         raise PreventUpdate
         #return net_data, clicked_node
-    #final_data = {'nodes': total_data['nodes'], 'edges': current_data['edges']}
+
     #return clicked_node
     #return current_data, clicked_node
 
