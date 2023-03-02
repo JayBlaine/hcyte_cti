@@ -215,13 +215,14 @@ def csv_to_flow_dict(live_micro_file):
     Output(component_id='net', component_property='data'),
     Output(component_id='num_flows', component_property='children'),
     Input(component_id='interval_component', component_property='n_intervals'),
+    Input(component_id='net', component_property='selection')
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value'),
     Input(component_id='proto_filter', component_property='value'),
     Input(component_id='flow_slider', component_property='value'),
     Input(component_id='interface_dropdown', component_property='value')
 )
-def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
+def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
     global active_int
     print("Running build function")
     # create visdcc thing here
@@ -395,6 +396,9 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
                     sweepNodes.append(new_node)
                 else:
                     nodes.append(new_node)
+
+    if(len(clicked_node['nodes']) > 0):
+        print("you clicked a node")
 
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
