@@ -402,6 +402,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         print(clicked_node)
         print("Scans dict: " + str(scans_dict))
         print("Scan nodes: " + str(scanNodes))
+
+        print("This is what the clicked node is scanning: " + str(scans_dict[clicked_node['nodes'][0]]))
         nodes = nodes + scanNodes
 
     data = {'nodes': nodes, 'edges': edges}
