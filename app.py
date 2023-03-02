@@ -315,7 +315,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #scans_dict[edges[i]["from"]].append(edges[i]["to"])
             #if this is the first thing it is scanning, create a list to hold all potential scans
             else:
-                scans_dict[edges[i]["from"]] = [edges[i]["to"]]
+                scans_dict[edges[i]["from"]] = edges[i]["to"]
             #scans_dict[edges[i]["from"]] = edges[i]["to"]
     #print("Scans: " + str(scans))
 
