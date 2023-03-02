@@ -391,10 +391,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #    scanNodes.append(new_node)
                 #    sweepNodes.append(new_node)
                 #if the node is scanning other nodes, display it
-                allScannedNodes = []
-                for nodes in scans_dict.values():
-                    allScannedNodes = allScannedNodes + nodes
-                print("All scanned nodes: " + str(allScannedNodes))
+                #allScannedNodes = []
+                #for nodes in scans_dict.values():
+                #    allScannedNodes = allScannedNodes + nodes
+                #print("All scanned nodes: " + str(allScannedNodes))
                 if new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
