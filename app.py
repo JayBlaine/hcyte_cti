@@ -437,6 +437,7 @@ def display_sweeps_and_scans(net_data, clicked_node):
     #print(current_data['nodes'])
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
+        print("Number of clicked nodes: " + str(len(clicked_node['nodes'])))
         #print("All the data: " + str(current_data))
         print(clicked_node['nodes'][0])
         return {'nodes': [], 'edges': []} #, net_data
