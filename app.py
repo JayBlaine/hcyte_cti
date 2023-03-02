@@ -444,9 +444,9 @@ def display_sweeps_and_scans(net_data, clicked_node):
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
         #total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
-    #else:
-        #print("Preventing update")
-        #raise PreventUpdate
+    else:
+        print("Preventing update")
+        raise PreventUpdate
         #return net_data, clicked_node
 
     #return clicked_node
