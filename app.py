@@ -400,7 +400,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node")
         print(clicked_node)
-        
+        print("Here are the current scans: " + str(scans_dict))
         nodes = nodes + scanNodes
 
     data = {'nodes': nodes, 'edges': edges}
