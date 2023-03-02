@@ -439,7 +439,7 @@ def display_sweeps_and_scans(net_data, clicked_node):
         print("you clicked a node")
         #print("All the data: " + str(current_data))
         print(clicked_node['nodes'][0])
-        return {'nodes': [], 'edges': []}, net_data
+        return {'nodes': [], 'edges': []} #, net_data
         #total_data['nodes'] = clicked_node['nodes']
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
