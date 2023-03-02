@@ -414,7 +414,11 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #print("Scan nodes: " + str(scanNodes))
 
         print("This is what the clicked node is scanning: " + str(scans_dict[clicked_node['nodes'][0]]))
-        nodes = nodes + scanNodes
+
+        for scanned in scanNodes:
+            if(scanned['id'] == scans_dict[clicked_node['nodes'][0]]):
+                nodes.append(scanned)
+        #nodes = nodes + scanNodes
 
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
