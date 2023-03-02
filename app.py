@@ -418,35 +418,35 @@ def build_visdcc(n_intervals=None, live_check=None, vis_filter=None, proto_filte
 
 #input: 
 #output: net, data
-@dash_app_micro.callback(
+#@dash_app_micro.callback(
     #Output(component_id='net', component_property='data'),
-    Output(component_id='net', component_property='data'),
+#    Output(component_id='net', component_property='data'),
     #Input('net', 'data'),
-    Input(component_id='net', component_property='selection'),
-    prevent_initial_call=True
-)
-def display_sweeps_and_scans(clicked_node):
+#    Input(component_id='net', component_property='selection'),
+#    prevent_initial_call=True
+#)
+#def display_sweeps_and_scans(clicked_node):
     #time.sleep(5)
-    print("running click function")
+#    print("running click function")
     #print("Current net data: " + str(net_data))
-    print("nodes clicked: " + str(clicked_node))
-    total_data = {'nodes': [], 'edges': []}
+#    print("nodes clicked: " + str(clicked_node))
+#    total_data = {'nodes': [], 'edges': []}
     #print(current_data['nodes'])
-    if(len(clicked_node['nodes']) > 0):
-        print("you clicked a node")
-        print("Number of clicked nodes: " + str(len(clicked_node['nodes'])))
+#    if(len(clicked_node['nodes']) > 0):
+#        print("you clicked a node")
+#        print("Number of clicked nodes: " + str(len(clicked_node['nodes'])))
         
         #print(clicked_node['nodes'][0])
-        for node in clicked_node['nodes']:
-            print(node)
-        return net_data #, 
+#        for node in clicked_node['nodes']:
+#            print(node)
+#        return net_data #, 
 
         #print("Scans: " + str(scans_dict))
         #print("Sweeps: " + str(sweeps_dict))
         #total_data['nodes'] = current_data['nodes'] + scanNodes + sweepNodes
-    else:
-        print("Preventing update")
-        raise PreventUpdate
+#    else:
+#        print("Preventing update")
+#        raise PreventUpdate
         #return net_data, clicked_node
 
     #return clicked_node
