@@ -214,8 +214,8 @@ def csv_to_flow_dict(live_micro_file):
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
     Output(component_id='num_flows', component_property='children'),
+    Input(component_id='net', component_property='selection'),
     Input(component_id='interval_component', component_property='n_intervals'),
-    Input(component_id='net', component_property='selection')
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value'),
     Input(component_id='proto_filter', component_property='value'),
