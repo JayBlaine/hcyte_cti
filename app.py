@@ -406,7 +406,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node: " + str(clicked_node['nodes'][0]))
         print("Scans dict: " + str(scans_dict))
-        #print("Scan nodes: " + str(scanNodes))
+        print("Scan nodes: " + str(scanNodes))
 
         print("This is what the clicked node is scanning: " + str(scans_dict[clicked_node['nodes'][0]]))
         nodes = nodes + scanNodes
