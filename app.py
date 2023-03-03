@@ -436,10 +436,12 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 break
             
         if(fullNode["color"] == 'blue'):
+            print("Scan node clicked")
             for scanned in scanNodes:
                 if(scanned['id'] == scans_dict[clicked_node['nodes'][0]]):
                     nodes.append(scanned)
         if(fullNode["color"] == 'pink'):
+            print("Sweep node clicked")
             for swept in sweepNodes:
                 for edge in edges:
                     if(edge["from"] == clicked_node['nodes'][0] and edge["to"] == swept):
