@@ -306,6 +306,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     for i in range(len(edges)):
         matches = 0
         #loop through the other edges
+        matchNodes = []
         for edge in edges:
             #increment matches if both the to and from IPs match
             if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"]) and edges[i] != edge:
