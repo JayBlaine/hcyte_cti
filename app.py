@@ -416,7 +416,6 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     #sweepNodes.append(new_node)
                 else:
                     found_in_sweeps = False
-                    alreadyAdded = False
                     for edge in edges:
                         if(edge["id"].split("__")[1].split(":")[1] in sweeps_dict.values() and edge['to'] == new_node['id']):
                             sweepNodes.append(new_node)
@@ -424,12 +423,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                             break
                     if(found_in_sweeps == False):
                         nodes.append(new_node)
-                        alreadyAdded = True
 
                     for edge in edges:
                         if(edge["to"] == new_node['id'] and edge['from'] not in scans_dict.keys() and edge['from'] not in sweeps_dict.keys()):
-                            if(alreadyAdded == False):
-                                nodes.append(new_node)
+                            nodes.append(new_node)
     
     #handle any node clicks
     if(len(clicked_node['nodes']) > 0):
