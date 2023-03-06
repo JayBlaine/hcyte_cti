@@ -522,11 +522,11 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
-        html.Div(dcc.Dropdown(
+        html.Div([html.Div(dcc.Dropdown(
             df_flows_drop,
             'num_flows',
             id='yaxis-column'), style={'width': '48%', 'float': 'left', 'display': 'inline-block'}),
-        html.Div([dcc.Graph(id="secondary_graph_flow"),
+            dcc.Graph(id="secondary_graph_flow"),
 
             html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
                       html.Div(id='total_value', style={'display': 'inline-block'}),
