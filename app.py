@@ -617,12 +617,10 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
 
-    tickvals = [*range(100_000, 1_000_000_000, 1000)]
-    ticktext = [f"{t // 1000:,}K" for t in tickvals]
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
                   hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
-        rangeslider_visible=True).update_yaxes(tickvals=tickvals, ticktext=ticktext)
+        rangeslider_visible=True)
     return fig
 
 
