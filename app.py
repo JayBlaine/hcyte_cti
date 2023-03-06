@@ -527,8 +527,9 @@ def create_dash_macro(flask_app):
             'num_flows',
             id='yaxis-column'), style={'width': '48%', 'display': 'inline-block', "padding-top": "10px",}),
             dcc.Graph(id="secondary_graph_flow"),
+            html.Hr(),
 
-            html.Div([html.Div(html.B('Total Alerts:'), style={'width': '48%', 'margin-right': '15px', 'text-align':'right', 'display': 'inline-block'}),
+            html.Div([html.Div(html.B('Total Alerts:'), style={'width': '50%', 'margin-right': '1px', 'text-align':'right', 'display': 'inline-block'}),
                       html.Div(id='total_value', style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
                       ], style={'margin-bottom': '20px'}),
             html.Div([html.Div(dcc.Graph(
