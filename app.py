@@ -604,7 +604,7 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     y_name = flow_y[curve] + yaxis_column_name
     cols_format_dict = dict.fromkeys(df1.columns.tolist())
     for key in cols_format_dict:
-        cols_format_dict[key] = ':.2f'
+        cols_format_dict[key] = ',.6s'
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
                   hover_name='date', hover_data=cols_format_dict, x='date', y=y_name).update_xaxes(
