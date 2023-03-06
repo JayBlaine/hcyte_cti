@@ -583,6 +583,7 @@ flow_y = {
 }
 
 def human_format(num):
+    num = float(num)
     magnitude = 0
     while abs(num) >= 1000:
         magnitude += 1
@@ -608,13 +609,11 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
         curve = 'all_alerts'  # no scan flows at this time
     curve_regex = '^{}_'.format(curve.split('_')[0])
     df1 = df_flows.filter(regex=curve_regex, axis=1)  # TODO: NEW CSV WITH FLOW DATA, REPLACE DF WITH
+    df1 = df1.apply(human_format, axis=1)
+
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
     print(df1)
-    for date1 in df1['date'].values.tolist():
-        for col in df1.columns.tolist():
-            if col != 'date':
-                df1[date1][col] = human_format(float(df1[date1][col]))
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
                   hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
