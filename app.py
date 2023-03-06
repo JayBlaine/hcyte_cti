@@ -525,11 +525,11 @@ def create_dash_macro(flask_app):
         html.Div([html.Div(dcc.Dropdown(
             df_flows_drop,
             'num_flows',
-            id='yaxis-column'), style={'width': '48%', 'float': 'left', 'display': 'inline-block'}),
+            id='yaxis-column'), style={'width': '48%', 'display': 'inline-block'}),
             dcc.Graph(id="secondary_graph_flow"),
 
             html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
-                      html.Div(id='total_value', style={'display': 'inline-block'}),
+                      html.Div(id='total_value', style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
                       ], style={'margin-bottom': '20px'}),
             html.Div([html.Div(dcc.Graph(
                 id='main_graph_line',
