@@ -546,7 +546,7 @@ def create_dash_macro(flask_app):
                 }
             ),
                                style={'width': '50%', 'display': 'inline-block'}),
-                      html.Div(dcc.Graph(id='secondary_graph_flow'),
+                      html.Div(dcc.Graph(id='secondary_graph_pie'),
                                style={'width': '50%', 'display': 'inline-block'})]),
 
         ])
