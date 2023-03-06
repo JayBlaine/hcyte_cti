@@ -602,9 +602,12 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     df1 = df_flows.filter(regex=curve_regex, axis=1)  # TODO: NEW CSV WITH FLOW DATA, REPLACE DF WITH
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
+    cols_format_dict = dict.fromkeys(df1.columns.tolist())
+    for key in cols_format_dict:
+        cols_format_dict[key] = ':.2f'
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
-                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
+                  hover_name='date', hover_data=cols_format_dict, x='date', y=y_name).update_xaxes(
         rangeslider_visible=True)
     return fig
 
