@@ -582,14 +582,17 @@ flow_y = {
     'rtsp_alerts': 'rtsp_'
 }
 
-def human_format(num):
-    num = float(num)
-    magnitude = 0
-    while abs(num) >= 1000:
-        magnitude += 1
-        num /= 1000.0
-    # add more suffixes if you need them
-    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+def human_format(num1):
+    ret_list = []
+    for num in num1:
+        num = float(num)
+        magnitude = 0
+        while abs(num) >= 1000:
+            magnitude += 1
+            num /= 1000.0
+        # add more suffixes if you need them
+        ret_list.append('%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude]))
+    return ret_list
 
 
 @dash_app_macro.callback(
