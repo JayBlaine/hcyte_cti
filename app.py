@@ -610,6 +610,7 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     df1 = df_flows.filter(regex=curve_regex, axis=1)  # TODO: NEW CSV WITH FLOW DATA, REPLACE DF WITH
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
+    print(df1)
     for col in df1.columns.tolist():
         df1[col] = human_format(float(df1[0][col]))
 
