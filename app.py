@@ -522,29 +522,29 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
-        html.Div([
-            dcc.Graph(
+        html.Div(dcc.Dropdown(
+            df_flows_drop,
+            'num_flows',
+            id='yaxis-column'), style={'width': '48%', 'float': 'left', 'display': 'inline-block'}),
+        html.Div([dcc.Graph(id="secondary_graph_flow"),
+
+            html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
+                      html.Div(id='total_value', style={'display': 'inline-block'}),
+                      ], style={'margin-bottom': '20px'}),
+            html.Div([html.Div(dcc.Graph(
                 id='main_graph_line',
                 figure=px.line(df, x='date', y=df.columns.values.tolist()[1:6],
                                title='H-CyTE Alerts')  # TODO: FIX FROM HARD CODE COL CALL
                     .update_xaxes(rangeslider_visible=True)
-                    .update_layout(width=1200, height=400, clickmode='event+select').update_traces(marker_size=20),
+                    .update_layout(width=600, height=400, clickmode='event+select').update_traces(marker_size=20),
                 style={
-                    "width": "100%",
+                    "width": "50%",
                     "height": "400px",
                     "display": "inline-block",
                     "padding-top": "5px",
                     "padding-left": "1px",
                 }
             ),
-            html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
-                      html.Div(id='total_value', style={'display': 'inline-block'}),
-                      html.Div(dcc.Dropdown(
-                          df_flows_drop,
-                          'num_flows',
-                          id='yaxis-column'), style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
-                      ], style={'margin-bottom': '20px'}),
-            html.Div([html.Div(dcc.Graph(id='secondary_graph_pie'),
                                style={'width': '50%', 'display': 'inline-block'}),
                       html.Div(dcc.Graph(id='secondary_graph_flow'),
                                style={'width': '50%', 'display': 'inline-block'})]),
