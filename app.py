@@ -582,6 +582,14 @@ flow_y = {
     'rtsp_alerts': 'rtsp_'
 }
 
+def human_format(num):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+
 
 @dash_app_macro.callback(
     Output(component_id='secondary_graph_flow', component_property='figure'),
@@ -602,12 +610,11 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     df1 = df_flows.filter(regex=curve_regex, axis=1)  # TODO: NEW CSV WITH FLOW DATA, REPLACE DF WITH
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
-    cols_format_dict = dict.fromkeys(df1.columns.tolist())
-    for key in cols_format_dict:
-        cols_format_dict[key] = ',.6s'
+    for col in df1.columns.tolist():
+        df1[col] = human_format(df1[col])
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
-                  hover_name='date', hover_data=cols_format_dict, x='date', y=y_name).update_xaxes(
+                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
         rangeslider_visible=True)
     return fig
 
