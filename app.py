@@ -619,8 +619,8 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
     print(df1)
 
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
-                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name, hovertemplate ='%{y}<br>%{text}').update_xaxes(
-        rangeslider_visible=True)
+                  hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
+        rangeslider_visible=True).update_yaxes(tickformat="~s", tickvals=[*range(1000000, 100000, 1000)])
     return fig
 
 
