@@ -408,6 +408,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
+                #display all nodes in the home network
+                elif new_node['id'] in home_net:
+                    nodes.append(new_node)
                 #if the node is being scanned, hide it
                 elif new_node['id'] in scans_dict.values():
                     scanNodes.append(new_node)
