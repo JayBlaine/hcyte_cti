@@ -392,7 +392,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
 
-        print("mal alert keys: " + str(mal_alerts.keys()))
+        #print("mal alert keys: " + str(mal_alerts.keys()))
         # ip filtering of nodes
         if new_node not in nodes and ip_type in vis_switches:
             # protocol filtering of nodes
@@ -501,8 +501,11 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'from': "test1",
         'to': "test3"
     }
-    nodes.append(test1, test2, test3)
-    edges.append(edge1, edge2)
+    nodes.append(test1)
+    nodes.append(test2)
+    nodes.append(test3)
+    edges.append(edge1)
+    edges.append(edge2)
 
     
     data = {'nodes': nodes, 'edges': edges}
