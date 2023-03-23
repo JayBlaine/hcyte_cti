@@ -398,6 +398,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             # protocol filtering of nodes
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node["id"] in home_net:
+                    new_node["x"] = 50
+                    new_node["y"] = 40
                     print("{} is in the home network".format(new_node["id"]))
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
@@ -476,7 +478,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'shape': 'dot',
         'size': 10,
         'color': 'red',
-        'x': 50.235,
+        'x': 50,
         'y': 40
     }
     nodes.append(position_node)
