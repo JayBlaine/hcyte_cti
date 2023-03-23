@@ -411,7 +411,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             offset = 0
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node["id"] in home_net:
-                    position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 150)
+                    position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
                     new_node["x"] = position[0]
                     new_node["y"] = position[1]
                     #new_node["x"] = node_positions["homeNet"][0] + random.uniform(-50, 50)
@@ -437,7 +437,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                 else:
-                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 100)
+                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                     new_node["x"] = position[0]
                     new_node["y"] = position[1]
 
