@@ -158,7 +158,7 @@ def create_dash_micro(flask_app):
 
                                  dcc.Interval(
                                      id='interval_component',
-                                     interval=5 * 1000,  # in milliseconds
+                                     interval=10 * 1000,  # in milliseconds
                                      n_intervals=0
                                  ), html.Div(id='hidden_div', style={'display': 'none'}),
                                  html.Div(id='nodes'),
@@ -238,10 +238,11 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     scanNodes = []
 
     node_positions = {
-        'center': [50, 40],
-        'homeNet': 200,
-        'homeExternal': 50,
-        'broadNet': 0,
+        'homeNet': [200, 200],
+        'homeExternal': [50, 50],
+        'multiNet': [0, 200],
+        'broadNet': [0, 0],
+        'broadInner': [100, 100],
         'other': [200, 0]
     }
 
@@ -404,16 +405,25 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             offset = 0
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node["id"] in home_net:
-                    new_node["x"] = node_positions["homeNet"] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["homeNet"] + offset
+                    new_node["x"] = node_positions["homeNet"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["homeNet"][1] + offset
                     offset += 10000
                     print("{} is in the home network".format(new_node["id"]))
                 elif new_node['id'] in home_ext:
-                    new_node["x"] = node_positions["homeExternal"] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["homeExternal"] + random.uniform(-50, 50)
+                    new_node["x"] = node_positions["homeExternal"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["homeExternal"][1] + random.uniform(-50, 50)
                 elif new_node["id"] in broad_net:
-                    new_node["x"] = node_positions["broadNet"] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["broadNet"] + random.uniform(-50, 50)
+                    new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
+                elif new_node["id"] in multi_net:
+                    new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
+                elif new_node['id'] in broad_net:
+                    new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
+                elif new_node["id"] in broad_inner:
+                    new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                 else:
                     new_node["x"] = node_positions["other"][0] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["other"][1] + random.uniform(-50, 50)
@@ -490,44 +500,44 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #nodes = nodes + scanNodes
     #center (50,40)
     
-    test1 = {
-        'id': "test1",
-        'label': "1",
-        'shape': 'dot',
-        'size': 10,
-        'color': 'red',
-        'x': 200,
-        'y': 200
-    }
-    test2 = {
-        'id': "test2",
-        'label': "2",
-        'shape': 'dot',
-        'size': 10,
-        'color': 'red'
-    }
-    test3 = {
-        'id': "test3",
-        'label': "3",
-        'shape': 'dot',
-        'size': 10,
-        'color': 'red'
-    }
-    edge1 = {
-        'id': "1to2",
-        'from': "test1",
-        'to': "test2"
-    }
-    edge2 = {
-        'id': "1to3",
-        'from': "test1",
-        'to': "test3"
-    }
-    nodes.append(test1)
-    nodes.append(test2)
-    nodes.append(test3)
-    edges.append(edge1)
-    edges.append(edge2)
+    #test1 = {
+    #    'id': "test1",
+    #    'label': "1",
+    #    'shape': 'dot',
+    #    'size': 10,
+    #    'color': 'red',
+    #    'x': 200,
+    #    'y': 200
+    #}
+    #test2 = {
+    #    'id': "test2",
+    #    'label': "2",
+    #    'shape': 'dot',
+    #    'size': 10,
+    #    'color': 'red'
+    #}
+    #test3 = {
+    #    'id': "test3",
+    #    'label': "3",
+    #    'shape': 'dot',
+    #    'size': 10,
+    #    'color': 'red'
+    #}
+    #edge1 = {
+    #    'id': "1to2",
+    #    'from': "test1",
+    #    'to': "test2"
+    #}
+    #edge2 = {
+    #    'id': "1to3",
+    #    'from': "test1",
+    #    'to': "test3"
+    #}
+    #nodes.append(test1)
+    #nodes.append(test2)
+    #nodes.append(test3)
+    #edges.append(edge1)
+    #edges.append(edge2)
     edges = []
     
     data = {'nodes': nodes, 'edges': edges}
