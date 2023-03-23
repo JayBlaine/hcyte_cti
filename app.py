@@ -475,8 +475,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'shape': 'dot',
         'size': 10,
         'color': 'red',
-        'x': 50,
-        'y': 40
+        'x': 200,
+        'y': 200
     }
     test2 = {
         'id': "test2",
