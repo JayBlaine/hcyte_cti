@@ -431,7 +431,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                 else:
-                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 10)
+                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 100)
                     new_node["x"] = position[0]
                     new_node["y"] = position[1]
 
