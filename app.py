@@ -404,7 +404,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 if new_node["id"] in home_net:
                     new_node["x"] = node_positions["homeNet"] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["homeNet"] + offset
-                    offset += 50
+                    offset += 1000
                     print("{} is in the home network".format(new_node["id"]))
                 if new_node['id'] in home_ext:
                     new_node["x"] = node_positions["homeExternal"] + random.uniform(-50, 50)
