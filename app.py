@@ -241,7 +241,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'center': [50, 40],
         'homeNet': 200,
         'homeExternal': 50,
-        'broadNet': 0
+        'broadNet': 0,
+        'other': [200, 0]
     }
 
 
@@ -413,7 +414,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 elif new_node["id"] in broad_net:
                     new_node["x"] = node_positions["broadNet"] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["broadNet"] + random.uniform(-50, 50)
-
+                else:
+                    new_node["x"] = node_positions["other"][0] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["other"][1] + random.uniform(-50, 50)
 
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
