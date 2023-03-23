@@ -388,10 +388,13 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
 
+        print("mal alert keys: " + str(mal_alerts.keys()))
         # ip filtering of nodes
         if new_node not in nodes and ip_type in vis_switches:
             # protocol filtering of nodes
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
+                if new_node["id"] in home_net:
+                    print("{} is in the home network".format(new_node["id"]))
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
                     nodes.append(new_node)
@@ -406,6 +409,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node['color'] = 'blue'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
+                #display all nodes in the home network
+                elif new_node['id'] in home_net:
+                    nodes.append(new_node)
                 #if the node is being scanned, hide it
                 elif new_node['id'] in scans_dict.values():
                     scanNodes.append(new_node)
@@ -530,31 +536,32 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
-        html.Div([
-            dcc.Graph(
+        html.Div([html.Div(dcc.Dropdown(
+            df_flows_drop,
+            'num_flows',
+            id='yaxis-column'), style={'width': '48%', 'display': 'inline-block', "padding-top": "10px",}),
+            dcc.Graph(id="secondary_graph_flow"),
+            html.Hr(),
+
+            html.Div([html.Div(html.B('Total Alerts:'), style={'width': '50%', 'margin-right': '1px', 'text-align':'right', 'display': 'inline-block'}),
+                      html.Div(id='total_value', style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
+                      ], style={'margin-bottom': '20px'}),
+            html.Div([html.Div(dcc.Graph(
                 id='main_graph_line',
                 figure=px.line(df, x='date', y=df.columns.values.tolist()[1:6],
-                               title='H-CyTE Alerts')  # TODO: FIX FROM HARD CODE COL CALL
+                               title='HCyTE Alerts')  # TODO: FIX FROM HARD CODE COL CALL
                     .update_xaxes(rangeslider_visible=True)
-                    .update_layout(width=1200, height=400, clickmode='event+select').update_traces(marker_size=20),
+                    .update_layout(width=600, height=400, clickmode='event+select').update_traces(marker_size=20),
                 style={
-                    "width": "100%",
+                    "width": "50%",
                     "height": "400px",
                     "display": "inline-block",
                     "padding-top": "5px",
                     "padding-left": "1px",
                 }
             ),
-            html.Div([html.Div(html.B('Total Alerts:'), style={'margin-right': '15px', 'display': 'inline-block'}),
-                      html.Div(id='total_value', style={'display': 'inline-block'}),
-                      html.Div(dcc.Dropdown(
-                          df_flows_drop,
-                          'num_flows',
-                          id='yaxis-column'), style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
-                      ], style={'margin-bottom': '20px'}),
-            html.Div([html.Div(dcc.Graph(id='secondary_graph_pie'),
                                style={'width': '50%', 'display': 'inline-block'}),
-                      html.Div(dcc.Graph(id='secondary_graph_flow'),
+                      html.Div(dcc.Graph(id='secondary_graph_pie'),
                                style={'width': '50%', 'display': 'inline-block'})]),
 
         ])
@@ -589,6 +596,18 @@ flow_y = {
     'rtsp_alerts': 'rtsp_'
 }
 
+def human_format(num1):
+    ret_list = []
+    for num in num1:
+        num = float(num)
+        magnitude = 0
+        while abs(num) >= 1000:
+            magnitude += 1
+            num /= 1000.0
+        # add more suffixes if you need them
+        ret_list.append('%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude]))
+    return ret_list
+
 
 @dash_app_macro.callback(
     Output(component_id='secondary_graph_flow', component_property='figure'),
@@ -607,12 +626,15 @@ def displayHoverFlowGraph(yaxis_column_name=None, hoverData=None, clickData=None
         curve = 'all_alerts'  # no scan flows at this time
     curve_regex = '^{}_'.format(curve.split('_')[0])
     df1 = df_flows.filter(regex=curve_regex, axis=1)  # TODO: NEW CSV WITH FLOW DATA, REPLACE DF WITH
+    #df1 = df1.apply(human_format)
+
     df1.insert(0, 'date', df_flows['date'].values.tolist())
     y_name = flow_y[curve] + yaxis_column_name
 
+
     fig = px.line(data_frame=df1, title='flow data: {}'.format(flow_titles[curve]),
                   hover_name='date', hover_data=df1.columns.tolist(), x='date', y=y_name).update_xaxes(
-        rangeslider_visible=True)
+        rangeslider_visible=True)#.update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
 
