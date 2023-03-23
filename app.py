@@ -85,6 +85,14 @@ micro_node_color_code = {
     5: 'red'
 }
 
+def calcCoordinates(centerX, centerY, radius)
+{
+    angle = random.randint(0, 359)
+    x = radius * math.sin(math.radians(angle))
+    y = radius * math.cos(math.radians(angle))
+    coordinates = [x + centerX, y + centerY]
+    return coordinates
+}
 
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
@@ -425,8 +433,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                 else:
-                    new_node["x"] = node_positions["other"][0] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["other"][1] + random.uniform(-50, 50)
+                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 10)
+                    new_node["x"] = position[0]
+                    new_node["y"] = position[1]
 
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
