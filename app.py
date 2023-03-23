@@ -135,7 +135,7 @@ def create_dash_micro(flask_app):
                                                         'edgeMinimization': True
                                                     }
                                                 }, physics={
-                                                    'enabled': False,
+                                                    'enabled': True,
                                                     'maxVelocity': 25,
                                                     'solver': 'barnesHut',
                                                     'barnesHut': {
@@ -528,6 +528,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     nodes.append(test3)
     edges.append(edge1)
     edges.append(edge2)
+    edges = []
     
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
