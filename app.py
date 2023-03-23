@@ -240,7 +240,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     node_positions = {
         'center': [50, 40],
         'homeNet': 200,
-        'homeExternal': 50
+        'homeExternal': 50,
+        'broadNet': 0
     }
 
 
@@ -406,9 +407,14 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     new_node["y"] = node_positions["homeNet"] + offset
                     offset += 10000
                     print("{} is in the home network".format(new_node["id"]))
-                if new_node['id'] in home_ext:
+                elif new_node['id'] in home_ext:
                     new_node["x"] = node_positions["homeExternal"] + random.uniform(-50, 50)
                     new_node["y"] = node_positions["homeExternal"] + random.uniform(-50, 50)
+                elif new_node["id"] in broad_net:
+                    new_node["x"] = node_positions["broadNet"] + random.uniform(-50, 50)
+                    new_node["y"] = node_positions["broadNet"] + random.uniform(-50, 50)
+
+
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
                     nodes.append(new_node)
