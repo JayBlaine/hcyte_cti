@@ -493,18 +493,14 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'label': "2",
         'shape': 'dot',
         'size': 10,
-        'color': 'red',
-        'x': node_positions['test'] + random.uniform(-50,50),
-        'y': node_positions['test'] + random.uniform(-50,50)
+        'color': 'red'
     }
     test3 = {
         'id': "test3",
         'label': "3",
         'shape': 'dot',
         'size': 10,
-        'color': 'red',
-        'x': node_positions['test'] + random.uniform(-50,50),
-        'y': node_positions['test'] + random.uniform(-50,50)
+        'color': 'red'
     }
     edge1 = {
         'id': "1to2",
