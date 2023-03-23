@@ -460,8 +460,16 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
         #nodes = nodes + scanNodes
 
-
-
+    position_node = {
+        'id': "Test node",
+        'label': "Test node",
+        'shape': 'dot',
+        'size': 10,
+        'color': 'red'
+        'x': 200,
+        'y': 200
+    }
+    nodes.append(position_node)
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
     current_data['nodes'] = nodes
