@@ -472,8 +472,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'shape': 'dot',
         'size': 10,
         'color': 'red',
-        'x': 90,
-        'y': 70
+        'x': 50,
+        'y': 40
     }
     nodes.append(position_node)
     data = {'nodes': nodes, 'edges': edges}
