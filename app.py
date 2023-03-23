@@ -3,6 +3,7 @@ import datetime as dt
 import math
 import re
 import time
+import random
 
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
@@ -467,7 +468,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #nodes = nodes + scanNodes
     #center (50,40)
     node_positions = {
-        'center': [50, 40]
+        'center': [50, 40],
+        'test': 200
     }
     test1 = {
         'id': "test1",
@@ -483,14 +485,18 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'label': "2",
         'shape': 'dot',
         'size': 10,
-        'color': 'red'
+        'color': 'red',
+        'x': node_positions['test'] + random.uniform(-5,5),
+        'y': node_positions['test'] + random.uniform(-5,5)
     }
     test3 = {
         'id': "test3",
         'label': "3",
         'shape': 'dot',
         'size': 10,
-        'color': 'red'
+        'color': 'red',
+        'x': node_positions['test'] + random.uniform(-5,5),
+        'y': node_positions['test'] + random.uniform(-5,5)
     }
     edge1 = {
         'id': "1to2",
