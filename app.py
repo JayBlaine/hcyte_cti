@@ -237,6 +237,12 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     sweepNodes = []
     scanNodes = []
 
+    node_positions = {
+        'center': [50, 40],
+        'homeNet': 200,
+        'homeExternal': 50
+    }
+
 
     # switches match with codes returned from anon checks for addr type
     external_switch = 1 if 'external' in vis_filter else 0
@@ -395,7 +401,12 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             # protocol filtering of nodes
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node["id"] in home_net:
+                    new_node["x"] = node_positions["homeNet"]
+                    new_node["y"] = node_positions["homeNet"]
                     print("{} is in the home network".format(new_node["id"]))
+                if new_node['id'] in home_ext:
+                    new_node["x"] = node_positions["homeExternal"]
+                    new_node["y"] = node_positions["homeExternal"]
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
                     nodes.append(new_node)
@@ -467,10 +478,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
         #nodes = nodes + scanNodes
     #center (50,40)
-    node_positions = {
-        'center': [50, 40],
-        'test': 200
-    }
+    
     test1 = {
         'id': "test1",
         'label': "1",
