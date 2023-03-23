@@ -85,7 +85,7 @@ micro_node_color_code = {
     5: 'red'
 }
 
-def calcCoordinates(centerX, centerY, radius)
+def calcCoordinates(centerX, centerY, radius):
 {
     angle = random.randint(0, 359)
     x = radius * math.sin(math.radians(angle))
