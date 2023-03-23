@@ -398,8 +398,6 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             # protocol filtering of nodes
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 if new_node["id"] in home_net:
-                    new_node["x"] = 50
-                    new_node["y"] = 40
                     print("{} is in the home network".format(new_node["id"]))
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
@@ -472,16 +470,41 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
         #nodes = nodes + scanNodes
     #center (50,40)
-    position_node = {
-        'id': "Test node",
-        'label': "Center",
+    test1 = {
+        'id': "test1",
+        'label': "1",
         'shape': 'dot',
         'size': 10,
-        'color': 'red',
-        'x': 50,
-        'y': 40
+        'color': 'red'
     }
-    nodes.append(position_node)
+    test2 = {
+        'id': "test2",
+        'label': "2",
+        'shape': 'dot',
+        'size': 10,
+        'color': 'red'
+    }
+    test3 = {
+        'id': "test3",
+        'label': "3",
+        'shape': 'dot',
+        'size': 10,
+        'color': 'red'
+    }
+    edge1 = {
+        'id': "1to2",
+        'from': "test1",
+        'to': "test2"
+    }
+    edge2 = {
+        'id': "1to3",
+        'from': "test1",
+        'to': "test3"
+    }
+    nodes.append(test1, test2, test3)
+    edges.append(edge1, edge2)
+
+    
     data = {'nodes': nodes, 'edges': edges}
     #current data is a global dictionary to be used in the scans/sweeps callback function
     current_data['nodes'] = nodes
