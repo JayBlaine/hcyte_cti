@@ -86,13 +86,11 @@ micro_node_color_code = {
 }
 
 def calcCoordinates(centerX, centerY, radius):
-{
     angle = random.randint(0, 359)
     x = radius * math.sin(math.radians(angle))
     y = radius * math.cos(math.radians(angle))
     coordinates = [x + centerX, y + centerY]
     return coordinates
-}
 
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
