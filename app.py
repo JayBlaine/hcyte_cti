@@ -84,6 +84,10 @@ micro_node_color_code = {
     5: 'red'
 }
 
+micro_node_positions = {
+    'center': [50, 40]
+}
+
 
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
@@ -465,14 +469,14 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         nodes.append(swept)
 
         #nodes = nodes + scanNodes
-
+    #center (50,40)
     position_node = {
         'id': "Test node",
-        'label': "Test node",
+        'label': "Center",
         'shape': 'dot',
         'size': 10,
         'color': 'red',
-        'x': 50,
+        'x': 50.235,
         'y': 40
     }
     nodes.append(position_node)
