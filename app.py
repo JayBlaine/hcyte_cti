@@ -146,15 +146,15 @@ def create_dash_micro(flask_app):
                                                         'edgeMinimization': True
                                                     }
                                                 }, physics={
-                                                    'enabled': False,
-                                                    'maxVelocity': 25,
+                                                    'enabled': True,
+                                            #        'maxVelocity': 25,
                                                     'solver': 'barnesHut',
                                                     'barnesHut': {
-                                                        'gravitationalConstant': -1000,
-                                                        'centralGravity': 0.85,
-                                                        'springLength': 95,
-                                                        'springConstant': 0.02,
-                                                        'damping': 0.09,
+                                            #            'gravitationalConstant': -1000,
+                                            #            'centralGravity': 0.85,
+                                            #            'springLength': 95,
+                                            #            'springConstant': 0.02,
+                                            #            'damping': 0.09,
                                                         'avoidOverlap': 0
                                                     },
                                                     'stabilization': {
