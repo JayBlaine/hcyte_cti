@@ -99,7 +99,7 @@ def create_dash_micro(flask_app):
 
     dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
-                                 html.Div(dcc.Dropdown(df_flows_drop, 'num_flows', id='live_yaxis-column')),
+                                 html.Div(dcc.Dropdown(df_flows_drop, 'num_flows', id='live_yaxis_column')),
                                  html.Div(dcc.Graph(id='live_flow_data')),
                                  html.Div([html.Div(html.B('Displayed Nodes'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                      dcc.Checklist(id='vis_filter', options=
@@ -223,15 +223,18 @@ def csv_to_flow_dict(live_micro_file):
 @dash_app_micro.callback(
     Output(component_id='net', component_property='data'),
     Output(component_id='num_flows', component_property='children'),
+    Output(component_id='live_flow_data', component_property='figure'),  # line graph for active flows
     Input(component_id='net', component_property='selection'),
     Input(component_id='interval_component', component_property='n_intervals'),
     Input(component_id='live_check', component_property='value'),
     Input(component_id='vis_filter', component_property='value'),
     Input(component_id='proto_filter', component_property='value'),
     Input(component_id='flow_slider', component_property='value'),
-    Input(component_id='interface_dropdown', component_property='value')
+    Input(component_id='interface_dropdown', component_property='value'),
+    Input(component_id='live_yaxis_column', component_property='value')  # filter to select which y gets picked
 )
-def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=None, proto_filter=None, flow_slider=None, interface_dropdown=None):
+def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=None,
+                 proto_filter=None, flow_slider=None, interface_dropdown=None, live_y_col=None):
     global active_int
     print("Running build function")
     # create visdcc thing here
@@ -274,6 +277,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         visdcc_display_dict['internal'] = csv_to_flow_dict(micro_int_files['internal'])
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
+
+    print(live_y_col)
 
 
     # TODO: Change from full rebuild to something more efficient
