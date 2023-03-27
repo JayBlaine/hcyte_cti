@@ -629,20 +629,23 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
     for f in flows.keys():
         sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[f].flow_cur_time))
         try:
-            if flow_data_dict[sec]['num_flows'] == 0:
-                flow_data_dict[sec]['num_flows'] += 1
-                flow_data_dict[sec]['num_addrs'] += 2
+            flow_data_dict[sec]['num_flows'] += 1
 
-                addr1 = f.split()[0]
-                addr2 = f.split()[1]
-                addr1_clean = addr1.split(':')[0]
-                addr2_clean = addr2.split(':')[0]
-                unique_addrs[sec].append(addr1_clean)
-                unique_addrs[sec].append(addr2_clean)
+            if f.split()[0].split(':')[0] not in unique_addrs[sec]:  # f = ip:port ip:port
+                unique_addrs[sec].append(f.split()[0].split(':')[0])
+                flow_data_dict[sec]['num_addrs'] += 1
+            if f.split()[1].split(':')[0] not in unique_addrs[sec]:
+                unique_addrs[sec].append(f.split()[1].split(':')[0])
+                flow_data_dict[sec]['num_addrs'] += 1
+
+            old_avg_pkts = flow_data_dict[sec]['avg_pkts']
+            flow_data_dict[sec]['avg_pkts'] = old_avg_pkts + (int(flows[f].ip_pkt_tot_num) - old_avg_pkts) / flow_data_dict[sec]['num_flows']
+
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
 
-        print(len(unique_addrs))
+        print(flow_data_dict)
+
 
 
 
