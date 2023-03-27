@@ -579,7 +579,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         elif int(visdcc_display_dict[active_int][key].label) == 1:
             alerts[visdcc_display_dict[active_int][key].flow_alert] += 1
 
-    return data, active_flows
+    return data, active_flows, live_line_fig
 
 
 #input: 
@@ -619,6 +619,15 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     #return current_data, clicked_node
 
 
+def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
+    df1 = pd.DataFrame()
+
+    fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec',
+                  hover_data=df1.columns.tolist(), x='sec', y=y).update_xaxes(rangeslider_visible=True)
+    # .update_traces(hovertemplate='%{y}<br>%{text}')
+    return fig
+
+
 def create_dash_macro(flask_app):
     dash_app = Dash(server=flask_app, name='dashboard', url_base_pathname='/dash/')
     dash_app.layout = html.Div(
@@ -654,15 +663,6 @@ def create_dash_macro(flask_app):
 
     )
     return dash_app
-
-
-def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
-    df1 = pd.DataFrame()
-
-    fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df1.columns.tolist(), x='sec', y=y)\
-        .update_xaxes(
-        rangeslider_visible=True)  # .update_traces(hovertemplate='%{y}<br>%{text}')
-    return fig
 
 
 
