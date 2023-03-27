@@ -621,6 +621,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
     flow_data_dict = []
+    print('FLOWS: ' + str(flows))
     for i in range(91):
         flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0})
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
