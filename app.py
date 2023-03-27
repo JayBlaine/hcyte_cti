@@ -8,6 +8,8 @@ import random
 from flask import Flask, render_template, redirect, url_for, request
 import pandas as pd
 import plotly.express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 from dash import Dash, html, dcc, Output, Input
 from dash.exceptions import PreventUpdate
 import visdcc
@@ -736,7 +738,7 @@ def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None)
 
     fig = px.line(
         data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y_ax).add_trace(
-        px.line(df_alert, hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y_ax)).update_xaxes(
+        px.line(df_alert, hover_name='sec', hover_data=df_alert.columns.tolist(), x='sec', y=y_ax)).update_xaxes(
         rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
