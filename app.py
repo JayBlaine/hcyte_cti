@@ -638,9 +638,25 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
                 unique_addrs[sec].append(f.split()[1].split(':')[0])
                 flow_data_dict[sec]['num_addrs'] += 1
 
-            old_avg_pkts = flow_data_dict[sec]['avg_pkts']
-            flow_data_dict[sec]['avg_pkts'] = old_avg_pkts + (int(flows[f].ip_pkt_tot_num) - old_avg_pkts) / flow_data_dict[sec]['num_flows']
+            old_avg_pkts = flow_data_dict[sec]['avg_len']
+            flow_data_dict[sec]['avg_pkts'] = old_avg_pkts + (
+                    int(flows[f].ip_pkt_tot_num) - old_avg_pkts) / flow_data_dict[sec]['num_flows']
 
+            old_avg_len = flow_data_dict[sec]['avg_len']
+            flow_data_dict[sec]['avg_len'] = old_avg_len + (
+                    int(flows[f].ip_pkt_tot_len) - old_avg_len) / flow_data_dict[sec]['avg_len']
+
+            old_avg_pkt_sec = flow_data_dict[sec]['avg_pkts_sec']
+            flow_data_dict[sec]['avg_pkts_sec'] = old_avg_pkt_sec + (
+                    flows[f].ip_flow_pkts_sec - old_avg_pkt_sec) / flow_data_dict[sec]['avg_pkts_sec']
+
+            old_avg_bytes_sec = flow_data_dict[sec]['avg_bytes_sec']
+            flow_data_dict[sec]['avg_bytes_sec'] = old_avg_bytes_sec + (
+                    flows[f].ip_flow_bytes_sec - old_avg_bytes_sec) / flow_data_dict[sec]['avg_bytes_sec']
+
+            old_avg_duration = flow_data_dict[sec]['avg_duration']
+            flow_data_dict[sec]['avg_duration'] = old_avg_duration + (
+                    flows[f].ip_all_flow_duration - old_avg_duration) / flow_data_dict[sec]['avg_duration']
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
 
