@@ -622,16 +622,67 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None):
     flow_data_dict = []
+    alert_flow_data_dict = []
     unique_addrs = []
     for i in range(92):  # init lists
         flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0, 'alerts': 0})
+        alert_flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0, 'alerts': 0})
         unique_addrs.append([])
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
     for f in flows.keys():
         sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[f].flow_cur_time))
         try:
+            """
+            MALICIOUS FLOWS
+            """
             if '1' in flows[f].label:
                 flow_data_dict[sec]['alerts'] += 1
+                alert_flow_data_dict[sec]['alerts'] += 1
+                alert_flow_data_dict[sec]['num_flows'] += 1
+                try:
+
+                    if f.split()[0].split(':')[0] not in unique_addrs[sec]:  # f = ip:port ip:port
+                        unique_addrs[sec].append(f.split()[0].split(':')[0])
+                        alert_flow_data_dict[sec]['num_addrs'] += 1
+                    if f.split()[1].split(':')[0] not in unique_addrs[sec]:
+                        unique_addrs[sec].append(f.split()[1].split(':')[0])
+                        alert_flow_data_dict[sec]['num_addrs'] += 1
+
+                    old_avg_pkts = alert_flow_data_dict[sec]['avg_pkts']
+                    alert_flow_data_dict[sec]['avg_pkts'] = ((old_avg_pkts * alert_flow_data_dict[sec]['num_flows'] - 1) +
+                                                       float(flows[f].ip_pkt_tot_num)) / flow_data_dict[sec]['num_flows']
+
+                    old_avg_len = alert_flow_data_dict[sec]['avg_len']
+                    alert_flow_data_dict[sec]['avg_len'] = ((old_avg_len * alert_flow_data_dict[sec]['num_flows'] - 1) +
+                                                      float(flows[f].ip_pkt_tot_len)) / alert_flow_data_dict[sec]['num_flows']
+
+                    old_avg_pkt_sec = alert_flow_data_dict[sec]['avg_pkts_sec']
+                    alert_flow_data_dict[sec]['avg_pkts_sec'] = ((old_avg_pkt_sec * alert_flow_data_dict[sec]['num_flows'] - 1) +
+                                                           float(flows[f].ip_flow_pkts_sec)) / alert_flow_data_dict[sec][
+                                                              'num_flows']
+
+                    old_avg_bytes_sec = alert_flow_data_dict[sec]['avg_bytes_sec']
+                    alert_flow_data_dict[sec]['avg_bytes_sec'] = ((old_avg_bytes_sec * alert_flow_data_dict[sec]['num_flows'] - 1) +
+                                                            float(flows[f].ip_flow_bytes_sec)) / alert_flow_data_dict[sec][
+                                                               'num_flows']
+
+                    old_avg_duration = alert_flow_data_dict[sec]['avg_duration']
+                    alert_flow_data_dict[sec]['avg_duration'] = ((old_avg_duration * alert_flow_data_dict[sec]['num_flows'] - 1) +
+                                                           float(flows[f].ip_all_flow_duration)) / alert_flow_data_dict[sec][
+                                                              'num_flows']
+                except IndexError:
+                    print('OUT OF BOUND: ' + str(sec))
+                except ZeroDivisionError:  # no flows for that second
+                    alert_flow_data_dict[sec]['avg_pkts'] = int(flows[f].ip_pkt_tot_num)
+                    alert_flow_data_dict[sec]['avg_len'] = int(flows[f].ip_pkt_tot_len)
+                    alert_flow_data_dict[sec]['avg_pkts_sec'] = float(flows[f].ip_flow_pkts_sec)
+                    alert_flow_data_dict[sec]['avg_bytes_sec'] = float(flows[f].ip_flow_bytes_sec)
+                    alert_flow_data_dict[sec]['avg_duration'] = abs(float(flows[f].ip_all_flow_duration))
+
+            """
+            ALL FLOWS
+            """
+
             flow_data_dict[sec]['num_flows'] += 1
 
             if f.split()[0].split(':')[0] not in unique_addrs[sec]:  # f = ip:port ip:port
@@ -673,15 +724,20 @@ def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None)
 
 
     flow_data_dict.reverse()
+    alert_flow_data_dict.reverse()
+
     df = pd.DataFrame.from_dict(flow_data_dict)
     df = df.rename_axis('sec').reset_index()
+
+    df_alert = pd.DataFrame.from_dict(alert_flow_data_dict)
+    df_alert = df.rename_axis('sec').reset_index()
 
 
 
     fig = px.line(
         data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y_ax).update_xaxes(
         rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
-    fig.add_scatter(x=df['sec'], y=df['alerts'], mode='lines', name='alerts')
+    fig.add_scatter(x=df_alert['sec'], y=df['alerts'], hover_name='sec', hover_data=df_alert.columns.tolist(), mode='lines', name='alerts')
     return fig
 
 
