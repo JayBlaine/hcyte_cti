@@ -625,7 +625,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
         flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0})
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
     for flow in flows:
-        sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - flow.flow_cur_time)
+        sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flow.flow_cur_time))
         if flow_data_dict[sec]['num_flows'] == 0:
             flow_data_dict[sec]['num_flows'] += 1
 
