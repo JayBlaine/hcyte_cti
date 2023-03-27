@@ -97,10 +97,11 @@ def create_dash_micro(flask_app):
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
                      external_stylesheets=external_stylesheets)
 
-    dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
-                                                        value=['live'])),
+    dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')),
                                  html.Div(dcc.Dropdown(df_flows_drop, 'num_flows', id='live_yaxis_column')),
                                  html.Div(dcc.Graph(id='live_flow_data')),
+                                 html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
+                                                   value=['live'])),
                                  html.Div([html.Div(html.B('Displayed Nodes'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                      dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
@@ -675,7 +676,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
     fig = px.line(data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y).\
-        update_xaxes(rangeslider_visible=True)#.update_traces(hovertemplate='%{y}<br>%{text}')
+        update_xaxes(rangeslider_visible=True).update_layout(width=600, height=200)#.update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
 
