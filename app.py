@@ -730,7 +730,7 @@ def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None)
     df = df.rename_axis('sec').reset_index()
 
     df_alert = pd.DataFrame.from_dict(alert_flow_data_dict)
-    df_alert = df.rename_axis('sec').reset_index()
+    df_alert = df_alert.rename_axis('sec').reset_index()
 
 
 
