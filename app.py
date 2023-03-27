@@ -627,8 +627,11 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
     for flow in flows.keys():
         sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[flow].flow_cur_time))
         print('CUR TIME: ' + str(sec))
-        if flow_data_dict[sec]['num_flows'] == 0:
-            flow_data_dict[sec]['num_flows'] += 1
+        try:
+            if flow_data_dict[sec]['num_flows'] == 0:
+                flow_data_dict[sec]['num_flows'] += 1
+        except IndexError:
+            print('OUT OF BOUND: ' + str(sec))
 
 
 
