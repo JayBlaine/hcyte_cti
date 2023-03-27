@@ -244,7 +244,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     scanNodes = []
 
     node_positions = {
-        'homeNet': [200, 200],
+        'homeNet': [0, 0],
         'homeExternal': [50, 50],
         'multiNet': [0, 200],
         'broadNet': [0, 0],
