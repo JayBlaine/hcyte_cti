@@ -670,15 +670,13 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
     df = pd.DataFrame.from_dict(flow_data_dict)
-    df = df.rename_axis('index1').reset_index()
+    df = df.rename_axis('sec').reset_index()
     print(df)
 
 
-    fig = px.line(title='Live Flows: {} interface'.format(interface))
 
-    #fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec',
-    #              hover_data=df1.columns.tolist(), x='sec', y=y).update_xaxes(rangeslider_visible=True)
-    # .update_traces(hovertemplate='%{y}<br>%{text}')
+    fig = px.line(data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y).\
+        update_xaxes(rangeslider_visible=True).update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
 
