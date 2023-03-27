@@ -664,7 +664,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
             flow_data_dict[sec]['avg_len'] = int(flows[f].ip_pkt_tot_len)
             flow_data_dict[sec]['avg_pkts_sec'] = float(flows[f].ip_flow_pkts_sec)
             flow_data_dict[sec]['avg_bytes_sec'] = float(flows[f].ip_flow_bytes_sec)
-            flow_data_dict[sec]['avg_duration'] = float(abs(flows[f].ip_all_flow_duration))
+            flow_data_dict[sec]['avg_duration'] = abs(float(flows[f].ip_all_flow_duration))
 
 
 
