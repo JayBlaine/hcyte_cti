@@ -278,7 +278,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
-    print(live_y_col)
+    print('y_col:' +  live_y_col)
 
 
     # TODO: Change from full rebuild to something more efficient
