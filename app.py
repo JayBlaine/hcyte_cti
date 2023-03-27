@@ -648,15 +648,15 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
             old_avg_pkt_sec = flow_data_dict[sec]['avg_pkts_sec']
             flow_data_dict[sec]['avg_pkts_sec'] = old_avg_pkt_sec + (
-                    flows[f].ip_flow_pkts_sec - old_avg_pkt_sec) / flow_data_dict[sec]['avg_pkts_sec']
+                    float(flows[f].ip_flow_pkts_sec) - old_avg_pkt_sec) / flow_data_dict[sec]['avg_pkts_sec']
 
             old_avg_bytes_sec = flow_data_dict[sec]['avg_bytes_sec']
             flow_data_dict[sec]['avg_bytes_sec'] = old_avg_bytes_sec + (
-                    flows[f].ip_flow_bytes_sec - old_avg_bytes_sec) / flow_data_dict[sec]['avg_bytes_sec']
+                    float(flows[f].ip_flow_bytes_sec) - old_avg_bytes_sec) / flow_data_dict[sec]['avg_bytes_sec']
 
             old_avg_duration = flow_data_dict[sec]['avg_duration']
             flow_data_dict[sec]['avg_duration'] = old_avg_duration + (
-                    flows[f].ip_all_flow_duration - old_avg_duration) / flow_data_dict[sec]['avg_duration']
+                    float(flows[f].ip_all_flow_duration) - old_avg_duration) / flow_data_dict[sec]['avg_duration']
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
         except ZeroDivisionError:  # no flows for that second
