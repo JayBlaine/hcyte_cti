@@ -278,7 +278,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
-    print('y_col:' +  live_y_col)
+    live_line_fig = pop_live_line_fig(flows=visdcc_display_dict[active_int], y=live_y_col, interface=active_int)
+
+    # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
 
 
     # TODO: Change from full rebuild to something more efficient
@@ -652,6 +654,16 @@ def create_dash_macro(flask_app):
 
     )
     return dash_app
+
+
+def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
+    df1 = pd.DataFrame()
+
+    fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df1.columns.tolist(), x='sec', y=y)\
+        .update_xaxes(
+        rangeslider_visible=True)  # .update_traces(hovertemplate='%{y}<br>%{text}')
+    return fig
+
 
 
 dash_app_macro = create_dash_macro(flask_app=app)
