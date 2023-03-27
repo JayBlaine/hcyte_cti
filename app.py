@@ -94,6 +94,9 @@ def calcCoordinates(centerX, centerY, radius):
     coordinates = [x + centerX, y + centerY]
     return coordinates
 
+def joinConditionFunc(nodeOptions):
+    return(nodeOptions in home_net)
+
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
@@ -164,6 +167,9 @@ def create_dash_micro(flask_app):
                                                         'onlyDynamicEdges': False,
                                                         'fit': True
                                                     }
+                                                },
+                                                joinCondition={
+                                                    joinConditionFunc
                                                 }
                                                              )),
 
