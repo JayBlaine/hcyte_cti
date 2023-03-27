@@ -158,7 +158,7 @@ def create_dash_micro(flask_app):
                                                         'avoidOverlap': 0.5
                                                     },
                                                     'stabilization': {
-                                                        'enabled': True,
+                                                        'enabled': False,
                                                         'iterations': 1000,
                                                         'updateInterval': 100,
                                                         'onlyDynamicEdges': False,
