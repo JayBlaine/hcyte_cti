@@ -99,6 +99,8 @@ def create_dash_micro(flask_app):
 
     dash_app1.layout = html.Div([html.Div(html.B(id='num_flows')), html.Div(dcc.Checklist(id='live_check', options=[{'label': 'Live Feed', 'value': 'live'}],
                                                         value=['live'])),
+                                 html.Div(dcc.Dropdown(df_flows_drop, 'num_flows', id='live_yaxis-column')),
+                                 html.Div(dcc.Graph(id='live_flow_data')),
                                  html.Div([html.Div(html.B('Displayed Nodes'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                      dcc.Checklist(id='vis_filter', options=
                                  [{'label': 'Internal', 'value': 'internal'},
