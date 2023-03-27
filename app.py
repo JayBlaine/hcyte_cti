@@ -737,7 +737,7 @@ def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None)
     fig = px.line(
         data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y_ax).update_xaxes(
         rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
-    fig.add_scatter(x=df_alert['sec'], y=df['alerts'], hover_name='sec', hover_data=df_alert.columns.tolist(), mode='lines', name='alerts')
+    fig.add_scatter(x=df_alert['sec'], y=df_alert['alerts'], hover_name='sec', hover_data=df_alert.columns.tolist(), mode='lines', name='alerts')
     return fig
 
 
