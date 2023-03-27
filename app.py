@@ -620,10 +620,23 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 
 def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
+    flow_data_dict = []
+    for i in range(91):
+        flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0})
+    # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
+    for flow in flows:
+        sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - flow.flow_cur_time)
+        if flow_data_dict[sec]['num_flows'] == 0:
+            flow_data_dict[sec]['num_flows'] += 1
+
+
+
     df1 = pd.DataFrame()
 
-    fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec',
-                  hover_data=df1.columns.tolist(), x='sec', y=y).update_xaxes(rangeslider_visible=True)
+    fig = px.line(title='Live Flows: {} interface'.format(interface))
+
+    #fig = px.line(data_frame=df1, title='Live Flows: {} interface'.format(interface), hover_name='sec',
+    #              hover_data=df1.columns.tolist(), x='sec', y=y).update_xaxes(rangeslider_visible=True)
     # .update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
