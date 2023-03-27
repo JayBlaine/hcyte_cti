@@ -659,8 +659,15 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
                     flows[f].ip_all_flow_duration - old_avg_duration) / flow_data_dict[sec]['avg_duration']
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
+        except ZeroDivisionError:  # no flows for that one
+            flow_data_dict[sec]['avg_pkts'] = flows[f].ip_pkt_tot_num
+            flow_data_dict[sec]['avg_len'] = flows[f].ip_pkt_tot_len
+            flow_data_dict[sec]['avg_pkts_sec'] = flows[f].ip_flow_pkts_sec
+            flow_data_dict[sec]['avg_bytes_sec'] = flows[f].ip_flow_bytes_sec
+            flow_data_dict[sec]['avg_duration'] = flows[f].ip_all_flow_duration
 
-        print(flow_data_dict)
+
+    print(flow_data_dict)
 
 
 
