@@ -95,7 +95,10 @@ def calcCoordinates(centerX, centerY, radius):
     return coordinates
 
 def joinConditionFunc(nodeOptions):
-    return(nodeOptions in home_net)
+    joinCluster = False
+    if(nodeOpeions.id in home_net):
+        joinCluster = True
+    return joinCluster
 
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
