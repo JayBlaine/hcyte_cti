@@ -642,7 +642,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
 
-        print(unique_addrs)
+        print(len(unique_addrs))
 
 
 
