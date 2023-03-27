@@ -669,8 +669,9 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
 
-    df1 = pd.DataFrame.from_dict(flow_data_dict)
-    print(df1)
+    df = pd.DataFrame.from_dict(flow_data_dict)
+    df = df.rename_axis('index1').reset_index()
+    print(df)
 
 
     fig = px.line(title='Live Flows: {} interface'.format(interface))
