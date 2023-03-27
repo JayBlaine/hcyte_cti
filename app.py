@@ -623,13 +623,15 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
     flow_data_dict = []
     unique_addrs = []
-    for i in range(92):
-        flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0})
+    for i in range(92):  # init lists
+        flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0, 'alerts': 0})
         unique_addrs.append([])
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
     for f in flows.keys():
         sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[f].flow_cur_time))
         try:
+            if flows[f].label == '1':
+                flow_data_dict[sec]['alerts'] += 1
             flow_data_dict[sec]['num_flows'] += 1
 
             if f.split()[0].split(':')[0] not in unique_addrs[sec]:  # f = ip:port ip:port
@@ -676,8 +678,9 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
 
-    fig = px.line(data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=y).\
-        update_xaxes(rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
+    fig = px.line(
+        data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=[y, 'alerts']).update_xaxes(
+        rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
 
