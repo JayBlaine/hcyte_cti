@@ -670,6 +670,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
 
+    flow_data_dict.reverse()
     df = pd.DataFrame.from_dict(flow_data_dict)
     df = df.rename_axis('sec').reset_index()
 
