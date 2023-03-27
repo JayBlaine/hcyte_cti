@@ -621,17 +621,28 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
     flow_data_dict = []
-    for i in range(91):
+    unique_addrs = []
+    for i in range(92):
         flow_data_dict.append({'num_flows': 0, 'num_addrs':0, 'avg_pkts':0.0, 'avg_len':0.0, 'avg_pkts_sec':0.0, 'avg_bytes_sec':0.0, 'avg_duration':0.0})
+        unique_addrs.append([])
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
-    for flow in flows.keys():
-        sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[flow].flow_cur_time))
-        print('CUR TIME: ' + str(sec))
+    for f in flows.keys():
+        sec = int(dt.datetime.now(dt.timezone.utc).timestamp() - float(flows[f].flow_cur_time))
         try:
             if flow_data_dict[sec]['num_flows'] == 0:
                 flow_data_dict[sec]['num_flows'] += 1
+                flow_data_dict[sec]['num_addrs'] += 2
+
+                addr1 = f.split()[0]
+                addr2 = f.split()[1]
+                addr1_clean = addr1.split(':')[0]
+                addr2_clean = addr2.split(':')[0]
+                unique_addrs[sec].append(addr1_clean)
+                unique_addrs[sec].append(addr2_clean)
         except IndexError:
             print('OUT OF BOUND: ' + str(sec))
+
+        print(unique_addrs)
 
 
 
