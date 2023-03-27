@@ -279,7 +279,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         visdcc_display_dict['external'] = csv_to_flow_dict(micro_int_files['external'])
         visdcc_display_dict['tap'] = csv_to_flow_dict(micro_int_files['tap'])
 
-    live_line_fig = pop_live_line_fig(flows=visdcc_display_dict[active_int], y=live_y_col, interface=active_int)
+    live_line_fig = pop_live_line_fig(flows=visdcc_display_dict[active_int], y_ax=live_y_col, interface=active_int)
 
     # live_y_col: num_flows, num_addrs, avg_pkts, avg_len, avg_pkts_sec, avg_bytes_sec, avg_duration
 
@@ -620,7 +620,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     #return current_data, clicked_node
 
 
-def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
+def pop_live_line_fig(flows:dict=None, y_ax:str='num_flows', interface:str=None):
     flow_data_dict = []
     unique_addrs = []
     for i in range(92):  # init lists
@@ -679,7 +679,7 @@ def pop_live_line_fig(flows:dict=None, y:str='num_flows', interface:str=None):
 
 
     fig = px.line(
-        data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=[y, 'alerts']).update_xaxes(
+        data_frame=df, title='Live Flows: {} interface'.format(interface), hover_name='sec', hover_data=df.columns.tolist(), x='sec', y=[y_ax, 'alerts']).update_xaxes(
         rangeslider_visible=True).update_layout(height=300)#.update_traces(hovertemplate='%{y}<br>%{text}')
     return fig
 
