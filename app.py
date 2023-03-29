@@ -161,7 +161,7 @@ def create_dash_micro(flask_app):
                                                         'springLength': 200,
                                                         'springConstant': 0.00,
                                             #            'damping': 0.09,
-                                                        'avoidOverlap': 0.5
+                                                        'avoidOverlap': 0.1
                                                     },
                                                     'stabilization': {
                                                         'enabled': False,
