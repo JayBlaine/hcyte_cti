@@ -159,7 +159,7 @@ def create_dash_micro(flask_app):
                                                         'gravitationalConstant': -100,
                                                         'centralGravity': 0.00,
                                                         'springLength': 1000,
-                                                        'springConstant': 0.01,
+                                                        'springConstant': 0.00,
                                             #            'damping': 0.09,
                                                         'avoidOverlap': 0.5
                                                     },
