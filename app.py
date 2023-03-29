@@ -152,7 +152,7 @@ def create_dash_micro(flask_app):
                                                         'edgeMinimization': True
                                                     }
                                                 }, physics={
-                                                    'enabled': False,
+                                                    'enabled': True,
                                                     'maxVelocity': 25,
                                                     'solver': 'barnesHut',
                                                     'barnesHut': {
