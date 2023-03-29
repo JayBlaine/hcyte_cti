@@ -170,10 +170,10 @@ def create_dash_micro(flask_app):
                                                         'onlyDynamicEdges': False,
                                                         'fit': True
                                                     }
-                                                },
-                                                joinCondition={
-                                                    joinConditionFunc
                                                 }
+                                            #    joinCondition={
+                                            #        joinConditionFunc
+                                            #    }
                                                              )),
 
                                  dcc.Interval(
