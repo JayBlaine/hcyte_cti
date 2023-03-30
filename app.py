@@ -31,6 +31,8 @@ active_int = 'internal'
 #sweepNodes = []
 #scanNodes = []
 
+prior_locations = {}
+
 current_data = {'nodes': [], 'edges': []}
 
 home_net = IPNetwork("192.168.50.0/24")
@@ -431,36 +433,41 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             # protocol filtering of nodes
             offset = 0
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
-                if new_node["id"] in home_net:
-                    position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
-                    new_node["x"] = position[0]
-                    new_node["y"] = position[1]
-                    #new_node["x"] = node_positions["homeNet"][0] + random.uniform(-50, 50)
-                    #new_node["y"] = node_positions["homeNet"][1] + offset
-                    offset += 10000
-                    print("{} is in the home network".format(new_node["id"]))
-                elif new_node['id'] in home_ext:
-                    position = calcCoordinates(node_positions['homeExternal'][0], node_positions['homeExternal'][1], 50)
-                    new_node["x"] = position[0]
-                    new_node["y"] = position[1]
-                    #new_node["x"] = node_positions["homeExternal"][0] + random.uniform(-50, 50)
-                    #new_node["y"] = node_positions["homeExternal"][1] + random.uniform(-50, 50)
-                elif new_node["id"] in broad_net:
-                    new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
-                elif new_node["id"] in multi_net:
-                    new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
-                elif new_node['id'] in broad_net:
-                    new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
-                elif new_node["id"] in broad_inner:
-                    new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
-                    new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
+                #set the location of the node depending on what network the node is in
+                if new_node["id"] in prior_locations:
+                    pass
                 else:
-                    position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
-                    new_node["x"] = position[0]
-                    new_node["y"] = position[1]
+                    if new_node["id"] in home_net:
+                        position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
+                        new_node["x"] = position[0]
+                        new_node["y"] = position[1]
+                        #new_node["x"] = node_positions["homeNet"][0] + random.uniform(-50, 50)
+                        #new_node["y"] = node_positions["homeNet"][1] + offset
+                        offset += 10000
+                        print("{} is in the home network".format(new_node["id"]))
+                    elif new_node['id'] in home_ext:
+                        position = calcCoordinates(node_positions['homeExternal'][0], node_positions['homeExternal'][1], 50)
+                        new_node["x"] = position[0]
+                        new_node["y"] = position[1]
+                        #new_node["x"] = node_positions["homeExternal"][0] + random.uniform(-50, 50)
+                        #new_node["y"] = node_positions["homeExternal"][1] + random.uniform(-50, 50)
+                    elif new_node["id"] in broad_net:
+                        new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
+                        new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
+                    elif new_node["id"] in multi_net:
+                        new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
+                        new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
+                    elif new_node['id'] in broad_net:
+                        new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
+                        new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
+                    elif new_node["id"] in broad_inner:
+                        new_node["x"] = node_positions["broadInner"][0] + random.uniform(-50, 50)
+                        new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
+                    else:
+                        position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
+                        new_node["x"] = position[0]
+                        new_node["y"] = position[1]
+
 
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
                     new_node['color'] = 'black'
