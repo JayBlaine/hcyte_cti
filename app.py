@@ -96,12 +96,6 @@ def calcCoordinates(centerX, centerY, radius):
     coordinates = [x + centerX, y + centerY]
     return coordinates
 
-def joinConditionFunc(nodeOptions):
-    joinCluster = False
-    if(nodeOpeions.id in home_net):
-        joinCluster = True
-    return joinCluster
-
 def create_dash_micro(flask_app):
     external_stylesheets = ['https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css']
     dash_app1 = Dash(server=flask_app, name='dashboard1', url_base_pathname='/dash1/',
@@ -427,7 +421,6 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
 
-        #print("mal alert keys: " + str(mal_alerts.keys()))
         # ip filtering of nodes
         if new_node not in nodes and ip_type in vis_switches:
             # protocol filtering of nodes
@@ -435,20 +428,19 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             if (num_udp > 0 and 'UDP' in proto_switches) or (num_tcp > 0 and 'TCP' in proto_switches):
                 #set the location of the node depending on what network the node is in
                 if new_node["id"] in prior_locations:
-                    pass
+                    new_node["x"] = prior_locations[new_node["id"]][0]
+                    new_node["y"] = prior_locations[new_node["id"]][1]
                 else:
                     if new_node["id"] in home_net:
                         position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
-                        #new_node["x"] = node_positions["homeNet"][0] + random.uniform(-50, 50)
-                        #new_node["y"] = node_positions["homeNet"][1] + offset
-                        offset += 10000
-                        print("{} is in the home network".format(new_node["id"]))
+                        prior_locations[new_node["id"]] = [position[0], position[1]]
                     elif new_node['id'] in home_ext:
                         position = calcCoordinates(node_positions['homeExternal'][0], node_positions['homeExternal'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
+                        prior_locations[new_node["id"]] = [position[0], position[1]]
                         #new_node["x"] = node_positions["homeExternal"][0] + random.uniform(-50, 50)
                         #new_node["y"] = node_positions["homeExternal"][1] + random.uniform(-50, 50)
                     elif new_node["id"] in broad_net:
