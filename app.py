@@ -460,6 +460,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
+                        prior_locations[new_node["id"]] = [position[0], position[1]]
 
 
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
