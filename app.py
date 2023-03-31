@@ -262,7 +262,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'multiNet': [0, 200],
         'broadNet': [0, 0],
         'broadInner': [100, 100],
-        'other': [500, 0]
+        'other': [1000, 0]
     }
 
 
