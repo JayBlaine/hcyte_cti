@@ -262,6 +262,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'multiNet': [0, 200],
         'broadNet': [0, 0],
         'broadInner': [100, 100],
+        'legend': [500, -500],
         'other': [1000, 0]
     }
 
@@ -534,46 +535,18 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         nodes.append(swept)
 
         #nodes = nodes + scanNodes
-    #center (50,40)
     
-    #test1 = {
-    #    'id': "test1",
-    #    'label': "1",
-    #    'shape': 'dot',
-    #    'size': 10,
-    #    'color': 'red',
-    #    'x': 200,
-    #    'y': 200
-    #}
-    #test2 = {
-    #    'id': "test2",
-    #    'label': "2",
-    #    'shape': 'dot',
-    #    'size': 10,
-    #    'color': 'red'
-    #}
-    #test3 = {
-    #    'id': "test3",
-    #    'label': "3",
-    #    'shape': 'dot',
-    #    'size': 10,
-    #    'color': 'red'
-    #}
-    #edge1 = {
-    #    'id': "1to2",
-    #    'from': "test1",
-    #    'to': "test2"
-    #}
-    #edge2 = {
-    #    'id': "1to3",
-    #    'from': "test1",
-    #    'to': "test3"
-    #}
-    #nodes.append(test1)
-    #nodes.append(test2)
-    #nodes.append(test3)
-    #edges.append(edge1)
-    #edges.append(edge2)
+    #legend
+    nodes.append({
+        'id': 'Green node',
+        'x': node_positions['legend'][0],
+        'y': node_positions['legend'][1],
+        'label': "Local",
+        'fixed': True,
+        'physics': False
+    })
+
+
     #edges = []
     
     data = {'nodes': nodes, 'edges': edges}
