@@ -575,14 +575,35 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'id': 'Black node',
         'x': node_positions['legend'][0] + 3*step,
         'y': node_positions['legend'][1],
-        'label': "Scanner and Sweeper",
+        'label': "Scanner and \nSweeper",
         'fixed': True,
         'physics': False,
         'shape': 'dot',
         'color': 'black',
         'size': 10
     })
-
+    nodes.append({
+        'id': 'Orange node',
+        'x': node_positions['legend'][0] + 4*step,
+        'y': node_positions['legend'][1],
+        'label': "Suspicious",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'orange',
+        'size': 10
+    })
+    nodes.append({
+        'id': 'Red node',
+        'x': node_positions['legend'][0] + 5*step,
+        'y': node_positions['legend'][1],
+        'label': "Malicious",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'red',
+        'size': 10
+    })
 
     #edges = []
     
