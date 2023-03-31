@@ -546,7 +546,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'fixed': True,
         'physics': False,
         'shape': 'dot',
-        'color': 'green'
+        'color': 'green',
+        'size': 10
     })
     nodes.append({
         'id': 'Blue node',
@@ -556,7 +557,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'fixed': True,
         'physics': False,
         'shape': 'dot',
-        'color': 'blue'
+        'color': 'blue',
+        'size': 10
     })
     nodes.append({
         'id': 'Pink node',
@@ -566,7 +568,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'fixed': True,
         'physics': False,
         'shape': 'dot',
-        'color': 'pink'
+        'color': 'pink',
+        'size': 10
     })
     nodes.append({
         'id': 'Black node',
@@ -576,7 +579,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'fixed': True,
         'physics': False,
         'shape': 'dot',
-        'color': 'black'
+        'color': 'black',
+        'size': 10
     })
 
 
