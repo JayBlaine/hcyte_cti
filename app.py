@@ -262,7 +262,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'multiNet': [0, 200],
         'broadNet': [0, 0],
         'broadInner': [100, 100],
-        'legend': [500, -500],
+        'legend': [300, -500],
         'other': [1000, 0]
     }
 
@@ -537,7 +537,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #nodes = nodes + scanNodes
     
     #legend
-    step = 50
+    step = 70
     nodes.append({
         'id': 'Green node',
         'x': node_positions['legend'][0],
