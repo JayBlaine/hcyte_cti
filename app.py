@@ -537,7 +537,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #nodes = nodes + scanNodes
     
     #legend
-    step = 100
+    step = 130
     nodes.append({
         'id': 'Green node',
         'x': node_positions['legend'][0],
