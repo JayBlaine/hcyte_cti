@@ -543,7 +543,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'y': node_positions['legend'][1],
         'label': "Local",
         'fixed': True,
-        'physics': False
+        'physics': False,
+        'shape': 'dot',
+        'color': 'green'
     })
 
 
