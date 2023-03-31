@@ -550,8 +550,19 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'size': 10
     })
     nodes.append({
+        'id': 'Yellow node',
+        'x': node_positions['legend'][0] + 2*step,
+        'y': node_positions['legend'][1],
+        'label': "External",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'yellow',
+        'size': 10
+    })
+    nodes.append({
         'id': 'Blue node',
-        'x': node_positions['legend'][0] + step,
+        'x': node_positions['legend'][0] + 3*step,
         'y': node_positions['legend'][1],
         'label': "Scanner",
         'fixed': True,
@@ -562,7 +573,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     })
     nodes.append({
         'id': 'Pink node',
-        'x': node_positions['legend'][0] + 2*step,
+        'x': node_positions['legend'][0] + 4*step,
         'y': node_positions['legend'][1],
         'label': "Sweeper",
         'fixed': True,
@@ -573,7 +584,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     })
     nodes.append({
         'id': 'Black node',
-        'x': node_positions['legend'][0] + 3*step,
+        'x': node_positions['legend'][0] + 5*step,
         'y': node_positions['legend'][1],
         'label': "Scanner and \nSweeper",
         'fixed': True,
@@ -584,7 +595,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     })
     nodes.append({
         'id': 'Orange node',
-        'x': node_positions['legend'][0] + 4*step,
+        'x': node_positions['legend'][0] + 6*step,
         'y': node_positions['legend'][1],
         'label': "Suspicious",
         'fixed': True,
@@ -595,7 +606,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     })
     nodes.append({
         'id': 'Red node',
-        'x': node_positions['legend'][0] + 5*step,
+        'x': node_positions['legend'][0] + 7*step,
         'y': node_positions['legend'][1],
         'label': "Malicious",
         'fixed': True,
