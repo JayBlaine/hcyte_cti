@@ -318,6 +318,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 'to': destIP,
                 'label': '{}'.format(destPort),
                 'width':  width,
+                'physics': False,
                 'title':
                     "flow: {}<br>protocol: {}<br>number of packets: {}"
                     "<br>number of bytes: {}<br>duration: {}<br>Label: {}".format(
