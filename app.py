@@ -537,6 +537,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #nodes = nodes + scanNodes
     
     #legend
+    step = 50
     nodes.append({
         'id': 'Green node',
         'x': node_positions['legend'][0],
@@ -546,6 +547,36 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'physics': False,
         'shape': 'dot',
         'color': 'green'
+    })
+    nodes.append({
+        'id': 'Blue node',
+        'x': node_positions['legend'][0] + step,
+        'y': node_positions['legend'][1],
+        'label': "Scanner",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'blue'
+    })
+    nodes.append({
+        'id': 'Pink node',
+        'x': node_positions['legend'][0] + 2*step,
+        'y': node_positions['legend'][1],
+        'label': "Sweeper",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'pink'
+    })
+    nodes.append({
+        'id': 'Black node',
+        'x': node_positions['legend'][0] + 3*step,
+        'y': node_positions['legend'][1],
+        'label': "Scanner and Sweeper",
+        'fixed': True,
+        'physics': False,
+        'shape': 'dot',
+        'color': 'black'
     })
 
 
