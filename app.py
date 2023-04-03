@@ -438,7 +438,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     if new_node["id"] in home_net:
                         cluster_locations = new_node["id"].split(".")
                         print("CLuster locations: " + str(cluster_locations))
-                        position = calcCoordinates(int(cluster_locations[0])*7, int(cluster_locations[1])*10, 50)
+                        position = calcCoordinates(int(cluster_locations[0])*9, int(cluster_locations[1])*10, 50)
                         #position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
@@ -465,7 +465,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     else:
                         cluster_locations = new_node["id"].split(".")
                         print("CLuster locations: " + str(cluster_locations))
-                        position = calcCoordinates(int(cluster_locations[0])*7, int(cluster_locations[1])*10, 50)
+                        position = calcCoordinates(int(cluster_locations[0])*9, int(cluster_locations[1])*10, 50)
                         #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
@@ -483,7 +483,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #    allScannedNodes = allScannedNodes + nodes
                 #print("All scanned nodes: " + str(allScannedNodes))
                 elif new_node['id'] in scans_dict.keys():
-                    new_node['color'] = 'blue'
+                    new_node['color'] = 'red'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
                 #display all nodes in the home network
