@@ -82,7 +82,7 @@ def get_anonymized_label(addr: str):
 
 
 micro_node_color_code = {
-    1: 'yellow',
+    1: 'green',
     2: 'green',
     3: 'purple',
     4: 'orange',
@@ -473,7 +473,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 
                 if new_node['id'] in scans_dict.keys() and new_node['id'] in sweeps_dict.keys():
-                    new_node['color'] = 'black'
+                    new_node['color'] = 'red'
                     nodes.append(new_node)
                     #canNodes.append(new_node)
                     #sweepNodes.append(new_node)
@@ -483,7 +483,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #    allScannedNodes = allScannedNodes + nodes
                 #print("All scanned nodes: " + str(allScannedNodes))
                 elif new_node['id'] in scans_dict.keys():
-                    new_node['color'] = 'blue'
+                    new_node['color'] = 'red'
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
                 #display all nodes in the home network
@@ -497,7 +497,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                             #nodes.append(new_node)
                 #if the node is sweeping other nodes, display it
                 elif new_node['id'] in sweeps_dict:
-                    new_node['color'] = 'pink'
+                    new_node['color'] = 'red'
                     nodes.append(new_node)
                     #sweepNodes.append(new_node)
                 else:
