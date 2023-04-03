@@ -484,7 +484,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #print("All scanned nodes: " + str(allScannedNodes))
                 elif new_node['id'] in scans_dict.keys():
                     new_node['color'] = 'red'
-                    new_node['title'] = new_node['title'] + "<br>Scan Node"
+                    new_node['title'] = new_node['title'] + "<br>Scaning Node"
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
                 #display all nodes in the home network
@@ -499,6 +499,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #if the node is sweeping other nodes, display it
                 elif new_node['id'] in sweeps_dict:
                     new_node['color'] = 'red'
+                    new_node['title'] = new_node['title'] + "<br>Sweeping Node"
                     nodes.append(new_node)
                     #sweepNodes.append(new_node)
                 else:
