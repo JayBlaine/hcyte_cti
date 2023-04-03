@@ -436,6 +436,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 else:
                     if new_node["id"] in home_net:
                         cluster_locations = new_node["id"].split(".")
+                        print("CLuster locations: " + str(cluster_locations))
                         position = calcCoordinates(cluster_locations[0], cluster_locations[1], 50)
                         #position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
                         new_node["x"] = position[0]
@@ -462,6 +463,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                     else:
                         cluster_locations = new_node["id"].split(".")
+                        print("CLuster locations: " + str(cluster_locations))
                         position = calcCoordinates(cluster_locations[0], cluster_locations[1], 50)
                         #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
