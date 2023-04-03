@@ -550,71 +550,71 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         'id': 'Green node',
         'x': node_positions['legend'][0],
         'y': node_positions['legend'][1],
-        'label': "Local",
+        'label': "Benign",
         'fixed': True,
         'physics': False,
         'shape': 'dot',
         'color': 'green',
         'size': 10
     })
-    nodes.append({
-        'id': 'Yellow node',
-        'x': node_positions['legend'][0] + step,
-        'y': node_positions['legend'][1],
-        'label': "External",
-        'fixed': True,
-        'physics': False,
-        'shape': 'dot',
-        'color': 'yellow',
-        'size': 10
-    })
-    nodes.append({
-        'id': 'Blue node',
-        'x': node_positions['legend'][0] + 2*step,
-        'y': node_positions['legend'][1],
-        'label': "Scanner\n(Click to expand)",
-        'fixed': True,
-        'physics': False,
-        'shape': 'dot',
-        'color': 'blue',
-        'size': 10
-    })
-    nodes.append({
-        'id': 'Pink node',
-        'x': node_positions['legend'][0] + 3*step,
-        'y': node_positions['legend'][1],
-        'label': "Sweeper\n(Click to expand)",
-        'fixed': True,
-        'physics': False,
-        'shape': 'dot',
-        'color': 'pink',
-        'size': 10
-    })
-    nodes.append({
-        'id': 'Black node',
-        'x': node_positions['legend'][0] + 4*step,
-        'y': node_positions['legend'][1],
-        'label': "Scanner and \nSweeper\n(Click to expand)",
-        'fixed': True,
-        'physics': False,
-        'shape': 'dot',
-        'color': 'black',
-        'size': 10
-    })
-    nodes.append({
-        'id': 'Orange node',
-        'x': node_positions['legend'][0] + 5*step,
-        'y': node_positions['legend'][1],
-        'label': "Suspicious",
-        'fixed': True,
-        'physics': False,
-        'shape': 'dot',
-        'color': 'orange',
-        'size': 10
-    })
+   # nodes.append({
+   #     'id': 'Yellow node',
+   #     'x': node_positions['legend'][0] + step,
+   #     'y': node_positions['legend'][1],
+   #     'label': "External",
+   #     'fixed': True,
+   #     'physics': False,
+   #     'shape': 'dot',
+   #     'color': 'yellow',
+   #     'size': 10
+   # })
+   # nodes.append({
+   #     'id': 'Blue node',
+   #     'x': node_positions['legend'][0] + 2*step,
+   #     'y': node_positions['legend'][1],
+   #     'label': "Scanner\n(Click to expand)",
+   #     'fixed': True,
+   #     'physics': False,
+   #     'shape': 'dot',
+   #     'color': 'blue',
+   #     'size': 10
+   # })
+   #nodes.append({
+   #     'id': 'Pink node',
+   #     'x': node_positions['legend'][0] + 3*step,
+   #     'y': node_positions['legend'][1],
+   #     'label': "Sweeper\n(Click to expand)",
+   #     'fixed': True,
+   #     'physics': False,
+   #     'shape': 'dot',
+   #     'color': 'pink',
+   #     'size': 10
+   # })
+   # nodes.append({
+   #     'id': 'Black node',
+   #     'x': node_positions['legend'][0] + 4*step,
+   #     'y': node_positions['legend'][1],
+   #     'label': "Scanner and \nSweeper\n(Click to expand)",
+   #     'fixed': True,
+   #     'physics': False,
+   #     'shape': 'dot',
+   #     'color': 'black',
+   #     'size': 10
+   # })
+   # nodes.append({
+   #     'id': 'Orange node',
+   #     'x': node_positions['legend'][0] + 5*step,
+   #     'y': node_positions['legend'][1],
+   #     'label': "Suspicious",
+   #     'fixed': True,
+   #     'physics': False,
+   #     'shape': 'dot',
+   #     'color': 'orange',
+   #     'size': 10
+   # })
     nodes.append({
         'id': 'Red node',
-        'x': node_positions['legend'][0] + 6*step,
+        'x': node_positions['legend'][0] + step,
         'y': node_positions['legend'][1],
         'label': "Malicious",
         'fixed': True,
