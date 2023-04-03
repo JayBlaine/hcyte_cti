@@ -93,6 +93,7 @@ def calcCoordinates(centerX, centerY, radius):
     angle = random.randint(0, 359)
     x = radius * math.sin(math.radians(angle))
     y = radius * math.cos(math.radians(angle))
+    print("X: " + str(x) + "\tCenterX: " + str(centerX))
     coordinates = [x + centerX, y + centerY]
     return coordinates
 
