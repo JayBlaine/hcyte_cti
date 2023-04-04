@@ -350,7 +350,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #print("Scan match incremented")
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
-        if(matches > 3): #arbitrary threshold
+        if(matches > 10): #arbitrary threshold
             #print("Scan found") 
             #if the node is already scanning something, add the newly found scan node to its list
             if(edges[i]["from"] in scans_dict.keys() and edges[i]["to"] not in scans_dict[edges[i]["from"]]):
@@ -373,7 +373,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             #if the from IPs and dest ports match, it is a potential scan
             if(edges[i]["from"] == edge["from"]) and cur_dest == edge_dest and edges[i]["to"] != edge["to"] and edges[i] != edge:
                 matches += 1
-        if(matches > 3):
+        if(matches > 10):
             sweeps_dict[edges[i]["from"]] = cur_dest
     #print("Sweeps: " + str(sweeps))
     
