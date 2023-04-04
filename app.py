@@ -82,7 +82,7 @@ def get_anonymized_label(addr: str):
 
 
 micro_node_color_code = {
-    1: 'yellow',
+    1: 'green',
     2: 'green',
     3: 'purple',
     4: 'orange',
