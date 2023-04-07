@@ -483,8 +483,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 #    allScannedNodes = allScannedNodes + nodes
                 #print("All scanned nodes: " + str(allScannedNodes))
                 elif new_node['id'] in scans_dict.keys():
-                    #if new_node['id'] not in home_net:
-                    new_node['color'] = 'red'
+                    if new_node['id'] not in home_net:
+                        new_node['color'] = 'red'
                     new_node['title'] = new_node['title'] + "<br>Scanning Node"
                     nodes.append(new_node)
                     #scanNodes.append(new_node)
