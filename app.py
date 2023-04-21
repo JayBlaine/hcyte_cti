@@ -467,7 +467,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                     else:
                         cluster_locations = new_node["id"].split(".")
                         print("CLuster locations: " + str(cluster_locations))
-                        position = calcCoordinates(int(cluster_locations[0])*7, int(cluster_locations[1])*8, 50)
+                        position = calcCoordinates(int(cluster_locations[0])*5, int(cluster_locations[1])*5, 50)
                         #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
                         new_node["y"] = position[1]
