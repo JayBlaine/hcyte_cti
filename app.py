@@ -456,8 +456,15 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
                         new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
                     elif new_node["id"] in multi_net:
-                        new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
-                        new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
+                        #new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
+                        #new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
+                        cluster_locations = new_node["id"].split(".")
+                        print("CLuster locations: " + str(cluster_locations))
+                        position = calcCoordinates(int(cluster_locations[0])*5, int(cluster_locations[1])*5, 50)
+                        #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
+                        new_node["x"] = position[0]
+                        new_node["y"] = position[1]
+                        prior_locations[new_node["id"]] = [position[0], position[1]]                    
                     elif new_node['id'] in broad_net:
                         new_node["x"] = node_positions["broadNet"][0] + random.uniform(-50, 50)
                         new_node["y"] = node_positions["broadNet"][1] + random.uniform(-50, 50)
