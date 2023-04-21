@@ -346,7 +346,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         matchNodes = []
         for edge in edges:
             #increment matches if both the to and from IPs match
-            if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"]) and edges[i] != edge:
+            if(edges[i]["from"] == edge["from"] and edges[i]["to"] == edge["to"] and edge["to"] in home_net) and edges[i] != edge:
                 #print("Scan match incremented")
                 matches += 1
         #if the required amount of matches is reached, add the to and from IPs as a potential scan 
@@ -371,7 +371,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         for edge in edges:
             edge_dest = edge["id"].split("__")[1].split(":")[1]
             #if the from IPs and dest ports match, it is a potential scan
-            if(edges[i]["from"] == edge["from"]) and cur_dest == edge_dest and edges[i]["to"] != edge["to"] and edges[i] != edge:
+            if(edges[i]["from"] == edge["from"] and edges["from"] not in home_ext) and cur_dest == edge_dest and edges[i]["to"] != edge["to"] and edges[i] != edge:
                 matches += 1
         if(matches > 10):
             sweeps_dict[edges[i]["from"]] = cur_dest
