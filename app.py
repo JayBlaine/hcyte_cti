@@ -270,7 +270,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
     # switches match with codes returned from anon checks for addr type
     external_switch = 1 if 'external' in vis_filter else 0
-    internal_switch = 2 if 'internal' in vis_filter else 0
+    internal_switch = 2 #if 'internal' in vis_filter else 0
     multi_switch = 3 if 'multi' in vis_filter else 0
     int_sus_switch = 4 if 'internal_suspicious' in vis_filter else 0
     ext_sus_switch = 5 if 'external_suspicious' in vis_filter else 0
@@ -386,6 +386,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
     for ip in ip_all:  # nodes
         ip_label, ip_type = get_anonymized_label(ip)
+        ip_color = "green"
         num_malicious = 0
         num_udp = 0
         num_tcp = 0
@@ -413,8 +414,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 # converting type for coloring/filtering for malicious nodes
                 if ip in home_net:
                     ip_type = 4
+                    ip_color = "orange"
                 else:
                     ip_type = 5
+                    ip_color = "red"
 
         if len(mal_alerts.keys()) > 0:
             mal_alert_label += 'Alerts:'
