@@ -65,11 +65,11 @@ df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for 
 
 
 def get_anonymized_label(addr: str):
-    addr_type = 1  # 1 = outside home sub, 2 = inside home/net, 3 = broad/multicast
+    addr_type = 1  # 1 = outside home sub, 2 = inside home/net, 3 = broad/multicast #NEW  1 = external bengin, 2 = external malicious, 3 = internal
     if (addr in home_net or addr in home_ext) and addr not in broad_inner:
-        addr_type = 2
-    elif addr in multi_net or addr in broad_net or addr in broad_inner:
         addr_type = 3
+    elif addr in multi_net or addr in broad_net or addr in broad_inner:
+        addr_type = 5 #ignore for now
 
     if addr not in home_net and addr not in multi_net and addr not in broad_net and addr not in broad_inner:
         IP_label_split = addr.split('.')
@@ -109,11 +109,11 @@ def create_dash_micro(flask_app):
                                                    value=['live'])),
                                  html.Div([html.Div(html.B('Displayed Nodes'), style={'display': 'inline-block', 'padding-right': '5px'}),
                                      dcc.Checklist(id='vis_filter', options=
-                                 [{'label': 'Internal', 'value': 'internal'},
-                                  {'label': 'External', 'value': 'external'},
-                                  {'label': 'Multi/Broadcast', 'value': 'multi'},
-                                  {'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
-                                  {'label': 'External Suspicious Nodes', 'value': 'external_suspicious'}],
+                                 [#{'label': 'Internal', 'value': 'internal'},
+                                  {'label': 'External Benign', 'value': 'external'},
+                                  #{'label': 'Multi/Broadcast', 'value': 'multi'},
+                                  #{'label': 'Internal Suspicious Nodes', 'value': 'internal_suspicious'},
+                                  {'label': 'Malicious', 'value': 'external_suspicious'}],
                                                         value=['internal', 'external', 'multi', 'internal_suspicious', 'external_suspicious'],style={'display': 'inline-block'}),]),
 
                                  html.Div([html.Div(html.B('Protocol'), style={'display': 'inline-block', 'padding-right': '5px'}),
@@ -269,12 +269,17 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
 
     # switches match with codes returned from anon checks for addr type
-    external_switch = 1 if 'external' in vis_filter else 0
-    internal_switch = 2 #if 'internal' in vis_filter else 0
-    multi_switch = 3 if 'multi' in vis_filter else 0
-    int_sus_switch = 4 if 'internal_suspicious' in vis_filter else 0
-    ext_sus_switch = 5 if 'external_suspicious' in vis_filter else 0
-    vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
+    #external_switch = 1 if 'external' in vis_filter else 0
+    #internal_switch = 2 #if 'internal' in vis_filter else 0         #leave internal always on so that external malicious connections are shown
+    #multi_switch = 3 if 'multi' in vis_filter else 0
+    #int_sus_switch = 4 if 'internal_suspicious' in vis_filter else 0
+    #ext_sus_switch = 5 if 'external_suspicious' in vis_filter else 0
+    #vis_switches = [external_switch, internal_switch, multi_switch, int_sus_switch, ext_sus_switch]  # 4 for alerts (ALWAYS SHOW FOR NOW)
+    
+    internal_switch = 3 #always on
+    ext_ben = 1 if 'external' in vis_filter else 0
+    ext_mal = 2 if 'external_suspicious' in vis_filter else 0
+    vis_switches = [internal_switch, ext_ben, ext_mal]
 
     tcp_switch = 'TCP' if 'tcp' in proto_filter else '0'  # in str since ip_proto field is str
     udp_switch = 'UDP' if 'udp' in proto_filter else '0'
@@ -413,10 +418,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
                 # converting type for coloring/filtering for malicious nodes
                 if ip in home_net:
-                    ip_type = 4
+                    ip_type = 1
                     ip_color = "orange"
                 else:
-                    ip_type = 5
+                    ip_type = 3
                     ip_color = "red"
 
         if len(mal_alerts.keys()) > 0:
@@ -427,7 +432,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         new_node = {
             'id': ip,
             'label': ip_label,
-            'shape': 'dot', 'size': 5, 'color': micro_node_color_code[ip_type],
+            'shape': 'dot', 'size': 5, 'color': ip_color,
 
             'title': "{}<br>number of flows: {}<br>malicious flows: {}<br>{}".format(ip_label, len(re.findall(ip + ':', ''.join(
                 list(visdcc_display_dict[active_int].keys())))), num_malicious, mal_alert_label)}
@@ -435,9 +440,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #set scanning nodes to be displayed as malicious
         if new_node['id'] in scans_dict.keys():
             if new_node['id'] not in home_net:
-                ip_type = 5
+                ip_type = 2
             else:
-                ip_type = 4
+                ip_type = 3
                 #new_node['color'] = 'red'
 
         # ip filtering of nodes
