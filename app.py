@@ -444,6 +444,13 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             else:
                 ip_type = 3
                 #new_node['color'] = 'red'
+                
+        #set sweeping nodes as malicious
+        if new_node['id'] in sweeps_dict.keys():
+            if new_node['id'] not in home_net:
+                ip_type = 2
+            else:
+                ip_type = 3
 
         # ip filtering of nodes
         if new_node not in nodes and ip_type in vis_switches:
