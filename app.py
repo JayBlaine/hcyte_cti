@@ -365,7 +365,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             #if this is the first thing it is scanning, create a list to hold all potential scans
             else:
                 scans_dict[edges[i]["from"]] = edges[i]["to"]
-                print("Scans: " + str(scans_dict))
+                #print("Scans: " + str(scans_dict))
             #scans_dict[edges[i]["from"]] = edges[i]["to"]
     #print("Scans: " + str(scans))
 
@@ -419,10 +419,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 # converting type for coloring/filtering for malicious nodes
                 if ip in home_net:
                     ip_type = 1
-                    ip_color = "orange"
+                    ip_color = "orange" #internal node under attack
                 else:
                     ip_type = 3
-                    ip_color = "red"
+                    ip_color = "red" #external attacking node
 
         if len(mal_alerts.keys()) > 0:
             mal_alert_label += 'Alerts:'
@@ -451,6 +451,9 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 ip_type = 2
             else:
                 ip_type = 3
+
+        if new_node['id'] in scans_dict.values():
+            ip_type = 3
 
         # ip filtering of nodes
         if new_node not in nodes and ip_type in vis_switches:
