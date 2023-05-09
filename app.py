@@ -69,7 +69,7 @@ def get_anonymized_label(addr: str):
     if (addr in home_net or addr in home_ext or addr in broad_inner): #and addr not in broad_inner:
         addr_type = 3
     elif addr in multi_net or addr in broad_net or addr in broad_inner:
-        addr_type = 5 #ignore for now
+        addr_type = 99 #ignore for now
 
     if addr not in home_net and addr not in multi_net and addr not in broad_net and addr not in broad_inner:
         IP_label_split = addr.split('.')
@@ -278,7 +278,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     
     internal_switch = 3 #always on
     ext_ben = 1 if 'external' in vis_filter else 0
-    ext_mal = 2 if 'external_suspicious' in vis_filter else 0
+    ext_mal = 5 if 'external_suspicious' in vis_filter else 0
     vis_switches = [internal_switch, ext_ben, ext_mal]
 
     tcp_switch = 'TCP' if 'tcp' in proto_filter else '0'  # in str since ip_proto field is str
@@ -418,10 +418,10 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
 
                 # converting type for coloring/filtering for malicious nodes
                 if ip in home_net:
-                    ip_type = 1
+                    ip_type = 3
                     ip_color = "orange" #internal node under attack
                 else:
-                    ip_type = 3
+                    ip_type = 5
                     ip_color = "red" #external attacking node
 
         if len(mal_alerts.keys()) > 0:
@@ -440,7 +440,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #set scanning nodes to be displayed as malicious
         if new_node['id'] in scans_dict.keys():
             if new_node['id'] not in home_net:
-                ip_type = 2
+                ip_type = 5
             else:
                 ip_type = 3
                 #new_node['color'] = 'red'
@@ -448,7 +448,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
         #set sweeping nodes as malicious
         if new_node['id'] in sweeps_dict.keys():
             if new_node['id'] not in home_net:
-                ip_type = 2
+                ip_type = 5
             else:
                 ip_type = 3
 
