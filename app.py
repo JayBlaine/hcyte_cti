@@ -296,7 +296,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict[active_int].keys():  # edges
         if float(visdcc_display_dict[active_int][key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
-            print("Visdcc key:" + str(key))
+            #print("Visdcc key:" + str(key))
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
@@ -360,6 +360,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             #if this is the first thing it is scanning, create a list to hold all potential scans
             else:
                 scans_dict[edges[i]["from"]] = edges[i]["to"]
+                print("Scans: " + str(scans_dict))
             #scans_dict[edges[i]["from"]] = edges[i]["to"]
     #print("Scans: " + str(scans))
 
