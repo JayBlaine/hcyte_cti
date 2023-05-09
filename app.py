@@ -15,8 +15,8 @@ from dash.exceptions import PreventUpdate
 import visdcc
 from netaddr import IPNetwork
 
-from webApp import forms
-from webApp.flow import Flow
+#from webApp import forms
+#from webApp.flow import Flow
 
 visdcc_display_dict = {'internal': {},
                        'external': {},
@@ -66,7 +66,7 @@ df_flows_drop = [i[4:] for i in df_flows_drop]  # remove 'all_' to make use for 
 
 def get_anonymized_label(addr: str):
     addr_type = 1  # 1 = outside home sub, 2 = inside home/net, 3 = broad/multicast #NEW  1 = external bengin, 2 = external malicious, 3 = internal
-    if (addr in home_net or addr in home_ext) and addr not in broad_inner:
+    if (addr in home_net or addr in home_ext): #and addr not in broad_inner:
         addr_type = 3
     elif addr in multi_net or addr in broad_net or addr in broad_inner:
         addr_type = 5 #ignore for now
@@ -444,7 +444,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             else:
                 ip_type = 3
                 #new_node['color'] = 'red'
-                
+
         #set sweeping nodes as malicious
         if new_node['id'] in sweeps_dict.keys():
             if new_node['id'] not in home_net:
