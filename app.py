@@ -374,7 +374,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
             edge_dest = edge["id"].split("__")[1].split(":")[1]
             #if the from IPs and dest ports match, it is a potential scan
             if(edges[i]["from"] == edge["from"]) and cur_dest == edge_dest and edges[i]["to"] != edge["to"] and edges[i] != edge:
-                print(edge["from"])
+                #print(edge["from"])
                 if(edge["from"] not in home_ext):
                     matches += 1
         if(matches > 10):
@@ -441,7 +441,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                 else:
                     if new_node["id"] in home_net:
                         cluster_locations = new_node["id"].split(".")
-                        print("CLuster locations: " + str(cluster_locations))
+                        #print("CLuster locations: " + str(cluster_locations))
                         position = calcCoordinates(int(cluster_locations[0])*9, int(cluster_locations[1])*10, 50)
                         #position = calcCoordinates(node_positions['homeNet'][0], node_positions['homeNet'][1], 50)
                         new_node["x"] = position[0]
@@ -461,7 +461,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         #new_node["x"] = node_positions["multiNet"][0] + random.uniform(-50, 50)
                         #new_node["y"] = node_positions["multiNet"][1] + random.uniform(-50, 50)
                         cluster_locations = new_node["id"].split(".")
-                        print("CLuster locations: " + str(cluster_locations))
+                        #print("CLuster locations: " + str(cluster_locations))
                         position = calcCoordinates(int(cluster_locations[0])*5, int(cluster_locations[1])*5, 50)
                         #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
@@ -475,7 +475,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
                         new_node["y"] = node_positions["broadInner"][1] + random.uniform(-50, 50)
                     else:
                         cluster_locations = new_node["id"].split(".")
-                        print("CLuster locations: " + str(cluster_locations))
+                        #print("CLuster locations: " + str(cluster_locations))
                         position = calcCoordinates(int(cluster_locations[0])*5, int(cluster_locations[1])*5, 50)
                         #position = calcCoordinates(node_positions['other'][0], node_positions['other'][1], 50)
                         new_node["x"] = position[0]
@@ -531,8 +531,8 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     #handle any node clicks
     if(len(clicked_node['nodes']) > 0):
         print("you clicked a node: " + str(clicked_node['nodes'][0]))
-        print("Scans dict values: " + str(scans_dict.values()))
-        print("Scan nodes: " + str(scanNodes))
+        #print("Scans dict values: " + str(scans_dict.values()))
+        #print("Scan nodes: " + str(scanNodes))
 
         #print("This is what the clicked node is scanning: " + str(scans_dict[clicked_node['nodes'][0]]))
         fullNode = None
