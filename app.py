@@ -296,7 +296,7 @@ def build_visdcc(clicked_node, n_intervals=None, live_check=None, vis_filter=Non
     # TODO: Change from full rebuild to something more efficient
     for key in visdcc_display_dict[active_int].keys():  # edges
         if float(visdcc_display_dict[active_int][key].ip_pkt_tot_num) >= flow_slider:  # protect against scan handshakes TODO: MAKE THIS BETTER LATER
-            print(key)
+            print("Visdcc key:" + str(key))
             IPandPort = key.split(" ")
 
             srcIPandPort = IPandPort[0].split(":")
